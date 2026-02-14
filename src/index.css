@@ -93,6 +93,10 @@
     @apply border-border;
   }
 
+  html {
+    scroll-behavior: smooth;
+  }
+
   body {
     @apply bg-background text-foreground antialiased;
     font-family: "DM Sans", system-ui, sans-serif;
@@ -100,6 +104,18 @@
 
   h1, h2, h3, h4, h5, h6 {
     font-family: "Playfair Display", Georgia, serif;
+  }
+
+  /* Premium text rendering */
+  p, span, a, li {
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Elegant selection color */
+  ::selection {
+    background: hsl(var(--golden) / 0.25);
+    color: hsl(var(--foreground));
   }
 }
 
@@ -129,7 +145,62 @@
   }
 
   .whatsapp-float {
-    @apply fixed bottom-6 right-6 z-50 rounded-full shadow-2xl transition-transform duration-300 hover:scale-110;
+    @apply fixed bottom-6 right-6 z-50 rounded-full transition-all duration-300 hover:scale-110;
     background: hsl(142, 70%, 45%);
+    box-shadow: 0 4px 20px hsla(142, 70%, 45%, 0.4);
+  }
+
+  .whatsapp-float:hover {
+    box-shadow: 0 6px 28px hsla(142, 70%, 45%, 0.55);
+  }
+
+  /* Premium golden glow on CTA buttons */
+  .gradient-golden {
+    box-shadow: 0 4px 16px hsl(var(--golden) / 0.3);
+    transition: box-shadow 0.3s ease, opacity 0.3s ease;
+  }
+
+  .gradient-golden:hover {
+    box-shadow: 0 6px 24px hsl(var(--golden) / 0.45);
+  }
+
+  /* Subtle divider line with golden accent */
+  .premium-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent 0%, hsl(var(--golden) / 0.3) 50%, transparent 100%);
+  }
+
+  /* Premium card hover lift */
+  .premium-card {
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
+  }
+
+  .premium-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px hsl(var(--foreground) / 0.08);
+  }
+
+  /* Scrollbar styling */
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: hsl(var(--muted));
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: hsl(var(--golden) / 0.4);
+    border-radius: 99px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--golden) / 0.6);
+  }
+}
+
+@layer utilities {
+  .perspective-1000 {
+    perspective: 1000px;
   }
 }
