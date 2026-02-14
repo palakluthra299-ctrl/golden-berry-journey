@@ -43,16 +43,14 @@ const HeroSection = () => {
             >
               Explore Products
             </a>
-            <button
-              onClick={() => {
-                const phone = "919810984537";
-                const msg = "Namaste Palak! I want to learn more about WellWith Sea Buckthorn products.";
-                window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`, "_blank");
-              }}
-              className="border border-primary-foreground/30 text-primary-foreground px-8 py-3.5 rounded-full font-semibold text-sm hover:bg-primary-foreground/10 transition-colors"
+            <a
+              href={`https://wa.me/919266086554?text=${encodeURIComponent("Namaste Palak! I want to learn more about WellWith Sea Buckthorn products.")}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="border border-primary-foreground/30 text-primary-foreground px-8 py-3.5 rounded-full font-semibold text-sm hover:bg-primary-foreground/10 transition-colors inline-block"
             >
               Chat with Us
-            </button>
+            </a>
           </div>
         </motion.div>
       </div>
