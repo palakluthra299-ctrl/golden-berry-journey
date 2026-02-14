@@ -19,7 +19,7 @@ const Footer = () => (
         <div>
           <h4 className="font-semibold text-cream/90 mb-3">Contact</h4>
           <p className="text-sm text-cream/60">
-            WhatsApp: +91 9810984537<br />
+            WhatsApp: +91 9266086554<br />
             The Original Sea Buckthorn Co.
           </p>
         </div>

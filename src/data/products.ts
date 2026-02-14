@@ -123,7 +123,7 @@ export const products: Product[] = [
 ];
 
 export const sendWhatsAppLead = (productName: string, customMessage?: string) => {
-  const phone = "919810984537";
+  const phone = "919266086554";
   const message = customMessage || `Namaste Palak! I am very interested in your WellWith ${productName}. Please tell me more about its ingredients.`;
   window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, "_blank");
 };
