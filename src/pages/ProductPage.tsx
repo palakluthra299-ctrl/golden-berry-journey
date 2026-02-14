@@ -1,7 +1,7 @@
 import { useParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowLeft, MessageCircle } from "lucide-react";
-import { products, sendWhatsAppLead } from "@/data/products";
+import { products, getWhatsAppLink } from "@/data/products";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
@@ -90,13 +90,15 @@ const ProductPage = () => {
                 <p className="text-muted-foreground">{product.ingredients}</p>
               </div>
 
-              <button
-                onClick={() => sendWhatsAppLead(product.name)}
+              <a
+                href={getWhatsAppLink(product.name)}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="gradient-golden text-primary-foreground px-8 py-4 rounded-full font-semibold inline-flex items-center gap-3 hover:opacity-90 transition-opacity text-lg"
               >
                 <MessageCircle className="w-5 h-5" />
                 Order via WhatsApp
-              </button>
+              </a>
             </motion.div>
           </div>
         </div>

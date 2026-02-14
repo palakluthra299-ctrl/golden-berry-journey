@@ -14,11 +14,8 @@ const credentials = [
 
 
 const ExpertPage = () => {
-  const handleConsult = () => {
-    const phone = "919266086554";
-    const msg = "Namaste Palak! I visited your profile on WellWith. I'd love a personal consultation on Sea Buckthorn products for my health needs.";
-    window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`, "_blank");
-  };
+  const consultLink = `https://wa.me/919266086554?text=${encodeURIComponent("Namaste Palak! I visited your profile on WellWith. I'd love a personal consultation on Sea Buckthorn products for my health needs.")}`;
+
 
   return (
     <div className="min-h-screen bg-background">
@@ -86,13 +83,14 @@ const ExpertPage = () => {
                 to every Indian household — no synthetics, no compromises, just nature's best.
               </p>
 
-              <button
-                onClick={handleConsult}
+              <a
+                href={consultLink}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="gradient-golden text-primary-foreground px-8 py-4 rounded-full font-semibold inline-flex items-center gap-3 hover:opacity-90 transition-opacity text-lg">
-
                 <MessageCircle className="w-5 h-5" />
                 Book a Free Consultation
-              </button>
+              </a>
             </motion.div>
           </div>
         </section>
@@ -144,13 +142,14 @@ const ExpertPage = () => {
                 Speak directly with Palak for personalised guidance on which Sea Buckthorn products 
                 are right for your health goals.
               </p>
-              <button
-                onClick={handleConsult}
+              <a
+                href={consultLink}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="gradient-golden text-primary-foreground px-8 py-4 rounded-full font-semibold inline-flex items-center gap-3 hover:opacity-90 transition-opacity text-lg">
-
                 <MessageCircle className="w-5 h-5" />
                 Chat with Palak on WhatsApp
-              </button>
+              </a>
             </motion.div>
           </div>
         </section>
