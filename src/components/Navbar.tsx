@@ -18,16 +18,14 @@ const Navbar = () => {
           <a href="/#products" className="text-sm font-medium text-foreground/80 hover:text-primary transition-colors">Products</a>
           <a href="/#story" className="text-sm font-medium text-foreground/80 hover:text-primary transition-colors">Our Story</a>
           <Link to="/expert" className="text-sm font-medium text-foreground/80 hover:text-primary transition-colors">Palak Luthra</Link>
-          <button
-            onClick={() => {
-              const phone = "919266086554";
-              const msg = "Namaste Palak! I want to know more about WellWith Sea Buckthorn products.";
-              window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`, "_blank");
-            }}
+          <a
+            href={`https://wa.me/919266086554?text=${encodeURIComponent("Namaste Palak! I want to know more about WellWith Sea Buckthorn products.")}`}
+            target="_blank"
+            rel="noopener noreferrer"
             className="gradient-golden text-primary-foreground px-5 py-2 rounded-full text-sm font-semibold hover:opacity-90 transition-opacity"
           >
             Order Now
-          </button>
+          </a>
         </div>
 
         <button className="md:hidden text-foreground" onClick={() => setOpen(!open)}>
