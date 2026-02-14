@@ -5,6 +5,8 @@ import { products, getWhatsAppLink } from "@/data/products";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
+import IngredientFlashcard from "@/components/IngredientFlashcard";
+import JuiceMakingAnimation from "@/components/JuiceMakingAnimation";
 
 const pageVariants = {
   initial: { opacity: 0, y: 30 },
@@ -38,6 +40,7 @@ const ProductPage = () => {
         transition={{ duration: 0.5 }}
         className="pt-20"
       >
+        {/* Hero Section */}
         <div className="container mx-auto px-4 py-10">
           <Link
             to="/#products"
@@ -47,7 +50,6 @@ const ProductPage = () => {
           </Link>
 
           <div className="grid lg:grid-cols-2 gap-12 items-center">
-            {/* Product Image */}
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -70,7 +72,6 @@ const ProductPage = () => {
               </div>
             </motion.div>
 
-            {/* Product Info */}
             <motion.div
               initial={{ opacity: 0, x: 30 }}
               animate={{ opacity: 1, x: 0 }}
@@ -85,11 +86,6 @@ const ProductPage = () => {
               <p className="text-xl text-primary font-display italic mb-6">{product.tagline}</p>
               <p className="text-muted-foreground text-lg leading-relaxed mb-8">{product.description}</p>
 
-              <div className="bg-muted rounded-2xl p-6 mb-8">
-                <h3 className="text-sm font-semibold uppercase tracking-wider text-foreground mb-2">Key Ingredients</h3>
-                <p className="text-muted-foreground">{product.ingredients}</p>
-              </div>
-
               <a
                 href={getWhatsAppLink(product.name)}
                 target="_blank"
@@ -103,8 +99,45 @@ const ProductPage = () => {
           </div>
         </div>
 
-        {/* Animated Feature Section */}
-        <section className="py-20 bg-muted mt-16">
+        {/* Ingredient Flashcards Section */}
+        <section className="py-20 bg-muted">
+          <div className="container mx-auto px-4">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="text-center mb-14"
+            >
+              <span className="text-sm font-semibold uppercase tracking-[0.3em] text-primary">
+                What's Inside
+              </span>
+              <h2 className="text-3xl md:text-4xl font-bold text-foreground mt-3">
+                Key Ingredients
+              </h2>
+              <p className="text-muted-foreground mt-3 max-w-md mx-auto">
+                Tap any card to discover the benefit of each ingredient
+              </p>
+            </motion.div>
+
+            <div className={`grid gap-5 max-w-4xl mx-auto ${
+              product.ingredientsList.length <= 2 
+                ? "sm:grid-cols-2" 
+                : product.ingredientsList.length <= 3 
+                ? "sm:grid-cols-2 lg:grid-cols-3"
+                : "sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+            }`}>
+              {product.ingredientsList.map((ing, i) => (
+                <IngredientFlashcard key={ing.name} ingredient={ing} index={i} />
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Juice Making Animation */}
+        <JuiceMakingAnimation />
+
+        {/* Why This Product */}
+        <section className="py-20 bg-muted">
           <div className="container mx-auto px-4 text-center">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
