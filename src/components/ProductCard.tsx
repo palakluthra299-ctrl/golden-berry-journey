@@ -17,7 +17,7 @@ const ProductCard = ({ product, index }: ProductCardProps) => {
     >
       <Link
         to={`/product/${product.slug}`}
-        className="group block bg-card rounded-2xl overflow-hidden border border-border/50 hover:border-primary/30 transition-all duration-500 hover:shadow-xl hover:shadow-primary/10"
+        className="group block bg-card rounded-2xl overflow-hidden border border-border/50 hover:border-primary/30 transition-all duration-500 premium-card"
       >
         <div className="aspect-square overflow-hidden bg-cream-dark relative">
           <img
