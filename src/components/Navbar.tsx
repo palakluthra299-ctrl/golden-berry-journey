@@ -17,9 +17,10 @@ const Navbar = () => {
           <Link to="/" className="text-sm font-medium text-foreground/80 hover:text-primary transition-colors">Home</Link>
           <a href="/#products" className="text-sm font-medium text-foreground/80 hover:text-primary transition-colors">Products</a>
           <a href="/#story" className="text-sm font-medium text-foreground/80 hover:text-primary transition-colors">Our Story</a>
+          <Link to="/expert" className="text-sm font-medium text-foreground/80 hover:text-primary transition-colors">Palak Luthra</Link>
           <button
             onClick={() => {
-              const phone = "919810984537";
+              const phone = "919266086554";
               const msg = "Namaste Palak! I want to know more about WellWith Sea Buckthorn products.";
               window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`, "_blank");
             }}
@@ -39,6 +40,7 @@ const Navbar = () => {
           <Link to="/" onClick={() => setOpen(false)} className="text-sm font-medium text-foreground/80">Home</Link>
           <a href="/#products" onClick={() => setOpen(false)} className="text-sm font-medium text-foreground/80">Products</a>
           <a href="/#story" onClick={() => setOpen(false)} className="text-sm font-medium text-foreground/80">Our Story</a>
+          <Link to="/expert" onClick={() => setOpen(false)} className="text-sm font-medium text-foreground/80">Palak Luthra</Link>
         </div>
       )}
     </nav>
