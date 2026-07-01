@@ -8,6 +8,7 @@ import Index from "./pages/Index";
 import ProductPage from "./pages/ProductPage";
 import ExpertPage from "./pages/ExpertPage";
 import NotFound from "./pages/NotFound";
+import SolutionFinder from "./pages/SolutionFinder";
 
 const queryClient = new QueryClient();
 
@@ -22,6 +23,7 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/product/:slug" element={<ProductPage />} />
             <Route path="/expert" element={<ExpertPage />} />
+            <Route path="/solution-finder" element={<SolutionFinder />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
