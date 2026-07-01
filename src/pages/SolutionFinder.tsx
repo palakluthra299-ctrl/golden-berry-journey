@@ -190,7 +190,7 @@ const SolutionFinder = () => {
 
     // Voice
     const productNames = groupsAfter.flatMap((g) => g.products.map((p) => p.name));
-    const spoken = `Namaste! Yahan hai aapki list — ${productNames.slice(0, 6).join(", ")}.`;
+    const spoken = `Namaste, yaha hai aapki list — ${productNames.slice(0, 6).join(", ")}.`;
     // slight delay so audio ctx resumes
     setTimeout(() => speakBill(spoken), 400);
 
