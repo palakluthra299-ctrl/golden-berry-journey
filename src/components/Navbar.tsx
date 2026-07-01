@@ -1,28 +1,9 @@
 import { Link } from "react-router-dom";
-import { Menu, X, Sun, Moon } from "lucide-react";
-import { useState, useEffect } from "react";
+import { Menu, X } from "lucide-react";
+import { useState } from "react";
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
-  const [isDark, setIsDark] = useState(() => {
-    if (typeof document !== "undefined") {
-      return document.documentElement.classList.contains("dark");
-    }
-    return true;
-  });
-
-  useEffect(() => {
-    const root = document.documentElement;
-    if (isDark) {
-      root.classList.add("dark");
-      root.style.colorScheme = "dark";
-    } else {
-      root.classList.remove("dark");
-      root.style.colorScheme = "light";
-    }
-  }, [isDark]);
-
-  const toggleTheme = () => setIsDark((prev) => !prev);
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-40 backdrop-blur-md bg-background/80 border-b border-border/50">
@@ -37,13 +18,6 @@ const Navbar = () => {
           <a href="/#products" className="text-sm font-medium text-foreground/80 hover:text-primary transition-colors">Products</a>
           <a href="/#story" className="text-sm font-medium text-foreground/80 hover:text-primary transition-colors">Our Story</a>
           <Link to="/expert" className="text-sm font-medium text-foreground/80 hover:text-primary transition-colors">Palak Luthra</Link>
-          <button
-            onClick={toggleTheme}
-            className="p-2 rounded-full bg-muted/50 hover:bg-muted transition-colors"
-            aria-label="Toggle night mode"
-          >
-            {isDark ? <Sun className="w-4 h-4 text-foreground" /> : <Moon className="w-4 h-4 text-foreground" />}
-          </button>
           <a
             href={`https://wa.me/919266086554?text=${encodeURIComponent("Namaste Palak! I want to know more about WellWith Sea Buckthorn products.")}`}
             target="_blank"
@@ -54,18 +28,9 @@ const Navbar = () => {
           </a>
         </div>
 
-        <div className="flex md:hidden items-center gap-3">
-          <button
-            onClick={toggleTheme}
-            className="p-2 rounded-full bg-muted/50 hover:bg-muted transition-colors"
-            aria-label="Toggle night mode"
-          >
-            {isDark ? <Sun className="w-4 h-4 text-foreground" /> : <Moon className="w-4 h-4 text-foreground" />}
-          </button>
-          <button className="text-foreground" onClick={() => setOpen(!open)}>
-            {open ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
-        </div>
+        <button className="md:hidden text-foreground" onClick={() => setOpen(!open)}>
+          {open ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+        </button>
       </div>
 
       {open && (
