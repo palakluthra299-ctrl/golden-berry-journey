@@ -143,6 +143,16 @@ const SolutionFinder = () => {
     }
   }, []);
 
+  // Force scroll-to-top on every step transition and drawer open
+  useEffect(() => {
+    try {
+      window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
+    } catch {
+      window.scrollTo(0, 0);
+    }
+  }, [step, drawerOpen]);
+
+
   const canSearch = query.trim().length > 0 || !!activeChip;
 
   const runSearch = (raw: string) => {
@@ -368,30 +378,21 @@ const SolutionFinder = () => {
                         <p className="text-muted-foreground mt-2">This complete set works together — no picking required.</p>
                       </div>
 
-                      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 mt-10 mb-32 perspective-1000">
+                      <div className="max-w-xl mx-auto mt-10 mb-40 divide-y divide-border/40 border-y border-border/40">
                         {currentMatch.products.map((p, i) => (
                           <motion.div
                             key={p.name}
-                            initial={{ opacity: 0, rotateY: -25, rotateX: 15, y: 40 }}
-                            animate={{ opacity: 1, rotateY: 0, rotateX: 0, y: 0 }}
-                            transition={{ delay: i * 0.12, type: "spring", stiffness: 120, damping: 14 }}
-                            className="bg-card rounded-2xl border border-border/60 p-7 shadow-md premium-card flex flex-col items-center text-center"
+                            initial={{ opacity: 0, y: 12 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: i * 0.08, duration: 0.35, ease: "easeOut" }}
+                            className="py-5 px-2"
                           >
-                            <div className="w-11 h-11 rounded-full bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center mb-4">
-                              <Sparkles className="w-5 h-5 text-primary" />
-                            </div>
                             <h3 className="font-display font-bold text-foreground text-lg leading-snug">{p.name}</h3>
-                            <p className="text-sm text-muted-foreground mt-2 leading-relaxed">{p.why}</p>
-                            <div className="flex flex-wrap gap-1.5 mt-4 justify-center">
-                              {p.tags.map((t) => (
-                                <span key={t} className="text-[10px] uppercase tracking-wider bg-primary/10 text-primary px-2 py-0.5 rounded-full">
-                                  {t}
-                                </span>
-                              ))}
-                            </div>
+                            <p className="text-sm text-muted-foreground mt-1.5 leading-relaxed">{p.why}</p>
                           </motion.div>
                         ))}
                       </div>
+
 
                       <div className="fixed bottom-6 left-0 right-0 z-30 flex justify-center px-4 pointer-events-none">
                         <motion.button
@@ -509,15 +510,25 @@ const SolutionFinder = () => {
               transition={{ type: "spring", stiffness: 260, damping: 30 }}
               className="fixed right-0 top-0 bottom-0 w-full sm:w-96 bg-card z-50 shadow-2xl overflow-y-auto"
             >
-              <div className="p-5 border-b border-border/50 flex items-center justify-between">
-                <div>
-                  <h3 className="font-display font-bold text-lg">Your Bill</h3>
-                  <p className="text-xs text-muted-foreground">Order Ref: {orderRef}</p>
-                </div>
-                <button onClick={() => setDrawerOpen(false)} className="p-2 hover:bg-muted rounded-full">
-                  <X className="w-5 h-5" />
+              <div className="sticky top-0 z-10 bg-card border-b border-border/50">
+                <button
+                  onClick={() => setDrawerOpen(false)}
+                  className="w-full flex items-center gap-2 px-5 py-3 text-sm font-semibold text-foreground hover:bg-muted transition-colors"
+                  aria-label="Back to bill"
+                >
+                  <ArrowLeft className="w-4 h-4" /> Back
                 </button>
+                <div className="p-5 flex items-center justify-between">
+                  <div>
+                    <h3 className="font-display font-bold text-lg">Your Bill</h3>
+                    <p className="text-xs text-muted-foreground">Order Ref: {orderRef}</p>
+                  </div>
+                  <button onClick={() => setDrawerOpen(false)} className="p-2 hover:bg-muted rounded-full" aria-label="Close">
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
               </div>
+
               <div className="p-5 space-y-6">
                 {bill.length === 0 && <p className="text-sm text-muted-foreground">No items yet.</p>}
                 {bill.map((g) => (
@@ -664,19 +675,29 @@ const PrintingOverlay = ({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-[9999] flex flex-col items-center justify-center overflow-hidden"
+      className="fixed inset-0 z-[9999] flex flex-col items-center overflow-hidden pt-12 sm:pt-16"
       style={{
         background:
           "radial-gradient(circle at 50% 40%, hsl(142 80% 30%) 0%, hsl(142 90% 12%) 50%, #04140a 100%)",
       }}
     >
+      {/* Persistent Back button */}
+      <button
+        onClick={onBack}
+        aria-label="Back"
+        className="absolute top-4 left-4 z-20 flex items-center gap-1.5 px-4 py-2 rounded-full bg-white/10 hover:bg-white/20 text-white text-sm font-semibold backdrop-blur-md border border-white/20 transition-colors"
+      >
+        <ArrowLeft className="w-4 h-4" /> Back
+      </button>
+
       {/* Machine */}
       <motion.div
         initial={{ scale: 0.6, opacity: 0, y: -20 }}
         animate={{ scale: 1, opacity: 1, y: 0 }}
         transition={{ type: "spring", stiffness: 160, damping: 16 }}
-        className="relative"
+        className="relative scale-75 sm:scale-90"
       >
+
         <motion.div
           animate={{ boxShadow: ["0 0 40px rgba(100,255,140,0.4)", "0 0 70px rgba(120,255,160,0.7)", "0 0 40px rgba(100,255,140,0.4)"] }}
           transition={{ duration: 2.4, repeat: Infinity }}
