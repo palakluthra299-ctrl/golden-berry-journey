@@ -510,15 +510,25 @@ const SolutionFinder = () => {
               transition={{ type: "spring", stiffness: 260, damping: 30 }}
               className="fixed right-0 top-0 bottom-0 w-full sm:w-96 bg-card z-50 shadow-2xl overflow-y-auto"
             >
-              <div className="p-5 border-b border-border/50 flex items-center justify-between">
-                <div>
-                  <h3 className="font-display font-bold text-lg">Your Bill</h3>
-                  <p className="text-xs text-muted-foreground">Order Ref: {orderRef}</p>
-                </div>
-                <button onClick={() => setDrawerOpen(false)} className="p-2 hover:bg-muted rounded-full">
-                  <X className="w-5 h-5" />
+              <div className="sticky top-0 z-10 bg-card border-b border-border/50">
+                <button
+                  onClick={() => setDrawerOpen(false)}
+                  className="w-full flex items-center gap-2 px-5 py-3 text-sm font-semibold text-foreground hover:bg-muted transition-colors"
+                  aria-label="Back to bill"
+                >
+                  <ArrowLeft className="w-4 h-4" /> Back
                 </button>
+                <div className="p-5 flex items-center justify-between">
+                  <div>
+                    <h3 className="font-display font-bold text-lg">Your Bill</h3>
+                    <p className="text-xs text-muted-foreground">Order Ref: {orderRef}</p>
+                  </div>
+                  <button onClick={() => setDrawerOpen(false)} className="p-2 hover:bg-muted rounded-full" aria-label="Close">
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
               </div>
+
               <div className="p-5 space-y-6">
                 {bill.length === 0 && <p className="text-sm text-muted-foreground">No items yet.</p>}
                 {bill.map((g) => (
