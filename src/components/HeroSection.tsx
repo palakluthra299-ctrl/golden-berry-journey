@@ -1,5 +1,7 @@
 import { motion } from "framer-motion";
 import heroBg from "@/assets/hero-bg.jpg";
+import SolutionFinderCTA from "@/components/SolutionFinderCTA";
+
 
 const HeroSection = () => {
   return (
