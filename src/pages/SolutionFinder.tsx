@@ -368,21 +368,21 @@ const SolutionFinder = () => {
                         <p className="text-muted-foreground mt-2">This complete set works together — no picking required.</p>
                       </div>
 
-                      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 mt-10 perspective-1000">
+                      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 mt-10 mb-32 perspective-1000">
                         {currentMatch.products.map((p, i) => (
                           <motion.div
                             key={p.name}
                             initial={{ opacity: 0, rotateY: -25, rotateX: 15, y: 40 }}
                             animate={{ opacity: 1, rotateY: 0, rotateX: 0, y: 0 }}
                             transition={{ delay: i * 0.12, type: "spring", stiffness: 120, damping: 14 }}
-                            className="bg-card rounded-2xl border border-border/60 p-5 shadow-md premium-card"
+                            className="bg-card rounded-2xl border border-border/60 p-7 shadow-md premium-card flex flex-col items-center text-center"
                           >
-                            <div className="aspect-square w-full rounded-xl bg-gradient-to-br from-primary/10 to-secondary/10 flex items-center justify-center text-5xl mb-4">
-                              {currentMatch.emoji}
+                            <div className="w-11 h-11 rounded-full bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center mb-4">
+                              <Sparkles className="w-5 h-5 text-primary" />
                             </div>
-                            <h3 className="font-display font-bold text-foreground">{p.name}</h3>
-                            <p className="text-sm text-muted-foreground mt-1">{p.why}</p>
-                            <div className="flex flex-wrap gap-1.5 mt-3">
+                            <h3 className="font-display font-bold text-foreground text-lg leading-snug">{p.name}</h3>
+                            <p className="text-sm text-muted-foreground mt-2 leading-relaxed">{p.why}</p>
+                            <div className="flex flex-wrap gap-1.5 mt-4 justify-center">
                               {p.tags.map((t) => (
                                 <span key={t} className="text-[10px] uppercase tracking-wider bg-primary/10 text-primary px-2 py-0.5 rounded-full">
                                   {t}
@@ -393,18 +393,19 @@ const SolutionFinder = () => {
                         ))}
                       </div>
 
-                      <div className="flex justify-center mt-12">
+                      <div className="fixed bottom-6 left-0 right-0 z-30 flex justify-center px-4 pointer-events-none">
                         <motion.button
-                          whileHover={{ scale: 1.08 }}
-                          whileTap={{ scale: 0.95 }}
+                          whileHover={{ scale: 1.06 }}
+                          whileTap={{ scale: 0.97 }}
                           onClick={handleAddToCart}
-                          className="w-20 h-20 rounded-full flex items-center justify-center text-white shadow-2xl"
-                          style={{ background: "linear-gradient(135deg,#ff4d8d,#ff2d6f)", boxShadow: "0 8px 30px rgba(255,45,111,0.5)" }}
-                          aria-label="Add to cart"
+                          className="proceed-pulse pointer-events-auto px-10 py-5 rounded-full text-white font-bold text-lg tracking-wide"
+                          style={{ background: "linear-gradient(135deg,#ff4d8d,#ff2d6f)" }}
+                          aria-label="Click to proceed"
                         >
-                          <ShoppingBag className="w-8 h-8" />
+                          Click to Proceed →
                         </motion.button>
                       </div>
+
                     </>
                   )}
                 </motion.section>

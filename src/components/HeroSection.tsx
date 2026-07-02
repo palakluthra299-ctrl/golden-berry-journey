@@ -1,5 +1,7 @@
 import { motion } from "framer-motion";
 import heroBg from "@/assets/hero-bg.jpg";
+import SolutionFinderCTA from "@/components/SolutionFinderCTA";
+
 
 const HeroSection = () => {
   return (
@@ -43,7 +45,9 @@ const HeroSection = () => {
             >
               Explore Products
             </a>
+            <SolutionFinderCTA variant="hero" />
             <a
+
               href={`https://wa.me/919266086554?text=${encodeURIComponent("Namaste Palak! I want to learn more about WellWith Sea Buckthorn products.")}`}
               target="_blank"
               rel="noopener noreferrer"
