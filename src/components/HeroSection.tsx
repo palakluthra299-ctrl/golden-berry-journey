@@ -45,7 +45,9 @@ const HeroSection = () => {
             >
               Explore Products
             </a>
+            <SolutionFinderCTA variant="hero" />
             <a
+
               href={`https://wa.me/919266086554?text=${encodeURIComponent("Namaste Palak! I want to learn more about WellWith Sea Buckthorn products.")}`}
               target="_blank"
               rel="noopener noreferrer"
