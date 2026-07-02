@@ -143,6 +143,16 @@ const SolutionFinder = () => {
     }
   }, []);
 
+  // Force scroll-to-top on every step transition and drawer open
+  useEffect(() => {
+    try {
+      window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
+    } catch {
+      window.scrollTo(0, 0);
+    }
+  }, [step, drawerOpen]);
+
+
   const canSearch = query.trim().length > 0 || !!activeChip;
 
   const runSearch = (raw: string) => {
