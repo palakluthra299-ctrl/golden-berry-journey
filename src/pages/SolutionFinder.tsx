@@ -378,30 +378,21 @@ const SolutionFinder = () => {
                         <p className="text-muted-foreground mt-2">This complete set works together — no picking required.</p>
                       </div>
 
-                      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 mt-10 mb-32 perspective-1000">
+                      <div className="max-w-xl mx-auto mt-10 mb-40 divide-y divide-border/40 border-y border-border/40">
                         {currentMatch.products.map((p, i) => (
                           <motion.div
                             key={p.name}
-                            initial={{ opacity: 0, rotateY: -25, rotateX: 15, y: 40 }}
-                            animate={{ opacity: 1, rotateY: 0, rotateX: 0, y: 0 }}
-                            transition={{ delay: i * 0.12, type: "spring", stiffness: 120, damping: 14 }}
-                            className="bg-card rounded-2xl border border-border/60 p-7 shadow-md premium-card flex flex-col items-center text-center"
+                            initial={{ opacity: 0, y: 12 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: i * 0.08, duration: 0.35, ease: "easeOut" }}
+                            className="py-5 px-2"
                           >
-                            <div className="w-11 h-11 rounded-full bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center mb-4">
-                              <Sparkles className="w-5 h-5 text-primary" />
-                            </div>
                             <h3 className="font-display font-bold text-foreground text-lg leading-snug">{p.name}</h3>
-                            <p className="text-sm text-muted-foreground mt-2 leading-relaxed">{p.why}</p>
-                            <div className="flex flex-wrap gap-1.5 mt-4 justify-center">
-                              {p.tags.map((t) => (
-                                <span key={t} className="text-[10px] uppercase tracking-wider bg-primary/10 text-primary px-2 py-0.5 rounded-full">
-                                  {t}
-                                </span>
-                              ))}
-                            </div>
+                            <p className="text-sm text-muted-foreground mt-1.5 leading-relaxed">{p.why}</p>
                           </motion.div>
                         ))}
                       </div>
+
 
                       <div className="fixed bottom-6 left-0 right-0 z-30 flex justify-center px-4 pointer-events-none">
                         <motion.button
