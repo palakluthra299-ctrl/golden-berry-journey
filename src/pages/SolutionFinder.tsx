@@ -675,19 +675,29 @@ const PrintingOverlay = ({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-[9999] flex flex-col items-center justify-center overflow-hidden"
+      className="fixed inset-0 z-[9999] flex flex-col items-center overflow-hidden pt-12 sm:pt-16"
       style={{
         background:
           "radial-gradient(circle at 50% 40%, hsl(142 80% 30%) 0%, hsl(142 90% 12%) 50%, #04140a 100%)",
       }}
     >
+      {/* Persistent Back button */}
+      <button
+        onClick={onBack}
+        aria-label="Back"
+        className="absolute top-4 left-4 z-20 flex items-center gap-1.5 px-4 py-2 rounded-full bg-white/10 hover:bg-white/20 text-white text-sm font-semibold backdrop-blur-md border border-white/20 transition-colors"
+      >
+        <ArrowLeft className="w-4 h-4" /> Back
+      </button>
+
       {/* Machine */}
       <motion.div
         initial={{ scale: 0.6, opacity: 0, y: -20 }}
         animate={{ scale: 1, opacity: 1, y: 0 }}
         transition={{ type: "spring", stiffness: 160, damping: 16 }}
-        className="relative"
+        className="relative scale-75 sm:scale-90"
       >
+
         <motion.div
           animate={{ boxShadow: ["0 0 40px rgba(100,255,140,0.4)", "0 0 70px rgba(120,255,160,0.7)", "0 0 40px rgba(100,255,140,0.4)"] }}
           transition={{ duration: 2.4, repeat: Infinity }}
