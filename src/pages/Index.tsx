@@ -15,6 +15,8 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       <Navbar />
       <HeroSection />
+      <ProductShowcase />
+
 
       {/* Products Section */}
       <section id="products" className="py-20">
