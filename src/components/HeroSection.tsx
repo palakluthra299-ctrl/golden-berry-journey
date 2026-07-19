@@ -29,10 +29,31 @@ const HeroSection = () => {
             From the Himalayas of Ladakh
           </motion.span>
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-primary-foreground leading-tight mb-6">
-            Nature's{" "}
-            <span className="text-gradient-golden">Golden</span>
+            <motion.span
+              initial={{ opacity: 0, y: 20, filter: "blur(8px)" }}
+              animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+              transition={{ duration: 0.7, delay: 0.6 }}
+              className="inline-block hero-breathe mr-3"
+            >
+              Nature's
+            </motion.span>
+            <motion.span
+              initial={{ opacity: 0, y: 20, filter: "blur(8px)" }}
+              animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+              transition={{ duration: 0.7, delay: 0.75 }}
+              className="inline-block hero-golden-shimmer"
+            >
+              Golden
+            </motion.span>
             <br />
-            Super Fruit
+            <motion.span
+              initial={{ opacity: 0, y: 20, filter: "blur(8px)" }}
+              animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+              transition={{ duration: 0.7, delay: 0.9 }}
+              className="inline-block hero-breathe"
+            >
+              Super Fruit
+            </motion.span>
           </h1>
           <p className="text-lg text-primary-foreground/80 max-w-lg mb-8 font-body">
             Pure Sea Buckthorn wellness from 11,500 ft above sea level. 

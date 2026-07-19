@@ -243,5 +243,42 @@
   @media (prefers-reduced-motion: reduce) {
     .proceed-pulse { animation: none; }
   }
+
+  /* Hero heading — golden shimmer sweep */
+  .hero-golden-shimmer {
+    background: linear-gradient(
+      100deg,
+      hsl(var(--golden)) 0%,
+      hsl(var(--golden-light)) 40%,
+      hsl(60 100% 92%) 50%,
+      hsl(var(--golden-light)) 60%,
+      hsl(var(--golden)) 100%
+    );
+    background-size: 200% 100%;
+    background-position: 100% 0;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: golden-shimmer 3.8s ease-in-out infinite;
+  }
+  @keyframes golden-shimmer {
+    0% { background-position: 100% 0; }
+    100% { background-position: -100% 0; }
+  }
+
+  /* Hero heading — subtle breathe */
+  .hero-breathe {
+    animation: hero-breathe 4.5s ease-in-out infinite;
+  }
+  @keyframes hero-breathe {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.86; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-golden-shimmer,
+    .hero-breathe { animation: none; }
+  }
+
 }
 
