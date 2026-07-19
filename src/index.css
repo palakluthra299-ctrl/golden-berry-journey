@@ -243,27 +243,5 @@
   @media (prefers-reduced-motion: reduce) {
     .proceed-pulse { animation: none; }
   }
-
-  /* Primary CTA pulse (subtle golden glow breathing) */
-  .primary-pulse {
-    animation: primary-pulse 2.6s ease-in-out infinite;
-  }
-  @keyframes primary-pulse {
-    0%, 100% { box-shadow: 0 4px 16px hsl(var(--golden) / 0.35), 0 0 0 0 hsl(var(--golden) / 0.35); }
-    50% { box-shadow: 0 8px 28px hsl(var(--golden) / 0.55), 0 0 0 10px hsl(var(--golden) / 0); }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .primary-pulse { animation: none; }
-  }
-
-  /* Trust bar marquee */
-  .animate-marquee {
-    animation: marquee 32s linear infinite;
-  }
-  @keyframes marquee {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(-50%); }
-  }
 }
-
 

@@ -6,7 +6,6 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import ProductShowcase from "@/components/ProductShowcase";
-import TrustBar from "@/components/TrustBar";
 
 const Index = () => {
   const concentrates = products.filter((p) => p.category === "concentrate");
@@ -16,7 +15,6 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       <Navbar />
       <HeroSection />
-      <TrustBar />
       <ProductShowcase />
 
 
