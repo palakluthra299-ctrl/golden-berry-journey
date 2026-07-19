@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import heroBg from "@/assets/hero-bg.jpg";
 import SolutionFinderCTA from "@/components/SolutionFinderCTA";
+import RotatingFactStrip from "@/components/RotatingFactStrip";
 
 
 const HeroSection = () => {
@@ -55,6 +56,7 @@ const HeroSection = () => {
               Super Fruit
             </motion.span>
           </h1>
+          <RotatingFactStrip />
           <p className="text-lg text-primary-foreground/80 max-w-lg mb-8 font-body">
             Pure Sea Buckthorn wellness from 11,500 ft above sea level. 
             Trusted by DRDO scientists and Russian cosmonauts. Now, from our hills to your home.
