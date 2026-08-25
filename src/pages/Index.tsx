@@ -5,7 +5,7 @@ import ProductCard from "@/components/ProductCard";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
-import ProductShowcase from "@/components/ProductShowcase";
+import ProductListenExperience from "@/components/ProductListenExperience";
 
 const Index = () => {
   const concentrates = products.filter((p) => p.category === "concentrate");
@@ -15,7 +15,7 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       <Navbar />
       <HeroSection />
-      <ProductShowcase />
+      <ProductListenExperience />
 
 
       {/* Products Section */}
