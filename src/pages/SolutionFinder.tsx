@@ -246,7 +246,7 @@ const SolutionFinder = () => {
   const waHref = useMemo(() => {
     if (bill.length === 0) return "#";
     const msg = buildWhatsAppMessage(bill, orderRef);
-    return `https://wa.me/919266086554?text=${encodeURIComponent(msg)}`;
+    return `https://wa.me/918299542169?text=${encodeURIComponent(msg)}`;
   }, [bill, orderRef]);
 
   const isFullscreen = step === "printing";
