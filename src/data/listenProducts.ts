@@ -85,5 +85,5 @@ export const listenProducts: ListenProduct[] = [
 
 export const listenOrderLink = (productName: string) =>
   `https://wa.me/918299542169?text=${encodeURIComponent(
-    `Hello Palak Luthra, humne ${productName} ke baare mein suna hai and I want to order. Please share details.`
+    `Hello Vandana, humne ${productName} ke baare mein suna hai and I want to order. Please share details.`
   )}`;

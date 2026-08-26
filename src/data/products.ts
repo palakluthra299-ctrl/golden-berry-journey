@@ -180,6 +180,6 @@ export const products: Product[] = [
 
 export const getWhatsAppLink = (productName: string, customMessage?: string) => {
   const phone = "918299542169";
-  const message = customMessage || `Namaste Palak! I am very interested in your WellWith ${productName}. Please tell me more about its ingredients.`;
+  const message = customMessage || `Namaste Vandana! I am very interested in your WellWith ${productName}. Please tell me more about its ingredients.`;
   return `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
 };

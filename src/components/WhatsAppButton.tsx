@@ -8,8 +8,8 @@ interface WhatsAppButtonProps {
 const WhatsAppButton = ({ productName, className = "" }: WhatsAppButtonProps) => {
   const phone = "918299542169";
   const message = productName
-    ? `Namaste Palak! I am very interested in your WellWith ${productName}. Please tell me more about its ingredients.`
-    : `Namaste Palak! I am interested in WellWith Sea Buckthorn products. Please tell me more.`;
+    ? `Namaste Vandana! I am very interested in your WellWith ${productName}. Please tell me more about its ingredients.`
+    : `Namaste Vandana! I am interested in WellWith Sea Buckthorn products. Please tell me more.`;
   const href = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
 
   return (
