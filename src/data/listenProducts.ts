@@ -5,13 +5,6 @@ import diawellImg from "@/assets/products/diawell.jpg";
 import powerxImg from "@/assets/products/powerx.jpg";
 import femwellImg from "@/assets/products/femwell.jpg";
 
-import pulpAudio from "@/assets/audio/pulp.wav.asset.json";
-import turmericAudio from "@/assets/audio/Turmuricoil.wav.asset.json";
-import fitwellAudio from "@/assets/audio/fitwell.wav.asset.json";
-import diawellAudio from "@/assets/audio/diawell.wav.asset.json";
-import powerxAudio from "@/assets/audio/power_x.wav.asset.json";
-import femwellAudio from "@/assets/audio/femwell.wav.asset.json";
-
 export interface ListenProduct {
   /** stable key, also used as the audio placeholder name */
   id: string;
@@ -35,7 +28,7 @@ export const listenProducts: ListenProduct[] = [
     description:
       "99.9% pure Ladakh Sea Buckthorn pulp — a simple daily spoon for immunity, energy and everyday wellness.",
     image: pulpImg,
-    audio: pulpAudio.url,
+    audio: "/audio/pulp.wav",
     url: "/product/sea-buckthorn-pulp",
   },
   {
@@ -45,7 +38,7 @@ export const listenProducts: ListenProduct[] = [
     description:
       "Sea Buckthorn blended with CO2-extracted turmeric oil for comfortable joints and steady immune support.",
     image: turmericImg,
-    audio: turmericAudio.url,
+    audio: "/audio/turmeric.wav",
     url: "/product/turmeric-blend",
   },
   {
@@ -55,7 +48,7 @@ export const listenProducts: ListenProduct[] = [
     description:
       "Sea Buckthorn with Garcinia and Kokum to support a healthy metabolism and weight-management routine.",
     image: fitwellImg,
-    audio: fitwellAudio.url,
+    audio: "/audio/fitwell.wav",
     url: "/product/fitwell",
   },
   {
@@ -65,7 +58,7 @@ export const listenProducts: ListenProduct[] = [
     description:
       "Karela, Jamun, Chirata and Punarnava with Sea Buckthorn — traditional herbs for metabolic wellness.",
     image: diawellImg,
-    audio: diawellAudio.url,
+    audio: "/audio/diawell.wav",
     url: "/product/diawell",
   },
   {
@@ -75,7 +68,7 @@ export const listenProducts: ListenProduct[] = [
     description:
       "Seven Ayurvedic herbs including Ashwagandha and Safed Musli with Sea Buckthorn for stamina and vitality.",
     image: powerxImg,
-    audio: powerxAudio.url,
+    audio: "/audio/power-x.wav",
     url: "/product/power-x",
   },
   {
@@ -85,7 +78,7 @@ export const listenProducts: ListenProduct[] = [
     description:
       "Shatavari, Ashok Chhal and Dashmool with Sea Buckthorn — a gentle blend for women's everyday balance.",
     image: femwellImg,
-    audio: femwellAudio.url,
+    audio: "/audio/femwell.wav",
     url: "/product/femwell",
   },
 ];

@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en" class="dark">
+  <head>
+    <script type="module">import { injectIntoGlobalHook } from "/@react-refresh";
+injectIntoGlobalHook(window);
+window.$RefreshReg$ = () => {};
+window.$RefreshSig$ = () => (type) => type;</script>
+
+    <script type="module" src="/@vite/client"></script>
+
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WellWith Sea Buckthorn | Premium Himalayan Wellness</title>
+    <meta name="description" content="WellWith Sea Buckthorn – Premium cold-pressed juices & supplements from Ladakh for immunity, energy & holistic wellness." />
+    <meta name="author" content="WellWith" />
+    <link rel="icon" href="/wellwith-favicon.png" type="image/png" />
+
+    <meta property="og:title" content="WellWith Sea Buckthorn" />
+    <meta property="og:description" content="Premium Himalayan Sea Buckthorn wellness products – cold-pressed juices, capsules & tisanes." />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@wellwith" />
+    <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
