@@ -14,7 +14,7 @@ const credentials = [
 
 
 const ExpertPage = () => {
-  const consultLink = `https://wa.me/918299542169?text=${encodeURIComponent("Namaste Vandana! I visited your profile on WellWith. I'd love a personal consultation on Sea Buckthorn products for my health needs.")}`;
+  const consultLink = `https://wa.me/918299542169?text=${encodeURIComponent("Namaste Vandana! I visited Palak Luthra's profile on WellWith. I'd love a personal consultation on Sea Buckthorn products for my health needs.")}`;
 
 
   return (
