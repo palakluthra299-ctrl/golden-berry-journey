@@ -32,7 +32,7 @@ export const partnerModels: PartnerModel[] = [
       "Training and mentorship support for beginners",
       "Company-stated retail and incentive opportunities",
     ],
-    audio: "/community_partner_audio.wav",
+    audio: "/communitypartner.wav",
     icon: "community",
     enquiry: "Community Partner enquiry",
   },
@@ -47,7 +47,7 @@ export const partnerModels: PartnerModel[] = [
       "Branding, marketing and setup support",
       "Full Seabuckthorn product portfolio access",
     ],
-    audio: "/franchise_owner_audio.wav",
+    audio: "/franchisebusiness.wav",
     icon: "franchise",
     enquiry: "Franchise Query",
   },
@@ -63,7 +63,7 @@ export const partnerModels: PartnerModel[] = [
       "Institutional tie-ups and R&D collaboration",
       "Seabuckthorn-based portfolio for category expansion",
     ],
-    audio: "/b2b_partner_audio.wav",
+    audio: "/B2B.wav",
     icon: "b2b",
     enquiry: "B2B Query",
   },
@@ -87,12 +87,12 @@ export const whyWellWith = [
     text: "Training, mentorship and digital-first support are highlighted for entrepreneurs.",
   },
   {
-    title: "Established Models",
-    text: "Community Partner, Franchise Owner and B2B Partner give different ways to work with WellWith.",
+    title: "3 Partnership Models",
+    text: "Community Partner, Franchise Owner and B2B Partner provide different ways to explore working with WellWith.",
   },
 ];
 
 export const partnerEnquiryLink = (model: PartnerModel) =>
   `https://wa.me/91${PARTNER_CONTACT_PHONE}?text=${encodeURIComponent(
-    `Namaste ${PARTNER_CONTACT_NAME}, I want to explore the WellWith ${model.name} partnership. Please share details — ${model.enquiry}.`
+    `Hello ${PARTNER_CONTACT_NAME}, humne ${model.name} ke baare mein suna hai and I want to know more. Please share details.`
   )}`;
