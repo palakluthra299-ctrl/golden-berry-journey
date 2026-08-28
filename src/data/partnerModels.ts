@@ -32,7 +32,7 @@ export const partnerModels: PartnerModel[] = [
       "Training and mentorship support for beginners",
       "Company-stated retail and incentive opportunities",
     ],
-    audio: "/community_partner_audio.wav",
+    audio: "/communitypartner.wav",
     icon: "community",
     enquiry: "Community Partner enquiry",
   },
