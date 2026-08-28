@@ -47,7 +47,7 @@ export const partnerModels: PartnerModel[] = [
       "Branding, marketing and setup support",
       "Full Seabuckthorn product portfolio access",
     ],
-    audio: "/franchise_owner_audio.wav",
+    audio: "/franchisebusiness.wav",
     icon: "franchise",
     enquiry: "Franchise Query",
   },
@@ -63,7 +63,7 @@ export const partnerModels: PartnerModel[] = [
       "Institutional tie-ups and R&D collaboration",
       "Seabuckthorn-based portfolio for category expansion",
     ],
-    audio: "/b2b_partner_audio.wav",
+    audio: "/B2B.wav",
     icon: "b2b",
     enquiry: "B2B Query",
   },
@@ -94,5 +94,5 @@ export const whyWellWith = [
 
 export const partnerEnquiryLink = (model: PartnerModel) =>
   `https://wa.me/91${PARTNER_CONTACT_PHONE}?text=${encodeURIComponent(
-    `Namaste ${PARTNER_CONTACT_NAME}, I want to explore the WellWith ${model.name} partnership. Please share details — ${model.enquiry}.`
+    `Hello ${PARTNER_CONTACT_NAME}, humne ${model.name} ke baare mein suna hai and I want to know more. Please share details.`
   )}`;
