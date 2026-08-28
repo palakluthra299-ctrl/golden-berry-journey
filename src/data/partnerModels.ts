@@ -87,8 +87,8 @@ export const whyWellWith = [
     text: "Training, mentorship and digital-first support are highlighted for entrepreneurs.",
   },
   {
-    title: "Established Models",
-    text: "Community Partner, Franchise Owner and B2B Partner give different ways to work with WellWith.",
+    title: "3 Partnership Models",
+    text: "Community Partner, Franchise Owner and B2B Partner provide different ways to explore working with WellWith.",
   },
 ];
 
