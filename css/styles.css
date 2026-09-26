@@ -1,12 +1,12 @@
 /* WellWith — hand-coded styles. Premium light/white Himalayan golden theme. */
 :root {
-  --bg: #ffffff;
-  --bg2: #faf7ef;
+  --bg: #faf8f5;
+  --bg2: #f5efe1;
   --card: #ffffff;
   --card-border: rgba(140, 105, 25, 0.18);
-  --gold: #cf9410;
-  --gold-light: #a8760b;
-  --gold-dark: #8a5f08;
+  --gold: #e8931f;
+  --gold-light: #d99a26;
+  --gold-dark: #9c6207;
   --cream: #2a2114;
   --cream-dim: rgba(42, 33, 20, 0.66);
   --cream-faint: rgba(42, 33, 20, 0.42);
@@ -52,7 +52,7 @@ h1, h2, .display { font-family: var(--display); }
 }
 .btn:active { transform: scale(0.98); }
 .btn-gold {
-  background: linear-gradient(135deg, #f5c95c, var(--gold) 55%, var(--gold-dark));
+  background: linear-gradient(135deg, var(--gold-light), var(--gold) 55%, var(--gold-dark));
   color: #241a05; box-shadow: 0 10px 30px -8px rgba(207, 148, 16, 0.55);
 }
 .btn-gold:hover { opacity: 0.93; transform: translateY(-1px); }
@@ -225,7 +225,7 @@ section.block { padding: 84px 0; }
 .stat .lbl { font-size: 13px; color: var(--muted); margin-top: 4px; }
 
 /* ---------- Footer ---------- */
-footer { background: #f6f1e3; border-top: 1px solid rgba(140,105,25,0.16); padding: 60px 0 0; }
+footer { background: #f3ecdc; border-top: 1px solid rgba(140,105,25,0.16); padding: 60px 0 0; }
 .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 36px; }
 footer h3.brand-name { font-size: 24px; }
 footer h4 { font-size: 15px; margin-bottom: 12px; color: var(--cream); }
@@ -289,7 +289,7 @@ footer a:hover { color: var(--gold-dark); }
 .expert-photo img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%;
   border: 4px solid rgba(207,148,16,0.4); box-shadow: 0 24px 60px -18px rgba(207,148,16,0.45); }
 .expert-badge { position: absolute; bottom: 6px; right: 6px;
-  background: linear-gradient(135deg, #f5c95c, var(--gold-dark)); color: #241a05;
+  background: linear-gradient(135deg, var(--gold-light), var(--gold-dark)); color: #241a05;
   border-radius: 14px; padding: 8px 14px; font-size: 13px; font-weight: 700; }
 .expert-hero h1 { font-size: clamp(36px, 5vw, 54px); }
 .expert-hero .role { font-family: var(--display); font-style: italic; color: var(--gold-light); font-size: 19px; margin: 6px 0 18px; }
