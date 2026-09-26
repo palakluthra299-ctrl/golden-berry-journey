@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Cart | WellWith Sea Buckthorn</title>
+  <meta name="description" content="Your WellWith shopping cart – review items and place your order on WhatsApp.">
+  <link rel="icon" href="assets/favicon.png" type="image/png">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="container navbar-inner">
+    <a class="brand" href="index.html">
+      <span class="brand-name">wellwith</span>
+      <span class="brand-tag">Sea Buckthorn</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="index.html#products">Products</a>
+      <a href="solution-finder.html">Solution Finder</a>
+      <a href="index.html#story">Our Story</a>
+      <a href="expert.html">Palak Luthra</a>
+      <a class="cart-link" href="cart.html" aria-label="Shopping cart">🛒<span class="cart-count" style="display:none">0</span></a>
+      <a class="btn btn-gold nav-cta" target="_blank" rel="noopener" href="https://wa.me/919266086554?text=Namaste%20Palak!%20I%20want%20to%20know%20more%20about%20WellWith%20Sea%20Buckthorn%20products.">Chat with Us</a>
+    </div>
+    <button class="hamburger" id="hamburger" aria-label="Menu">☰</button>
+  </div>
+  <div class="mobile-menu" id="mobile-menu">
+    <a href="index.html">Home</a>
+    <a href="index.html#products">Products</a>
+    <a href="solution-finder.html">Solution Finder</a>
+    <a href="index.html#story">Our Story</a>
+    <a href="expert.html">Palak Luthra</a>
+    <a href="cart.html">🛒 Cart</a>
+  </div>
+</nav>
+
+<div class="container page-head">
+  <a class="back-link" href="index.html#products">← Continue Shopping</a>
+  <h1 class="display">Your Cart</h1>
+  <p class="section-sub">Review your items, then place the order on WhatsApp.</p>
+  <div id="cart-root"></div>
+</div>
+
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <h3 class="brand-name">wellwith</h3>
+        <p style="margin-top:10px">The Original Sea Buckthorn Co.<br>Pure nutrition, directly from the hills of Ladakh to your home.</p>
+      </div>
+      <div>
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="index.html#products">Products</a></li>
+          <li><a href="solution-finder.html">Solution Finder</a></li>
+          <li><a href="index.html#story">Our Story</a></li>
+          <li><a href="expert.html">Palak Luthra</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <p>WhatsApp: +91 9266086554<br>The Original Sea Buckthorn Co.</p>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2026 WellWith Sea Buckthorn. All rights reserved.</div>
+  </div>
+</footer>
+
+<a class="wa-float" id="wa-float" target="_blank" rel="noopener" aria-label="Chat on WhatsApp" href="https://wa.me/919266086554?text=Namaste%20Palak!%20I%20want%20to%20know%20more%20about%20WellWith%20Sea%20Buckthorn%20products.">💬</a>
+
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+<script>
+(function () {
+  var root = document.getElementById("cart-root");
+
+  function render() {
+    var items = cartItems();
+
+    if (!items.length) {
+      root.innerHTML =
+        '<div class="cart-empty">' +
+          '<div class="big-icon">🛒</div>' +
+          '<h2 class="display">Your cart is empty</h2>' +
+          '<p>Add some Himalayan wellness to your cart.</p>' +
+          '<a class="btn btn-gold" href="index.html#products">Browse Products</a>' +
+        '</div>';
+      return;
+    }
+
+    var totalQty = items.reduce(function (n, it) { return n + it.qty; }, 0);
+    var lines = items.map(function (it, i) {
+      return (i + 1) + ". " + it.product.name + " — Qty: " + it.qty;
+    });
+    var msg = "Namaste Palak! I want to place this order:\n\n" +
+      lines.join("\n") +
+      "\n\nTotal items: " + totalQty +
+      "\nPlease share payment and delivery details. Dhanyavaad!";
+
+    root.innerHTML =
+      '<div class="cart-items">' +
+        items.map(function (it) {
+          var p = it.product;
+          return '<div class="cart-item">' +
+            '<img src="' + p.image + '" alt="' + p.name + '">' +
+            '<div class="cart-item-info"><h3>' + p.name + '</h3>' +
+            '<p class="tagline">' + p.tagline + '</p></div>' +
+            '<div class="qty-stepper">' +
+              '<button data-dec="' + p.slug + '" aria-label="Decrease quantity">−</button>' +
+              '<span>' + it.qty + '</span>' +
+              '<button data-inc="' + p.slug + '" aria-label="Increase quantity">+</button>' +
+            '</div>' +
+            '<button class="cart-del" data-del="' + p.slug + '" aria-label="Remove item">🗑️</button>' +
+          '</div>';
+        }).join("") +
+      '</div>' +
+      '<div class="cart-summary">' +
+        '<div class="cart-total-row"><span>Total items</span><strong>' + totalQty + '</strong></div>' +
+        '<p class="cart-note">Prices and delivery details will be shared with you on WhatsApp.</p>' +
+        '<a class="btn btn-gold btn-block" target="_blank" rel="noopener" href="' + waLink(msg) + '">💬 Proceed to Order on WhatsApp</a>' +
+        '<a class="btn btn-outline btn-block" href="index.html#products">＋ Add More Products</a>' +
+      '</div>';
+
+    qsa("[data-inc]", root).forEach(function (b) {
+      b.addEventListener("click", function () {
+        var it = cartItems().find(function (x) { return x.product.slug === b.dataset.inc; });
+        if (it) { setQty(it.product.slug, it.qty + 1); render(); }
+      });
+    });
+    qsa("[data-dec]", root).forEach(function (b) {
+      b.addEventListener("click", function () {
+        var it = cartItems().find(function (x) { return x.product.slug === b.dataset.dec; });
+        if (it) { setQty(it.product.slug, it.qty - 1); render(); }
+      });
+    });
+    qsa("[data-del]", root).forEach(function (b) {
+      b.addEventListener("click", function () {
+        removeFromCart(b.dataset.del);
+        showToast("Removed from cart");
+        render();
+      });
+    });
+  }
+
+  render();
+})();
+</script>
+</body>
+</html>
