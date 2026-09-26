@@ -7,6 +7,7 @@ var out = path.join(root, "dist");
 var entries = [
   "index.html",
   "product.html",
+  "cart.html",
   "expert.html",
   "solution-finder.html",
   "404.html",
