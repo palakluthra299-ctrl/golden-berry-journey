@@ -27,6 +27,10 @@ function initReveal() {
     });
   }, { threshold: 0.12 });
   els.forEach(function (e) { io.observe(e); });
+  /* Safety: never leave content hidden — reveal everything after 2.5s no matter what. */
+  setTimeout(function () {
+    qsa(".reveal").forEach(function (e) { e.classList.add("visible"); });
+  }, 2500);
 }
 
 /* ---------- Hero fact strip typewriter ---------- */
