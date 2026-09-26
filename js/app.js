@@ -3,6 +3,125 @@
 function qs(sel, el) { return (el || document).querySelector(sel); }
 function qsa(sel, el) { return Array.prototype.slice.call((el || document).querySelectorAll(sel)); }
 
+/* ---------- Cart ---------- */
+var CART_KEY = "wellwith_cart_v1";
+
+function getCart() {
+  try { return JSON.parse(localStorage.getItem(CART_KEY)) || {}; }
+  catch (e) { return {}; }
+}
+function saveCart(cart) {
+  try { localStorage.setItem(CART_KEY, JSON.stringify(cart)); } catch (e) {}
+  updateCartBadge();
+}
+function cartCount() {
+  var cart = getCart(), n = 0;
+  for (var k in cart) { if (cart.hasOwnProperty(k)) n += cart[k]; }
+  return n;
+}
+function cartItems() {
+  if (typeof PRODUCTS === "undefined") return [];
+  var cart = getCart(), out = [];
+  PRODUCTS.forEach(function (p) {
+    if (cart[p.slug]) out.push({ product: p, qty: cart[p.slug] });
+  });
+  return out;
+}
+function addToCart(slug, qty) {
+  if (typeof PRODUCTS === "undefined") return;
+  var p = PRODUCTS.find(function (x) { return x.slug === slug; });
+  if (!p) return;
+  var cart = getCart();
+  cart[slug] = (cart[slug] || 0) + (qty || 1);
+  saveCart(cart);
+  showToast("✓ " + p.name + " added to cart");
+  afterCartChange();
+}
+function changeQty(slug, delta) {
+  var cart = getCart();
+  var q = (cart[slug] || 0) + delta;
+  if (q <= 0) delete cart[slug];
+  else cart[slug] = q;
+  saveCart(cart);
+  afterCartChange();
+}
+function afterCartChange() {
+  refreshCartControls();
+  if (typeof window !== "undefined" && typeof window.onCartChanged === "function") {
+    window.onCartChanged();
+  }
+}
+/* Inline card control: "Add to Cart" button, or qty stepper once added. */
+function cartControlHTML(slug, extra) {
+  var q = (getCart()[slug] || 0);
+  var x = extra ? " " + extra : "";
+  if (q <= 0) {
+    return '<button class="btn btn-green' + x + '" data-add-cart="' + slug + '">Add to Cart</button>';
+  }
+  return '<span class="stepper-inline' + x + '">' +
+    '<button data-cart-dec="' + slug + '" aria-label="Decrease quantity">−</button>' +
+    '<span class="q">' + q + '</span>' +
+    '<button data-cart-inc="' + slug + '" aria-label="Increase quantity">+</button>' +
+    '<button class="sq-del" data-cart-del="' + slug + '" aria-label="Remove item">🗑️</button>' +
+  '</span>';
+}
+function refreshCartControls() {
+  qsa("[data-cart-control]").forEach(function (el) {
+    el.innerHTML = cartControlHTML(el.getAttribute("data-cart-control"), el.getAttribute("data-cart-size") || "");
+  });
+}
+function setQty(slug, qty) {
+  var cart = getCart();
+  if (qty <= 0) delete cart[slug];
+  else cart[slug] = qty;
+  saveCart(cart);
+}
+function removeFromCart(slug) {
+  var cart = getCart();
+  delete cart[slug];
+  saveCart(cart);
+}
+function updateCartBadge() {
+  var n = cartCount();
+  qsa(".cart-count").forEach(function (el) {
+    el.textContent = n;
+    el.style.display = n > 0 ? "inline-flex" : "none";
+  });
+}
+var toastTimer = null;
+function showToast(msg) {
+  var t = qs("#toast");
+  if (!t) {
+    t = document.createElement("div");
+    t.id = "toast";
+    t.className = "toast";
+    document.body.appendChild(t);
+  }
+  t.textContent = msg;
+  t.classList.add("show");
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(function () { t.classList.remove("show"); }, 2200);
+}
+function initCart() {
+  updateCartBadge();
+  refreshCartControls();
+  document.addEventListener("click", function (e) {
+    var t = e.target.closest ? e.target.closest("[data-add-cart],[data-cart-inc],[data-cart-dec],[data-cart-del]") : null;
+    if (!t) return;
+    if (t.hasAttribute("data-add-cart")) {
+      addToCart(t.getAttribute("data-add-cart"));
+    } else if (t.hasAttribute("data-cart-inc")) {
+      changeQty(t.getAttribute("data-cart-inc"), 1);
+    } else if (t.hasAttribute("data-cart-dec")) {
+      changeQty(t.getAttribute("data-cart-dec"), -1);
+    } else if (t.hasAttribute("data-cart-del")) {
+      removeFromCart(t.getAttribute("data-cart-del"));
+      showToast("Removed from cart");
+      afterCartChange();
+    }
+  });
+}
+
 /* ---------- Navbar ---------- */
 function initNavbar() {
   var btn = qs("#hamburger"), menu = qs("#mobile-menu");
@@ -116,6 +235,10 @@ function initListen() {
 
   function openListenModal(p) {
     var wrap = qs("#modal-slot");
+    var slug = (p.url.split("slug=")[1] || "").split("&")[0];
+    var addCartBtn = slug
+      ? '<span class="cart-ctl" data-cart-control="' + slug + '" style="width:100%">' + cartControlHTML(slug) + '</span>'
+      : "";
     wrap.innerHTML =
       '<div class="modal-backdrop open" id="listen-modal">' +
         '<div class="modal" role="dialog" aria-modal="true">' +
@@ -132,6 +255,7 @@ function initListen() {
             '</div>' +
           '</div>' +
           '<a class="btn btn-gold wa-order" target="_blank" rel="noopener" href="' + listenOrderLink(p.name) + '">Order on WhatsApp</a>' +
+          '<div style="margin-top:10px">' + addCartBtn + '</div>' +
         '</div>' +
       '</div>';
     var bd = qs("#listen-modal");
@@ -241,6 +365,9 @@ function initProductGrids() {
         '<p class="desc">' + p.description + '</p>' +
         '<div class="row">' +
           '<a class="btn btn-outline" href="product.html?slug=' + p.slug + '">View Details</a>' +
+          '<span class="cart-ctl" data-cart-control="' + p.slug + '">' + cartControlHTML(p.slug) + '</span>' +
+        '</div>' +
+        '<div class="row">' +
           '<a class="btn btn-gold" target="_blank" rel="noopener" href="' + productWaLink(p.name) + '">Order</a>' +
         '</div>' +
       '</div></article>';
@@ -254,6 +381,7 @@ function initProductGrids() {
 /* ---------- Boot ---------- */
 document.addEventListener("DOMContentLoaded", function () {
   initNavbar();
+  initCart();
   initReveal();
   initFactStrip();
   initModalBackdrops();
