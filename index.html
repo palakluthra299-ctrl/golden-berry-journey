@@ -1,25 +1,149 @@
-<!doctype html>
-<html lang="en" class="dark">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>WellWith Sea Buckthorn | Premium Himalayan Wellness</title>
-    <meta name="description" content="WellWith Sea Buckthorn – Premium cold-pressed juices & supplements from Ladakh for immunity, energy & holistic wellness." />
-    <meta name="author" content="WellWith" />
-    <link rel="icon" href="/wellwith-favicon.png" type="image/png" />
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WellWith Sea Buckthorn | Premium Himalayan Wellness</title>
+  <meta name="description" content="WellWith Sea Buckthorn – Premium cold-pressed juices & supplements from Ladakh for immunity, energy & holistic wellness.">
+  <meta name="author" content="WellWith">
+  <link rel="icon" href="assets/favicon.png" type="image/png">
+  <meta property="og:title" content="WellWith Sea Buckthorn">
+  <meta property="og:description" content="Premium Himalayan Sea Buckthorn wellness products – cold-pressed juices, capsules & tisanes.">
+  <meta property="og:type" content="website">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
 
-    <meta property="og:title" content="WellWith Sea Buckthorn" />
-    <meta property="og:description" content="Premium Himalayan Sea Buckthorn wellness products – cold-pressed juices, capsules & tisanes." />
-    <meta property="og:type" content="website" />
-    <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+<nav class="navbar">
+  <div class="container navbar-inner">
+    <a class="brand" href="index.html">
+      <span class="brand-name">wellwith</span>
+      <span class="brand-tag">Sea Buckthorn</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="index.html#products">Products</a>
+      <a href="solution-finder.html">Solution Finder</a>
+      <a href="index.html#story">Our Story</a>
+      <a href="expert.html">Palak Luthra</a>
+      <a class="btn btn-gold nav-cta" target="_blank" rel="noopener" href="https://wa.me/919266086554?text=Namaste%20Palak!%20I%20want%20to%20know%20more%20about%20WellWith%20Sea%20Buckthorn%20products.">Chat with Us</a>
+    </div>
+    <button class="hamburger" id="hamburger" aria-label="Menu">☰</button>
+  </div>
+  <div class="mobile-menu" id="mobile-menu">
+    <a href="index.html">Home</a>
+    <a href="index.html#products">Products</a>
+    <a href="solution-finder.html">Solution Finder</a>
+    <a href="index.html#story">Our Story</a>
+    <a href="expert.html">Palak Luthra</a>
+  </div>
+</nav>
 
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@wellwith" />
-    <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
-  </head>
+<header class="hero">
+  <img class="hero-bg" src="assets/hero-bg.jpg" alt="Sea Buckthorn berries in Ladakh mountains">
+  <div class="hero-overlay"></div>
+  <span class="float-berry" style="top:22%;right:8%;font-size:52px">🍊</span>
+  <span class="float-berry" style="top:34%;right:20%;font-size:32px;animation-delay:1s">🍊</span>
+  <div class="container">
+    <div class="hero-content">
+      <span class="kicker">From the Himalayas of Ladakh</span>
+      <h1>Nature's <span class="golden-shimmer">Golden</span><br>Super Fruit</h1>
+      <div class="fact-strip" id="fact-strip"></div>
+      <p class="lead">Pure Sea Buckthorn wellness from 11,500 ft above sea level. Trusted by DRDO scientists and Russian cosmonauts. Now, from our hills to your home.</p>
+      <div class="hero-ctas">
+        <a class="btn btn-gold" href="#products">Explore Products</a>
+        <a class="btn btn-green" href="solution-finder.html">✨ Find My Solution</a>
+        <a class="btn btn-outline" target="_blank" rel="noopener" href="https://wa.me/919266086554?text=Namaste%20Palak!%20I%20want%20to%20learn%20more%20about%20WellWith%20Sea%20Buckthorn%20products.">Chat with Us</a>
+      </div>
+    </div>
+  </div>
+</header>
 
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+<section class="block listen" id="showcase">
+  <div class="container">
+    <div class="center" style="margin-bottom:36px">
+      <span class="kicker">Listen &amp; Discover</span>
+      <h2 class="section-title display">Know Your Product in 30 Seconds</h2>
+    </div>
+    <div id="listen-root"></div>
+  </div>
+</section>
+
+<section class="block" id="partner">
+  <div class="container">
+    <div class="center">
+      <span class="kicker">Partner With Us</span>
+      <h2 class="section-title display">Grow With WellWith</h2>
+      <p class="section-sub">Three ways to build a wellness business with the golden berry of Ladakh.</p>
+    </div>
+    <div id="partner-grid"></div>
+  </div>
+</section>
+
+<section class="block" id="products" style="background:var(--bg2)">
+  <div class="container">
+    <div class="center reveal">
+      <span class="kicker">Our Collection</span>
+      <h2 class="section-title display">Liquid Concentrates</h2>
+      <p class="section-sub">Seven powerful formulations, each crafted with Sea Buckthorn and time-tested Ayurvedic ingredients.</p>
+    </div>
+    <div class="product-grid" id="grid-concentrates"></div>
+    <div class="center reveal" style="margin-top:70px">
+      <span class="kicker">Specialized</span>
+      <h2 class="section-title display">Premium Add-ons</h2>
+      <p class="section-sub">Teas, skincare, foods, and daily essentials — extending the golden berry's benefits across your daily routine.</p>
+    </div>
+    <div class="product-grid" id="grid-addons"></div>
+  </div>
+</section>
+
+<section class="block story" id="story">
+  <div class="container">
+    <div class="story-inner reveal">
+      <span class="kicker">Our Story</span>
+      <h2 class="section-title display">The Golden Berry of Ladakh</h2>
+      <p>At 11,500 feet above sea level, in the pristine valleys of Ladakh, grows a remarkable berry. Sea Buckthorn — known as the "Wonder Berry" — has roots that plunge 200 feet deep into mineral-rich Himalayan soil, absorbing extraordinary nutrition that no other fruit can match.</p>
+      <p>Trusted by DRDO for military nutrition and used by Russian cosmonauts in space, Sea Buckthorn contains over 190 bioactive compounds including the rare Omega-7 fatty acid. WellWith brings this ancient Himalayan treasure directly to your doorstep.</p>
+      <div class="stats">
+        <div class="stat"><div class="num">190+</div><div class="lbl">Bioactive Compounds</div></div>
+        <div class="stat"><div class="num">11,500</div><div class="lbl">Feet Altitude</div></div>
+        <div class="stat"><div class="num">200ft</div><div class="lbl">Deep Roots</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <h3 class="brand-name">wellwith</h3>
+        <p style="margin-top:10px">The Original Sea Buckthorn Co.<br>Pure nutrition, directly from the hills of Ladakh to your home.</p>
+      </div>
+      <div>
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="#products">Products</a></li>
+          <li><a href="solution-finder.html">Solution Finder</a></li>
+          <li><a href="#story">Our Story</a></li>
+          <li><a href="expert.html">Palak Luthra</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <p>WhatsApp: +91 9266086554<br>The Original Sea Buckthorn Co.</p>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2026 WellWith Sea Buckthorn. All rights reserved.</div>
+  </div>
+</footer>
+
+<a class="wa-float" target="_blank" rel="noopener" aria-label="Chat on WhatsApp"
+   href="https://wa.me/919266086554?text=Namaste%20Palak!%20I%20am%20interested%20in%20WellWith%20Sea%20Buckthorn%20products.%20Please%20tell%20me%20more.">💬</a>
+
+<div id="modal-slot"></div>
+
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+</body>
 </html>

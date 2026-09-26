@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Find My Solution | WellWith Sea Buckthorn</title>
+  <meta name="description" content="Tell us your wellness concern and get a personalised Sea Buckthorn recommendation.">
+  <link rel="icon" href="assets/favicon.png" type="image/png">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="container navbar-inner">
+    <a class="brand" href="index.html">
+      <span class="brand-name">wellwith</span>
+      <span class="brand-tag">Sea Buckthorn</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="index.html#products">Products</a>
+      <a href="solution-finder.html">Solution Finder</a>
+      <a href="index.html#story">Our Story</a>
+      <a href="expert.html">Palak Luthra</a>
+      <a class="btn btn-gold nav-cta" target="_blank" rel="noopener" href="https://wa.me/919266086554?text=Namaste%20Palak!%20I%20want%20to%20know%20more%20about%20WellWith%20Sea%20Buckthorn%20products.">Chat with Us</a>
+    </div>
+    <button class="hamburger" id="hamburger" aria-label="Menu">☰</button>
+  </div>
+  <div class="mobile-menu" id="mobile-menu">
+    <a href="index.html">Home</a>
+    <a href="index.html#products">Products</a>
+    <a href="solution-finder.html">Solution Finder</a>
+    <a href="index.html#story">Our Story</a>
+    <a href="expert.html">Palak Luthra</a>
+  </div>
+</nav>
+
+<div class="container page-head">
+  <a class="back-link" href="index.html">← Back to Home</a>
+  <div class="sf-wrap">
+    <div class="center" style="margin-bottom:30px">
+      <span class="kicker">Wellness Check</span>
+      <h1 class="display" style="font-size:clamp(32px,5vw,46px);margin-top:10px">Find My Solution</h1>
+      <p class="section-sub" style="margin:10px auto 0">Tell us what's on your mind — we'll match the right Sea Buckthorn products for you.</p>
+    </div>
+    <div id="sf-root"></div>
+  </div>
+</div>
+
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <h3 class="brand-name">wellwith</h3>
+        <p style="margin-top:10px">The Original Sea Buckthorn Co.<br>Pure nutrition, directly from the hills of Ladakh to your home.</p>
+      </div>
+      <div>
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="index.html#products">Products</a></li>
+          <li><a href="solution-finder.html">Solution Finder</a></li>
+          <li><a href="index.html#story">Our Story</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <p>WhatsApp: +91 9266086554<br>The Original Sea Buckthorn Co.</p>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2026 WellWith Sea Buckthorn. All rights reserved.</div>
+  </div>
+</footer>
+
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+<script>
+(function () {
+  var root = document.getElementById("sf-root");
+  var QUICK = ["Skin", "Hair", "Joint Pain", "Gut Health", "Diabetes", "Weight Management", "Men's Wellness", "Female Wellness"];
+  var bill = []; // [{concernKey, concernLabel, products:[...]}]
+
+  function showInput() {
+    root.innerHTML =
+      '<div class="sf-input-card">' +
+        '<h2 class="display">What\'s your wellness concern?</h2>' +
+        '<p>Type a concern or tap a quick option below.</p>' +
+        '<div class="sf-search">' +
+          '<input id="sf-query" type="text" placeholder="e.g. skin glow, hairfall, joint pain…" autocomplete="off">' +
+          '<button class="btn btn-gold" id="sf-go">🔍 Find</button>' +
+        '</div>' +
+        '<div class="quick-chips">' + QUICK.map(function (q) {
+          return '<button class="chip" data-chip="' + q + '">' + q + '</button>';
+        }).join("") + '</div>' +
+        (bill.length ? '<div style="margin-top:22px"><button class="btn btn-outline" id="sf-view-bill">🧾 View My List (' + bill.reduce(function (n, g) { return n + g.products.length; }, 0) + ' items)</button></div>' : '') +
+      '</div>';
+    var input = document.getElementById("sf-query");
+    function submit(q) { var m = findConcern(q); if (m) showThinking(m); else showNoMatch(q); }
+    document.getElementById("sf-go").addEventListener("click", function () { submit(input.value); });
+    input.addEventListener("keydown", function (e) { if (e.key === "Enter") submit(input.value); });
+    qsa("[data-chip]", root).forEach(function (c) {
+      c.addEventListener("click", function () { submit(c.dataset.chip); });
+    });
+    var vb = document.getElementById("sf-view-bill");
+    if (vb) vb.addEventListener("click", function () { showBill(); });
+    input.focus();
+  }
+
+  function showThinking(match) {
+    root.innerHTML =
+      '<div class="thinking">' +
+        '<div class="dots"><span></span><span></span><span></span></div>' +
+        '<p style="color:var(--muted);margin-top:18px">Analysing your concern…</p>' +
+      '</div>';
+    setTimeout(function () { showResult(match); }, 1600);
+  }
+
+  function showNoMatch(q) {
+    root.innerHTML =
+      '<div class="sf-input-card">' +
+        '<h2 class="display">Hmm, not sure about that one 🤔</h2>' +
+        '<p>We couldn\'t match "' + escapeHtml(q) + '" to a wellness area. Try one of the quick options — or chat with Palak directly.</p>' +
+        '<div class="quick-chips">' + QUICK.map(function (x) {
+          return '<button class="chip" data-chip="' + x + '">' + x + '</button>';
+        }).join("") + '</div>' +
+        '<div style="margin-top:22px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap">' +
+          '<button class="btn btn-outline" id="sf-back">← Try Again</button>' +
+          '<a class="btn btn-gold" target="_blank" rel="noopener" href="' + waLink("Namaste Palak! I have a wellness concern and need guidance on WellWith products.") + '">💬 Ask Palak</a>' +
+        '</div>' +
+      '</div>';
+    qsa("[data-chip]", root).forEach(function (c) {
+      c.addEventListener("click", function () { showThinking(findConcern(c.dataset.chip)); });
+    });
+    document.getElementById("sf-back").addEventListener("click", showInput);
+  }
+
+  function showResult(match) {
+    var existing = bill.find(function (g) { return g.concernKey === match.key; });
+    root.innerHTML =
+      '<div class="sf-input-card" style="text-align:left">' +
+        '<div class="center"><span style="font-size:44px">' + match.emoji + '</span>' +
+        '<h2 class="display" style="margin-top:6px">' + match.label + '</h2>' +
+        '<p>Here\'s what we recommend for ' + match.label.toLowerCase() + ':</p></div>' +
+        match.products.map(function (p) {
+          return '<div class="sf-result-card"><h3>' + p.name + '</h3>' +
+            '<p class="why">' + p.why + '</p>' +
+            '<div>' + p.tags.map(function (t) { return '<span class="tag">' + t + '</span>'; }).join("") + '</div></div>';
+        }).join("") +
+        '<div class="center" style="margin-top:22px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap">' +
+          (existing
+            ? '<button class="btn btn-outline" id="sf-added" disabled>✓ Added to Your List</button>'
+            : '<button class="btn btn-green" id="sf-add">➕ Add to My List</button>') +
+          '<button class="btn btn-gold" id="sf-print">🧾 Print My List</button>' +
+          '<button class="btn btn-outline" id="sf-more">← Another Concern</button>' +
+        '</div>' +
+      '</div>';
+    var add = document.getElementById("sf-add");
+    if (add) add.addEventListener("click", function () {
+      bill.push({ concernKey: match.key, concernLabel: match.label, products: match.products });
+      showResult(match);
+    });
+    document.getElementById("sf-print").addEventListener("click", function () {
+      if (!existing) bill.push({ concernKey: match.key, concernLabel: match.label, products: match.products });
+      showPrinting();
+    });
+    document.getElementById("sf-more").addEventListener("click", showInput);
+  }
+
+  /* printer sound via Web Audio */
+  function playPrinterHum(dur) {
+    try {
+      var AC = window.AudioContext || window.webkitAudioContext;
+      var ctx = new AC();
+      var osc = ctx.createOscillator(), gain = ctx.createGain();
+      osc.type = "sawtooth"; osc.frequency.value = 90;
+      var lfo = ctx.createOscillator(), lg = ctx.createGain();
+      lfo.frequency.value = 22; lg.gain.value = 12;
+      lfo.connect(lg); lg.connect(osc.frequency);
+      gain.gain.value = 0.03;
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.start(); lfo.start();
+      var stopAt = ctx.currentTime + dur;
+      gain.gain.setValueAtTime(0.03, stopAt - 0.3);
+      gain.gain.linearRampToValueAtTime(0.0001, stopAt);
+      osc.stop(stopAt); lfo.stop(stopAt);
+    } catch (e) {}
+  }
+
+  function showPrinting() {
+    root.innerHTML =
+      '<div class="thinking">' +
+        '<div style="font-size:54px">🖨️</div>' +
+        '<div class="dots"><span></span><span></span><span></span></div>' +
+        '<p style="color:var(--muted);margin-top:18px">Printing your wellness list…</p>' +
+      '</div>';
+    playPrinterHum(2.2);
+    setTimeout(showBill, 2400);
+  }
+
+  function showBill() {
+    var ref = "#" + Math.floor(1000 + Math.random() * 9000);
+    var date = new Date().toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" });
+    var groups = bill.map(function (g) {
+      return '<div class="bill-group">' + g.concernLabel + '</div>' +
+        g.products.map(function (p) { return '<div class="bill-line">• ' + p.name + '</div>'; }).join("");
+    }).join("");
+    var waMsg = "Namaste! I'd like to place an order based on my wellness check.\n\n" +
+      bill.map(function (g) {
+        return g.concernLabel + ":\n" + g.products.map(function (p) { return "- " + p.name; }).join("\n");
+      }).join("\n\n") +
+      "\n\nOrder Ref: " + ref + "\n\nPlease confirm availability, pricing, and delivery details.";
+
+    root.innerHTML =
+      '<div class="center" style="margin-bottom:20px">' +
+        '<h2 class="display">Your Wellness List</h2>' +
+        '<p class="section-sub" style="margin:8px auto 0">Show this to Palak on WhatsApp to order.</p>' +
+      '</div>' +
+      '<div class="bill"><h3>WELLWITH<br><span style="font-size:12px">Wellness Check</span></h3>' +
+        '<div class="bill-line">Ref: ' + ref + '</div>' +
+        '<div class="bill-line">Date: ' + date + '</div>' +
+        groups +
+        '<div class="bill-foot">Thank you for choosing WellWith 🌿<br>wellwith.shop</div>' +
+      '</div>' +
+      '<div class="center" style="margin-top:24px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap">' +
+        '<a class="btn btn-gold" target="_blank" rel="noopener" href="' + waLink(waMsg) + '">💬 Order on WhatsApp</a>' +
+        '<button class="btn btn-outline" id="sf-speak">🔊 Read My List</button>' +
+        '<button class="btn btn-outline" id="sf-restart">← Start Over</button>' +
+      '</div>';
+
+    document.getElementById("sf-restart").addEventListener("click", function () { bill = []; showInput(); });
+    document.getElementById("sf-speak").addEventListener("click", function () { speakBill(); });
+
+    // Auto-read the bill aloud once
+    setTimeout(speakBill, 600);
+  }
+
+  function speakBill() {
+    try {
+      if (!("speechSynthesis" in window)) return;
+      window.speechSynthesis.cancel();
+      var text = "Here is your WellWith wellness list. " + bill.map(function (g) {
+        return "For " + g.concernLabel + ": " + g.products.map(function (p) { return p.name; }).join(", ") + ".";
+      }).join(" ");
+      var u = new SpeechSynthesisUtterance(text);
+      var voices = window.speechSynthesis.getVoices();
+      var pick = voices.find(function (v) { return /hi-IN/i.test(v.lang) && /female/i.test(v.name); }) ||
+                 voices.find(function (v) { return /hi-IN/i.test(v.lang); }) ||
+                 voices.find(function (v) { return /en-IN/i.test(v.lang); }) ||
+                 voices[0];
+      if (pick) u.voice = pick;
+      u.rate = 0.95; u.pitch = 1.05;
+      window.speechSynthesis.speak(u);
+    } catch (e) {}
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+
+  showInput();
+})();
+</script>
+</body>
+</html>

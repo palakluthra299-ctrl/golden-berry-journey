@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product | WellWith Sea Buckthorn</title>
+  <meta name="description" content="WellWith Sea Buckthorn products – pure Himalayan wellness from Ladakh.">
+  <link rel="icon" href="assets/favicon.png" type="image/png">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="container navbar-inner">
+    <a class="brand" href="index.html">
+      <span class="brand-name">wellwith</span>
+      <span class="brand-tag">Sea Buckthorn</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="index.html#products">Products</a>
+      <a href="solution-finder.html">Solution Finder</a>
+      <a href="index.html#story">Our Story</a>
+      <a href="expert.html">Palak Luthra</a>
+      <a class="btn btn-gold nav-cta" target="_blank" rel="noopener" href="https://wa.me/919266086554?text=Namaste%20Palak!%20I%20want%20to%20know%20more%20about%20WellWith%20Sea%20Buckthorn%20products.">Chat with Us</a>
+    </div>
+    <button class="hamburger" id="hamburger" aria-label="Menu">☰</button>
+  </div>
+  <div class="mobile-menu" id="mobile-menu">
+    <a href="index.html">Home</a>
+    <a href="index.html#products">Products</a>
+    <a href="solution-finder.html">Solution Finder</a>
+    <a href="index.html#story">Our Story</a>
+    <a href="expert.html">Palak Luthra</a>
+  </div>
+</nav>
+
+<div class="container page-head" id="product-root"></div>
+
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <h3 class="brand-name">wellwith</h3>
+        <p style="margin-top:10px">The Original Sea Buckthorn Co.<br>Pure nutrition, directly from the hills of Ladakh to your home.</p>
+      </div>
+      <div>
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="index.html#products">Products</a></li>
+          <li><a href="solution-finder.html">Solution Finder</a></li>
+          <li><a href="index.html#story">Our Story</a></li>
+          <li><a href="expert.html">Palak Luthra</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <p>WhatsApp: +91 9266086554<br>The Original Sea Buckthorn Co.</p>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2026 WellWith Sea Buckthorn. All rights reserved.</div>
+  </div>
+</footer>
+
+<a class="wa-float" id="wa-float" target="_blank" rel="noopener" aria-label="Chat on WhatsApp" href="#">💬</a>
+
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+<script>
+(function () {
+  var slug = new URLSearchParams(window.location.search).get("slug");
+  var p = (typeof PRODUCTS !== "undefined") ? PRODUCTS.find(function (x) { return x.slug === slug; }) : null;
+  var root = document.getElementById("product-root");
+
+  if (!p) {
+    document.title = "Product not found | WellWith";
+    root.innerHTML = '<div class="center" style="padding:60px 0">' +
+      '<h1 class="display">Product not found</h1>' +
+      '<p class="section-sub"><a href="index.html#products" style="color:var(--gold)">← Go back to products</a></p></div>';
+    return;
+  }
+
+  document.title = p.name + " | WellWith Sea Buckthorn";
+  var cat = p.category === "concentrate" ? "Liquid Concentrate" : "Specialized Add-on";
+  var cols = p.ingredientsList.length <= 2 ? 2 : 3;
+
+  root.innerHTML =
+    '<a class="back-link" href="index.html#products">← Back to Products</a>' +
+    '<div class="product-hero">' +
+      '<div class="img-box"><span class="anim-icon">' + p.animationIcon + '</span>' +
+        '<img src="' + p.image + '" alt="' + p.name + '"></div>' +
+      '<div>' +
+        '<span class="cat">' + cat + '</span>' +
+        '<h1>' + p.name + '</h1>' +
+        '<p class="tagline">' + p.tagline + '</p>' +
+        '<p class="desc">' + p.description + '</p>' +
+        '<a class="btn btn-gold" target="_blank" rel="noopener" style="font-size:17px" href="' + productWaLink(p.name) + '">💬 Order via WhatsApp</a>' +
+      '</div>' +
+    '</div>' +
+
+    '<section class="block" style="padding-bottom:0">' +
+      '<div class="center"><span class="kicker">What\'s Inside</span>' +
+      '<h2 class="section-title display">Key Ingredients</h2>' +
+      '<p class="section-sub">Tap any card to discover the benefit of each ingredient</p></div>' +
+      '<div class="flash-grid" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr))">' +
+        p.ingredientsList.map(function (ing) {
+          return '<div class="flashcard reveal"><div class="inner">' +
+            '<div class="face"><div class="icon">' + ing.icon + '</div><h4>' + ing.name + '</h4>' +
+            '<div class="hint">Tap to reveal benefit</div></div>' +
+            '<div class="face back"><div class="icon">' + ing.icon + '</div><h4>' + ing.name + '</h4>' +
+            '<p class="benefit">' + ing.benefit + '</p></div>' +
+          '</div></div>';
+        }).join("") +
+      '</div>' +
+    '</section>' +
+
+    '<section class="block" style="padding-bottom:0">' +
+      '<div class="center"><span class="kicker">From Berry to Bottle</span>' +
+      '<h2 class="section-title display">How It\'s Made</h2></div>' +
+      '<div class="juice-steps">' +
+        '<div class="juice-step reveal"><div class="step-icon">🏔️</div><div class="step-name">Wild Harvest<br>Ladakh 11,500 ft</div></div>' +
+        '<div class="juice-step reveal"><div class="step-icon">🫐</div><div class="step-name">Handpicked<br>Golden Berries</div></div>' +
+        '<div class="juice-step reveal"><div class="step-icon">❄️</div><div class="step-name">Cold-Pressed<br>Pure Pulp</div></div>' +
+        '<div class="juice-step reveal"><div class="step-icon">🧪</div><div class="step-name">Lab Tested<br>190+ Compounds</div></div>' +
+        '<div class="juice-step reveal"><div class="step-icon">🍶</div><div class="step-name">Bottled<br>Fresh</div></div>' +
+      '</div>' +
+    '</section>' +
+
+    '<section class="block">' +
+      '<div class="center"><span class="anim-icon" style="font-size:56px">' + p.animationIcon + '</span>' +
+      '<h2 class="section-title display">Why ' + p.name + '?</h2>' +
+      '<p class="section-sub" style="max-width:640px">' + p.description + '</p></div>' +
+      '<div class="trust-badges">' +
+        '<div class="trust-badge reveal"><strong>100% Natural</strong><span>No synthetic additives</span></div>' +
+        '<div class="trust-badge reveal"><strong>Ladakh Sourced</strong><span>11,500 ft altitude</span></div>' +
+        '<div class="trust-badge reveal"><strong>DRDO Trusted</strong><span>Scientific validation</span></div>' +
+      '</div>' +
+      '<div class="center" style="margin-top:36px">' +
+        '<a class="btn btn-gold" target="_blank" rel="noopener" style="font-size:17px" href="' + productWaLink(p.name) + '">💬 Order ' + p.name + ' on WhatsApp</a>' +
+      '</div>' +
+    '</section>';
+
+  qsa(".flashcard").forEach(function (c) {
+    c.addEventListener("click", function () { c.classList.toggle("flipped"); });
+  });
+  document.getElementById("wa-float").href = productWaLink(p.name);
+  initReveal();
+})();
+</script>
+</body>
+</html>
