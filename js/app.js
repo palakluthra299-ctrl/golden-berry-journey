@@ -35,6 +35,40 @@ function addToCart(slug, qty) {
   cart[slug] = (cart[slug] || 0) + (qty || 1);
   saveCart(cart);
   showToast("✓ " + p.name + " added to cart");
+  afterCartChange();
+}
+function changeQty(slug, delta) {
+  var cart = getCart();
+  var q = (cart[slug] || 0) + delta;
+  if (q <= 0) delete cart[slug];
+  else cart[slug] = q;
+  saveCart(cart);
+  afterCartChange();
+}
+function afterCartChange() {
+  refreshCartControls();
+  if (typeof window !== "undefined" && typeof window.onCartChanged === "function") {
+    window.onCartChanged();
+  }
+}
+/* Inline card control: "Add to Cart" button, or qty stepper once added. */
+function cartControlHTML(slug, extra) {
+  var q = (getCart()[slug] || 0);
+  var x = extra ? " " + extra : "";
+  if (q <= 0) {
+    return '<button class="btn btn-green' + x + '" data-add-cart="' + slug + '">Add to Cart</button>';
+  }
+  return '<span class="stepper-inline' + x + '">' +
+    '<button data-cart-dec="' + slug + '" aria-label="Decrease quantity">−</button>' +
+    '<span class="q">' + q + '</span>' +
+    '<button data-cart-inc="' + slug + '" aria-label="Increase quantity">+</button>' +
+    '<button class="sq-del" data-cart-del="' + slug + '" aria-label="Remove item">🗑️</button>' +
+  '</span>';
+}
+function refreshCartControls() {
+  qsa("[data-cart-control]").forEach(function (el) {
+    el.innerHTML = cartControlHTML(el.getAttribute("data-cart-control"), el.getAttribute("data-cart-size") || "");
+  });
 }
 function setQty(slug, qty) {
   var cart = getCart();
@@ -70,9 +104,21 @@ function showToast(msg) {
 }
 function initCart() {
   updateCartBadge();
+  refreshCartControls();
   document.addEventListener("click", function (e) {
-    var btn = e.target.closest ? e.target.closest("[data-add-cart]") : null;
-    if (btn) addToCart(btn.getAttribute("data-add-cart"));
+    var t = e.target.closest ? e.target.closest("[data-add-cart],[data-cart-inc],[data-cart-dec],[data-cart-del]") : null;
+    if (!t) return;
+    if (t.hasAttribute("data-add-cart")) {
+      addToCart(t.getAttribute("data-add-cart"));
+    } else if (t.hasAttribute("data-cart-inc")) {
+      changeQty(t.getAttribute("data-cart-inc"), 1);
+    } else if (t.hasAttribute("data-cart-dec")) {
+      changeQty(t.getAttribute("data-cart-dec"), -1);
+    } else if (t.hasAttribute("data-cart-del")) {
+      removeFromCart(t.getAttribute("data-cart-del"));
+      showToast("Removed from cart");
+      afterCartChange();
+    }
   });
 }
 
@@ -191,7 +237,7 @@ function initListen() {
     var wrap = qs("#modal-slot");
     var slug = (p.url.split("slug=")[1] || "").split("&")[0];
     var addCartBtn = slug
-      ? '<button class="btn btn-green" data-add-cart="' + slug + '" style="width:100%">Add to Cart</button>'
+      ? '<span class="cart-ctl" data-cart-control="' + slug + '" style="width:100%">' + cartControlHTML(slug) + '</span>'
       : "";
     wrap.innerHTML =
       '<div class="modal-backdrop open" id="listen-modal">' +
@@ -319,7 +365,7 @@ function initProductGrids() {
         '<p class="desc">' + p.description + '</p>' +
         '<div class="row">' +
           '<a class="btn btn-outline" href="product.html?slug=' + p.slug + '">View Details</a>' +
-          '<button class="btn btn-green" data-add-cart="' + p.slug + '">Add to Cart</button>' +
+          '<span class="cart-ctl" data-cart-control="' + p.slug + '">' + cartControlHTML(p.slug) + '</span>' +
         '</div>' +
         '<div class="row">' +
           '<a class="btn btn-gold" target="_blank" rel="noopener" href="' + productWaLink(p.name) + '">Order</a>' +

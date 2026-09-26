@@ -109,11 +109,11 @@
             '<div class="cart-item-info"><h3>' + p.name + '</h3>' +
             '<p class="tagline">' + p.tagline + '</p></div>' +
             '<div class="qty-stepper">' +
-              '<button data-dec="' + p.slug + '" aria-label="Decrease quantity">−</button>' +
+              '<button data-cart-dec="' + p.slug + '" aria-label="Decrease quantity">−</button>' +
               '<span>' + it.qty + '</span>' +
-              '<button data-inc="' + p.slug + '" aria-label="Increase quantity">+</button>' +
+              '<button data-cart-inc="' + p.slug + '" aria-label="Increase quantity">+</button>' +
             '</div>' +
-            '<button class="cart-del" data-del="' + p.slug + '" aria-label="Remove item">🗑️</button>' +
+            '<button class="cart-del" data-cart-del="' + p.slug + '" aria-label="Remove item">🗑️</button>' +
           '</div>';
         }).join("") +
       '</div>' +
@@ -124,26 +124,10 @@
         '<a class="btn btn-outline btn-block" href="index.html#products">＋ Add More Products</a>' +
       '</div>';
 
-    qsa("[data-inc]", root).forEach(function (b) {
-      b.addEventListener("click", function () {
-        var it = cartItems().find(function (x) { return x.product.slug === b.dataset.inc; });
-        if (it) { setQty(it.product.slug, it.qty + 1); render(); }
-      });
-    });
-    qsa("[data-dec]", root).forEach(function (b) {
-      b.addEventListener("click", function () {
-        var it = cartItems().find(function (x) { return x.product.slug === b.dataset.dec; });
-        if (it) { setQty(it.product.slug, it.qty - 1); render(); }
-      });
-    });
-    qsa("[data-del]", root).forEach(function (b) {
-      b.addEventListener("click", function () {
-        removeFromCart(b.dataset.del);
-        showToast("Removed from cart");
-        render();
-      });
-    });
+    /* Clicks on the qty steppers are handled by the global cart delegation
+       in js/app.js, which calls window.onCartChanged below to re-render. */
   }
+  window.onCartChanged = render;
 
   render();
 })();

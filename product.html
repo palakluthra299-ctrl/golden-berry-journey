@@ -97,7 +97,7 @@
         '<p class="tagline">' + p.tagline + '</p>' +
         '<p class="desc">' + p.description + '</p>' +
         '<div class="row" style="display:flex;gap:10px;flex-wrap:wrap">' +
-          '<button class="btn btn-green" data-add-cart="' + p.slug + '" style="font-size:17px">Add to Cart</button>' +
+          '<span class="cart-ctl" data-cart-control="' + p.slug + '" data-cart-size="lg-ctl" style="flex:1;min-width:200px">' + cartControlHTML(p.slug, "lg-ctl") + '</span>' +
           '<a class="btn btn-gold" target="_blank" rel="noopener" style="font-size:17px" href="' + productWaLink(p.name) + '">💬 Order via WhatsApp</a>' +
         '</div>' +
       '</div>' +
@@ -141,7 +141,7 @@
         '<div class="trust-badge reveal"><strong>DRDO Trusted</strong><span>Scientific validation</span></div>' +
       '</div>' +
       '<div class="center" style="margin-top:36px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap">' +
-        '<button class="btn btn-green" data-add-cart="' + p.slug + '" style="font-size:17px">Add to Cart</button>' +
+        '<span class="cart-ctl" data-cart-control="' + p.slug + '" data-cart-size="lg-ctl" style="flex:1;min-width:200px;max-width:320px">' + cartControlHTML(p.slug, "lg-ctl") + '</span>' +
         '<a class="btn btn-gold" target="_blank" rel="noopener" style="font-size:17px" href="' + productWaLink(p.name) + '">💬 Order ' + p.name + ' on WhatsApp</a>' +
       '</div>' +
     '</section>';
