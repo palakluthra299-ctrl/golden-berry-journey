@@ -415,6 +415,18 @@ const LISTEN_PRODUCTS = [
   { id: "femwell", name: "Sea Buckthorn FemWell", purpose: "Women's wellness and hormonal health support.",
     description: "Shatavari, Ashok Chhal and Dashmool with Sea Buckthorn — a gentle blend for women's everyday balance.",
     image: "assets/products/femwell.jpg", audio: "assets/audio/femwell.wav", url: "product.html?slug=femwell" },
+  { id: "omega", name: "Omega 7 Oil Capsules", purpose: "Focused on Omega 7 and complete cellular nourishment.",
+    description: "Sea Buckthorn berry and seed oil capsules delivering the rare Omega 7 with Omega 3, 6 and 9.",
+    image: "assets/products/omega-capsules.jpg", audio: "assets/audio/omega.wav", url: "product.html?slug=omega-7-capsules" },
+  { id: "faceoil", name: "Nourishing Face Oil", purpose: "Focused on deep skin nourishment and rejuvenation.",
+    description: "100% pure CO2-extracted Sea Buckthorn oil, rich in Omega 3, 6, 7 and 9 — the elixir of youth for all skin types.",
+    image: "assets/products/face-oil.jpg", audio: "assets/audio/faceoil.wav", url: "product.html?slug=nourishing-face-oil" },
+  { id: "tisane", name: "Sea Buckthorn Leaves Tisane", purpose: "Focused on caffeine-free daily refreshment.",
+    description: "Pure Ladakh Sea Buckthorn leaves — half a teaspoon brews a vibrant yellow elixir in 5 seconds.",
+    image: "assets/products/tisane.jpg", audio: "assets/audio/tisane.wav", url: "product.html?slug=tisane-leaf-tea" },
+  { id: "dentowin", name: "Dentowin Herbal Toothpaste", purpose: "Focused on natural oral care.",
+    description: "Plant-based toothpaste with sea buckthorn, neem, tulsi, elaichi and 21 herbal ingredients. Sulphate and fluoride free.",
+    image: "assets/products/dentowin-100.jpg", audio: "assets/audio/dentowin.wav", url: "product.html?slug=dentowin-100" },
 ];
 
 const PARTNER_MODELS = [
