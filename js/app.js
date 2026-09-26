@@ -87,6 +87,30 @@ function updateCartBadge() {
     el.textContent = n;
     el.style.display = n > 0 ? "inline-flex" : "none";
   });
+  updateCartFloat(n);
+}
+/* Floating button swap: once the cart has items, the WhatsApp float is
+   replaced by a floating cart button (except on the cart page itself). */
+function initCartFloat() {
+  if (qs("#cart-float")) return;
+  var a = document.createElement("a");
+  a.id = "cart-float";
+  a.href = "cart.html";
+  a.setAttribute("aria-label", "View cart");
+  a.innerHTML = '🛒<span class="cart-float-count">0</span>';
+  document.body.appendChild(a);
+  updateCartFloat(cartCount());
+}
+function updateCartFloat(n) {
+  var cf = qs("#cart-float");
+  if (!cf) return;
+  var onCartPage = /cart\.html$/.test(location.pathname);
+  var show = n > 0 && !onCartPage;
+  cf.style.display = show ? "inline-flex" : "none";
+  var b = cf.querySelector(".cart-float-count");
+  if (b) b.textContent = n;
+  var wa = qs("#wa-float");
+  if (wa) wa.style.display = show ? "none" : "";
 }
 var toastTimer = null;
 function showToast(msg) {
@@ -103,6 +127,7 @@ function showToast(msg) {
   toastTimer = setTimeout(function () { t.classList.remove("show"); }, 2200);
 }
 function initCart() {
+  initCartFloat();
   updateCartBadge();
   refreshCartControls();
   document.addEventListener("click", function (e) {
