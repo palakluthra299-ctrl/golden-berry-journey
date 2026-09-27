@@ -216,6 +216,21 @@ section.block { padding: 84px 0; }
 .product-card .row { display: flex; gap: 10px; margin-top: 16px; }
 .product-card .row .btn { flex: 1; padding: 12px 10px; font-size: 13px; }
 
+/* ---------- Customer Reviews ---------- */
+.review-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 22px; margin-top: 44px; }
+.review-card {
+  background: var(--card); border: 1px solid var(--card-border); border-radius: var(--radius);
+  overflow: hidden; transition: transform 0.2s ease, border-color 0.2s ease; display: flex; flex-direction: column;
+  box-shadow: 0 10px 30px -18px rgba(60,45,15,0.22);
+}
+.review-card:hover { transform: translateY(-5px); border-color: rgba(207,148,16,0.5); }
+.review-video { background: #000; }
+.review-video .instagram-media { margin: 0 !important; min-width: 0 !important; border: 0 !important; box-shadow: none !important; }
+.review-body { padding: 20px 22px 24px; display: flex; flex-direction: column; gap: 12px; flex: 1; }
+.review-product { font-size: 19px; font-weight: 700; }
+.review-note { color: var(--muted); font-size: 13.5px; }
+.review-body .btn { text-align: center; }
+
 /* ---------- Story ---------- */
 .story { background: var(--bg2); }
 .story-inner { max-width: 760px; margin: 0 auto; text-align: center; }
