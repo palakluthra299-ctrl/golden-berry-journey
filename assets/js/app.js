@@ -1689,15 +1689,4 @@ document.addEventListener("DOMContentLoaded", function () {
       slides[i].classList.add("is-active");
     }, 2800);
   })();
-  /* Explore card: one Pixar-style character at a time, matching Business. */
-  (function initExploreCharacterSlider() {
-    var slides = qsa(".explore-character-slider .explore-character-slide");
-    if (slides.length < 2) return;
-    var i = 0;
-    setInterval(function () {
-      slides[i].classList.remove("is-active");
-      i = (i + 1) % slides.length;
-      slides[i].classList.add("is-active");
-    }, 2800);
-  })();
-});
+})();

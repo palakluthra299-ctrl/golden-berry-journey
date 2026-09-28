@@ -1,0 +1,20 @@
+3349:.featureModule.legacy-large .explore-character-art {
+3350-  position: absolute;
+3351-  right: -4px;
+3352-  bottom: -8px;
+3353-  width: 152px;
+3354-  height: 176px;
+3355-  margin: 0;
+3356-  overflow: hidden;
+3357-  border-radius: 0;
+3358-}
+3359:.featureModule.legacy-large .explore-character-art img {
+3360-  display: block;
+3361-  width: 100%;
+3362-  height: 100%;
+3363-  object-fit: cover;
+3364-  object-position: 58% center;
+3365-  filter: drop-shadow(0 10px 13px rgba(71, 39, 15, .2));
+3366-}
+3367-.featureModule.legacy-large .product-feature-art { width: 72px; height: 82px; }
+3368-.featureModule.legacy-large .nav-play-art { width: 54px; height: 54px; }
