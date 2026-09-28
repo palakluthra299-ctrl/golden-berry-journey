@@ -562,3 +562,16 @@ function waLink(message) {
 function productWaLink(name) {
   return waLink("Namaste Palak! I am very interested in your WellWith " + name + ". Please tell me more about its ingredients.");
 }
+
+/* Resolve media and detail-page paths for the static artifact's asset-hosted subpages. */
+var PAGE_IN_ASSETS = /\/assets\/[^/]+\.html$/.test(window.location.pathname);
+if (PAGE_IN_ASSETS) {
+  PRODUCTS.forEach(function (p) { p.image = p.image.replace(/^assets\//, ""); });
+  LISTEN_PRODUCTS.forEach(function (p) {
+    p.image = p.image.replace(/^assets\//, "");
+    p.audio = p.audio.replace(/^assets\//, "");
+  });
+  PARTNER_MODELS.forEach(function (m) { m.audio = m.audio.replace(/^assets\//, ""); });
+} else {
+  LISTEN_PRODUCTS.forEach(function (p) { p.url = "assets/" + p.url; });
+}

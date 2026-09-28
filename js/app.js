@@ -4,15 +4,51 @@ function qs(sel, el) { return (el || document).querySelector(sel); }
 function qsa(sel, el) { return Array.prototype.slice.call((el || document).querySelectorAll(sel)); }
 
 /* ---------- Cart ---------- */
-var CART_KEY = "wellwith_cart_v1";
+/* The cart travels in the page URL so it works across this static site without browser storage. */
+var CART_PARAM = "cart";
 
 function getCart() {
-  try { return JSON.parse(localStorage.getItem(CART_KEY)) || {}; }
-  catch (e) { return {}; }
+  var cart = {};
+  try {
+    var raw = new URLSearchParams(window.location.search).get(CART_PARAM) || "";
+    raw.split(",").forEach(function (entry) {
+      var parts = entry.split("~"), slug = parts[0], qty = parseInt(parts[1], 10);
+      if (slug && qty > 0) cart[slug] = qty;
+    });
+  } catch (e) {}
+  return cart;
+}
+function cartValue(cart) {
+  return Object.keys(cart).sort().map(function (slug) {
+    return slug + "~" + cart[slug];
+  }).join(",");
+}
+function withCartParam(href, cart) {
+  if (!href || href.charAt(0) === "#" || /^(?:https?:|mailto:|tel:|javascript:)/i.test(href)) return href;
+  var hash = "", hashAt = href.indexOf("#");
+  if (hashAt !== -1) { hash = href.slice(hashAt); href = href.slice(0, hashAt); }
+  var qAt = href.indexOf("?"), path = qAt === -1 ? href : href.slice(0, qAt);
+  var params = new URLSearchParams(qAt === -1 ? "" : href.slice(qAt + 1));
+  var value = cartValue(cart);
+  if (value) params.set(CART_PARAM, value); else params.delete(CART_PARAM);
+  var query = params.toString();
+  return path + (query ? "?" + query : "") + hash;
+}
+function updateInternalCartLinks() {
+  var cart = getCart();
+  qsa('a[href]:not([target="_blank"])').forEach(function (a) {
+    a.setAttribute("href", withCartParam(a.getAttribute("href"), cart));
+  });
 }
 function saveCart(cart) {
-  try { localStorage.setItem(CART_KEY, JSON.stringify(cart)); } catch (e) {}
+  try {
+    var url = new URL(window.location.href);
+    var value = cartValue(cart);
+    if (value) url.searchParams.set(CART_PARAM, value); else url.searchParams.delete(CART_PARAM);
+    window.history.replaceState(null, "", url.pathname + url.search + url.hash);
+  } catch (e) {}
   updateCartBadge();
+  updateInternalCartLinks();
 }
 function cartCount() {
   var cart = getCart(), n = 0;
@@ -35,40 +71,6 @@ function addToCart(slug, qty) {
   cart[slug] = (cart[slug] || 0) + (qty || 1);
   saveCart(cart);
   showToast("✓ " + p.name + " added to cart");
-  afterCartChange();
-}
-function changeQty(slug, delta) {
-  var cart = getCart();
-  var q = (cart[slug] || 0) + delta;
-  if (q <= 0) delete cart[slug];
-  else cart[slug] = q;
-  saveCart(cart);
-  afterCartChange();
-}
-function afterCartChange() {
-  refreshCartControls();
-  if (typeof window !== "undefined" && typeof window.onCartChanged === "function") {
-    window.onCartChanged();
-  }
-}
-/* Inline card control: "Add to Cart" button, or qty stepper once added. */
-function cartControlHTML(slug, extra) {
-  var q = (getCart()[slug] || 0);
-  var x = extra ? " " + extra : "";
-  if (q <= 0) {
-    return '<button class="btn btn-green' + x + '" data-add-cart="' + slug + '">Add to Cart</button>';
-  }
-  return '<span class="stepper-inline' + x + '">' +
-    '<button data-cart-dec="' + slug + '" aria-label="Decrease quantity">−</button>' +
-    '<span class="q">' + q + '</span>' +
-    '<button data-cart-inc="' + slug + '" aria-label="Increase quantity">+</button>' +
-    '<button class="sq-del" data-cart-del="' + slug + '" aria-label="Remove item">🗑️</button>' +
-  '</span>';
-}
-function refreshCartControls() {
-  qsa("[data-cart-control]").forEach(function (el) {
-    el.innerHTML = cartControlHTML(el.getAttribute("data-cart-control"), el.getAttribute("data-cart-size") || "");
-  });
 }
 function setQty(slug, qty) {
   var cart = getCart();
@@ -87,30 +89,6 @@ function updateCartBadge() {
     el.textContent = n;
     el.style.display = n > 0 ? "inline-flex" : "none";
   });
-  updateCartFloat(n);
-}
-/* Floating button swap: once the cart has items, the WhatsApp float is
-   replaced by a floating cart button (except on the cart page itself). */
-function initCartFloat() {
-  if (qs("#cart-float")) return;
-  var a = document.createElement("a");
-  a.id = "cart-float";
-  a.href = "cart.html";
-  a.setAttribute("aria-label", "View cart");
-  a.innerHTML = '🛒<span class="cart-float-count">0</span>';
-  document.body.appendChild(a);
-  updateCartFloat(cartCount());
-}
-function updateCartFloat(n) {
-  var cf = qs("#cart-float");
-  if (!cf) return;
-  var onCartPage = /cart\.html$/.test(location.pathname);
-  var show = n > 0 && !onCartPage;
-  cf.style.display = show ? "inline-flex" : "none";
-  var b = cf.querySelector(".cart-float-count");
-  if (b) b.textContent = n;
-  var wa = qs("#wa-float");
-  if (wa) wa.style.display = show ? "none" : "";
 }
 var toastTimer = null;
 function showToast(msg) {
@@ -127,23 +105,13 @@ function showToast(msg) {
   toastTimer = setTimeout(function () { t.classList.remove("show"); }, 2200);
 }
 function initCart() {
-  initCartFloat();
   updateCartBadge();
-  refreshCartControls();
+  updateInternalCartLinks();
   document.addEventListener("click", function (e) {
-    var t = e.target.closest ? e.target.closest("[data-add-cart],[data-cart-inc],[data-cart-dec],[data-cart-del]") : null;
-    if (!t) return;
-    if (t.hasAttribute("data-add-cart")) {
-      addToCart(t.getAttribute("data-add-cart"));
-    } else if (t.hasAttribute("data-cart-inc")) {
-      changeQty(t.getAttribute("data-cart-inc"), 1);
-    } else if (t.hasAttribute("data-cart-dec")) {
-      changeQty(t.getAttribute("data-cart-dec"), -1);
-    } else if (t.hasAttribute("data-cart-del")) {
-      removeFromCart(t.getAttribute("data-cart-del"));
-      showToast("Removed from cart");
-      afterCartChange();
-    }
+    var btn = e.target.closest ? e.target.closest("[data-add-cart]") : null;
+    if (btn) addToCart(btn.getAttribute("data-add-cart"));
+    var link = e.target.closest ? e.target.closest('a[href]:not([target="_blank"])') : null;
+    if (link) link.setAttribute("href", withCartParam(link.getAttribute("href"), getCart()));
   });
 }
 
@@ -262,7 +230,7 @@ function initListen() {
     var wrap = qs("#modal-slot");
     var slug = (p.url.split("slug=")[1] || "").split("&")[0];
     var addCartBtn = slug
-      ? '<span class="cart-ctl" data-cart-control="' + slug + '" style="width:100%">' + cartControlHTML(slug) + '</span>'
+      ? '<button class="btn btn-green" data-add-cart="' + slug + '" style="width:100%">Add to Cart</button>'
       : "";
     wrap.innerHTML =
       '<div class="modal-backdrop open" id="listen-modal">' +
@@ -389,8 +357,8 @@ function initProductGrids() {
         '<p class="tagline">' + p.tagline + '</p>' +
         '<p class="desc">' + p.description + '</p>' +
         '<div class="row">' +
-          '<a class="btn btn-outline" href="product.html?slug=' + p.slug + '">View Details</a>' +
-          '<span class="cart-ctl" data-cart-control="' + p.slug + '">' + cartControlHTML(p.slug) + '</span>' +
+          '<a class="btn btn-outline" href="' + (PAGE_IN_ASSETS ? "product.html" : "assets/product.html") + '?slug=' + p.slug + '">View Details</a>' +
+          '<button class="btn btn-green" data-add-cart="' + p.slug + '">Add to Cart</button>' +
         '</div>' +
         '<div class="row">' +
           '<a class="btn btn-gold" target="_blank" rel="noopener" href="' + productWaLink(p.name) + '">Order</a>' +
@@ -414,3 +382,99 @@ document.addEventListener("DOMContentLoaded", function () {
   initPartner();
   initProductGrids();
 });
+
+/* ---------- Transparent Ladakhi farmer thank-you film (6-character rotation) ---------- */
+(function () {
+  var inAssets = typeof PAGE_IN_ASSETS !== "undefined" && PAGE_IN_ASSETS;
+    var gratitude = document.createElement("div");
+    gratitude.className = "gratitude-overlay";
+    gratitude.id = "gratitude-overlay";
+    gratitude.setAttribute("aria-hidden", "true");
+    gratitude.setAttribute("role", "status");
+    gratitude.setAttribute("aria-live", "polite");
+    gratitude.setAttribute("aria-label", "Thank you. Continuing to WhatsApp.");
+    var gratitudeAssetPrefix = inAssets ? "" : "assets/";
+    gratitude.innerHTML =
+      '<div class="gratitude-shade" aria-hidden="true"></div>' +
+      '<div class="gratitude-scene" aria-hidden="true">' +
+        '<div class="gratitude-character-stage"><video class="gratitude-video" muted playsinline preload="auto" aria-hidden="true" src="' + gratitudeAssetPrefix + 'videos/thankyou-farmer-1.webm"></video><span class="gratitude-ground-shadow"></span></div>' +
+        '<div class="gratitude-copy"><p class="gratitude-thanks">Thank You!</p></div>' +
+        '<audio id="gratitude-audio" preload="auto" src="' + gratitudeAssetPrefix + 'audio/thankyou-voice.mp3"></audio>' +
+      '</div>';
+    document.body.appendChild(gratitude);
+  
+    var gratitudeDestination = "";
+    var gratitudeTimer = 0;
+    var gratitudeAudio = qs("#gratitude-audio", gratitude);
+    var gratitudeVideo = qs(".gratitude-video", gratitude);
+    var gratitudeCharacterIndex = 0;
+    var gratitudeFallbackLastIndex = -1;
+    var gratitudeCharacterStorageKey = "wellwith_thankyou_char_idx";
+    var gratitudeCharacters = [
+      { video: "thankyou-farmer-1.webm", voice: "thankyou-voice.mp3" },
+      { video: "thankyou-farmer-2.webm", voice: "thankyou-voice-aunty.mp3" },
+      { video: "thankyou-farmer-3.webm", voice: "thankyou-voice-child.mp3" },
+      { video: "thankyou-farmer-4.webm", voice: "thankyou-voice-aunty.mp3" },
+      { video: "thankyou-farmer-5.webm", voice: "thankyou-voice.mp3" },
+      { video: "thankyou-farmer-6.webm", voice: "thankyou-voice-child.mp3" }
+    ];
+  
+    function randomGratitudeCharacterIndex() {
+      var count = gratitudeCharacters.length;
+      if (count <= 1) return 0;
+      var nextIndex = Math.floor(Math.random() * (count - 1));
+      if (nextIndex >= gratitudeFallbackLastIndex && gratitudeFallbackLastIndex >= 0) nextIndex += 1;
+      gratitudeFallbackLastIndex = nextIndex;
+      return nextIndex;
+    }
+  
+    function selectNextGratitudeCharacter() {
+      try {
+        var storedIndex = parseInt(window.localStorage.getItem(gratitudeCharacterStorageKey), 10);
+        gratitudeCharacterIndex = isFinite(storedIndex) && storedIndex >= 0 ? storedIndex % gratitudeCharacters.length : 0;
+        window.localStorage.setItem(gratitudeCharacterStorageKey, String((gratitudeCharacterIndex + 1) % gratitudeCharacters.length));
+      } catch (e) {
+        gratitudeCharacterIndex = randomGratitudeCharacterIndex();
+      }
+      var character = gratitudeCharacters[gratitudeCharacterIndex];
+      gratitudeVideo.src = gratitudeAssetPrefix + "videos/" + character.video;
+      gratitudeAudio.src = gratitudeAssetPrefix + "audio/" + character.voice;
+    }
+  
+    function redirectToWhatsApp() {
+      if (!gratitudeDestination) return;
+      window.location.href = gratitudeDestination;
+    }
+  
+    function playCheckoutGratitude(destination) {
+      if (gratitude.classList.contains("active")) return;
+      gratitudeDestination = destination;
+      selectNextGratitudeCharacter();
+      gratitude.classList.add("active");
+      gratitude.setAttribute("aria-hidden", "false");
+      document.body.classList.add("gratitude-open");
+  
+      window.clearTimeout(gratitudeTimer);
+      gratitudeTimer = window.setTimeout(redirectToWhatsApp, 4500);
+  
+      try {
+        gratitudeVideo.pause();
+        gratitudeVideo.currentTime = 0;
+        gratitudeAudio.pause();
+        gratitudeAudio.currentTime = 0;
+        gratitudeAudio.volume = 1;
+  
+        gratitudeVideo.addEventListener("ended", function () {
+          window.clearTimeout(gratitudeTimer);
+          gratitudeTimer = window.setTimeout(redirectToWhatsApp, 650);
+        }, { once: true });
+  
+        var film = gratitudeVideo.play();
+        var voice = gratitudeAudio.play();
+        if (film && film.catch) film.catch(function () {});
+        if (voice && voice.catch) voice.catch(function () {});
+      } catch (e) {}
+    }
+  
+    window.startWellWithThankYou = playCheckoutGratitude;
+})();

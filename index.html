@@ -3,99 +3,201 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>WellWith Sea Buckthorn | Premium Himalayan Wellness</title>
-  <meta name="description" content="WellWith Sea Buckthorn – Premium cold-pressed juices & supplements from Ladakh for immunity, energy & holistic wellness.">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <title>WellWith Sea Buckthorn | Premium WellWith Wellness</title>
+  <meta name="description" content="WellWith Sea Buckthorn, premium cold-pressed juices and supplements from Ladakh for immunity, energy and holistic wellness.">
   <meta name="author" content="WellWith">
   <link rel="icon" href="assets/favicon.png" type="image/png">
   <meta property="og:title" content="WellWith Sea Buckthorn">
-  <meta property="og:description" content="Premium Himalayan Sea Buckthorn wellness products – cold-pressed juices, capsules & tisanes.">
+  <meta property="og:description" content="Premium WellWith Sea Buckthorn wellness products, including cold-pressed juices, capsules and tisanes.">
   <meta property="og:type" content="website">
-  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="assets/css/styles.css">
 </head>
 <body>
 
-<nav class="navbar">
-  <div class="container navbar-inner">
-    <a class="brand" href="index.html">
-      <span class="brand-name">wellwith</span>
-      <span class="brand-tag">Sea Buckthorn</span>
-    </a>
-    <div class="nav-links">
-      <a href="index.html">Home</a>
-      <a href="index.html#products">Products</a>
-      <a href="solution-finder.html">Solution Finder</a>
-      <a href="index.html#story">Our Story</a>
-      <a href="expert.html">Palak Luthra</a>
-      <a class="cart-link" href="cart.html" aria-label="Shopping cart">🛒<span class="cart-count" style="display:none">0</span></a>
-      <a class="btn btn-gold nav-cta" target="_blank" rel="noopener" href="https://wa.me/919266086554?text=Namaste%20Palak!%20I%20want%20to%20know%20more%20about%20WellWith%20Sea%20Buckthorn%20products.">Chat with Us</a>
+<header class="storefront-header">
+  <div class="container storefront-header-inner">
+    <div class="storefront-topbar">
+      <a class="brand" href="#home" aria-label="WellWith home">
+        <span class="brand-name">wellwith</span>
+        <span class="brand-tag">Sea Buckthorn</span>
+      </a>
+      <form class="quick-search storefront-search" id="quick-search" role="search">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-4-4"></path></svg>
+        <input id="quick-search-input" type="search" placeholder="Search WellWith" aria-label="Search WellWith products">
+        <button type="submit">Search</button>
+      </form>
     </div>
-    <button class="hamburger" id="hamburger" aria-label="Menu">☰</button>
-  </div>
-  <div class="mobile-menu" id="mobile-menu">
-    <a href="index.html">Home</a>
-    <a href="index.html#products">Products</a>
-    <a href="solution-finder.html">Solution Finder</a>
-    <a href="index.html#story">Our Story</a>
-    <a href="expert.html">Palak Luthra</a>
-    <a href="cart.html">🛒 Cart</a>
-  </div>
-</nav>
+    <nav class="storefront-nav featureModule legacy-large" aria-label="WellWith experiences">
+      <article class="storefront-nav-card nav-listen" id="feature-listen-card" aria-label="Listen to WellWith product stories">
+        <button class="listen-feature-main" id="feature-listen-open" type="button" data-open-listen data-listen-index="0">
+          <span class="nav-card-copy">
+            <small>Product stories</small>
+            <strong>Listen</strong>
+            <span class="listen-feature-name" id="feature-listen-name">Sea Buckthorn Pulp</span>
+            <span class="listen-feature-purpose" id="feature-listen-purpose">Daily overall wellness, immunity and general health support.</span>
+            <span class="listen-feature-audio" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><b>Hear story</b></span>
+          </span>
+          <span class="nav-card-art" aria-hidden="true"><img id="feature-listen-image" src="assets/products-transparent/pulp.png" alt=""></span>
+        </button>
+        <div class="listen-feature-progress" aria-hidden="true"><span class="listen-feature-dots" id="feature-listen-dots"></span></div>
+      </article>
 
-<header class="hero">
-  <img class="hero-bg" src="assets/hero-bg.jpg" alt="Sea Buckthorn berries in Ladakh mountains">
-  <div class="hero-overlay"></div>
-  <span class="float-berry" style="top:22%;right:8%;font-size:52px">🍊</span>
-  <span class="float-berry" style="top:34%;right:20%;font-size:32px;animation-delay:1s">🍊</span>
-  <div class="container">
-    <div class="hero-content">
-      <span class="kicker">From the Himalayas of Ladakh</span>
-      <h1>Nature's <span class="golden-shimmer">Golden</span><br>Super Fruit</h1>
-      <div class="fact-strip" id="fact-strip"></div>
-      <p class="lead">Pure Sea Buckthorn wellness from 11,500 ft above sea level. Trusted by DRDO scientists and Russian cosmonauts. Now, from our hills to your home.</p>
-      <div class="hero-ctas">
-        <a class="btn btn-gold" href="#products">Explore Products</a>
-        <a class="btn btn-green" href="solution-finder.html">✨ Find My Solution</a>
-        <a class="btn btn-outline" target="_blank" rel="noopener" href="https://wa.me/919266086554?text=Namaste%20Palak!%20I%20want%20to%20learn%20more%20about%20WellWith%20Sea%20Buckthorn%20products.">Chat with Us</a>
+      <div class="storefront-nav-square-grid">
+        <button class="storefront-nav-card nav-business" type="button" data-open-business-listen>
+          <span class="nav-card-copy"><strong>Want to do<br>Business With Us</strong></span>
+          <span class="nav-card-art nav-farmer-art" aria-hidden="true"><img src="assets/ladakh-farmer-namaste.png" alt=""></span>
+        </button>
+
+        <button class="storefront-nav-card nav-products" type="button" data-scroll-to="products">
+          <span class="nav-card-copy nav-explore-copy"><strong>EXPLORE</strong><span>Products</span></span>
+          <span class="nav-card-art product-feature-art" aria-hidden="true"><img src="assets/products-transparent/tisane.png" alt=""></span>
+        </button>
+
+        <button class="storefront-nav-card nav-reviews" type="button" data-open-reviews>
+          <span class="nav-card-copy"><strong>Check<br>Reviews</strong></span>
+          <span class="nav-card-art nav-play-art nav-review-character-art" aria-hidden="true"><img src="assets/review-character-icon.png" alt=""><span>▶</span></span>
+        </button>
+
+        <button class="storefront-nav-card nav-coach" type="button" data-open-coach>
+          <span class="nav-card-copy"><strong>Consult a<br>Health Coach</strong></span>
+          <span class="coach-feature-figure" aria-hidden="true"><i class="coach-orb"></i><i class="coach-leaf coach-leaf-one"></i><i class="coach-leaf coach-leaf-two"></i><i class="coach-pulse"></i></span>
+        </button>
       </div>
-    </div>
+    </nav>
   </div>
 </header>
 
-<section class="block listen" id="showcase">
+<main class="quick-home" id="home" aria-label="WellWith quick shop">
   <div class="container">
-    <div class="center" style="margin-bottom:36px">
-      <span class="kicker">Listen &amp; Discover</span>
-      <h2 class="section-title display">Know Your Product in 30 Seconds</h2>
-    </div>
-    <div id="listen-root"></div>
-  </div>
-</section>
 
-<section class="block" id="partner">
-  <div class="container">
-    <div class="center">
-      <span class="kicker">Partner With Us</span>
-      <h2 class="section-title display">Grow With WellWith</h2>
-      <p class="section-sub">Three ways to build a wellness business with the golden berry of Ladakh.</p>
-    </div>
-    <div id="partner-grid"></div>
-  </div>
-</section>
+    <section class="quick-section" id="categories" aria-labelledby="categories-title">
+      <div class="quick-heading"><div><p>Shop by category</p><h2 id="categories-title">What are you looking for?</h2></div><button type="button" data-open-list="all">See all</button></div>
+      <div class="category-grid">
+        <button class="category-tile" type="button" data-open-list="concentrate"><span><img src="assets/products-transparent/pulp.png" alt=""></span><strong>Juices</strong></button>
+        <button class="category-tile" type="button" data-open-list="capsules"><span><img src="assets/products-transparent/omega-capsules.png" alt=""></span><strong>Capsules</strong></button>
+        <button class="category-tile" type="button" data-open-list="tea"><span><img src="assets/products-transparent/tisane.png" alt=""></span><strong>Tea</strong></button>
+        <button class="category-tile" type="button" data-open-list="skincare"><span><img src="assets/products-transparent/sunscreen-50.png" alt=""></span><strong>Skin Care</strong></button>
+        <button class="category-tile" type="button" data-open-list="foods"><span><img src="assets/products-transparent/gummies-30.png" alt=""></span><strong>Daily Foods</strong></button>
+        <button class="category-tile" type="button" data-open-list="face"><span><img src="assets/products-transparent/face-oil.png" alt=""></span><strong>Face Care</strong></button>
+        <button class="category-tile" type="button" data-open-list="body"><span><img src="assets/products-transparent/foot-cream-50.png" alt=""></span><strong>Body Care</strong></button>
+        <button class="category-tile" type="button" data-open-list="all"><span><img src="assets/products-transparent/collagen-200.png" alt=""></span><strong>All Products</strong></button>
+      </div>
+    </section>
 
-<section class="block" id="products" style="background:var(--bg2)">
+    <section class="quick-section" id="deal-zone" aria-labelledby="deal-zone-title">
+      <div class="quick-heading"><div><p>Browse your way</p><h2 id="deal-zone-title">Deal Zone</h2></div></div>
+      <div class="promo-carousel deal-carousel" id="promo-carousel" role="region" aria-roledescription="carousel" aria-label="WellWith offers">
+        <div class="promo-viewport" id="promo-viewport" tabindex="0">
+          <div class="promo-track" id="promo-track">
+            <div class="promo-slide-frame" data-promo-slide aria-label="1 of 4">
+              <article class="deal-story-banner" aria-labelledby="deal-story-title" data-offer="harvest-season">
+                <img class="deal-story-scene" src="assets/hero-bg.jpg" alt="Sea Buckthorn berries growing against the Himalayan mountains of Ladakh" loading="lazy" decoding="async">
+                <div class="deal-story-shade" aria-hidden="true"></div>
+                <div class="deal-story-copy">
+                  <p class="deal-story-kicker">A harvest story from Ladakh</p>
+                  <h3 id="deal-story-title">Goodness, gathered by hand</h3>
+                  <p class="deal-story-offer">Harvest Season Offer on Sea Buckthorn Goodness</p>
+                  <button class="deal-story-cta" type="button" data-scroll-to="products">Shop Now <span aria-hidden="true">→</span></button>
+                </div>
+                <img class="deal-story-farmer" src="assets/ladakh-farmer-namaste.png" alt="Animated Ladakhi farmer welcoming you with folded hands" loading="lazy" decoding="async">
+              </article>
+            </div>
+            <div class="promo-slide-frame" data-promo-slide aria-label="2 of 4">
+              <header class="hero" aria-label="Pure WellWith Sea Buckthorn">
+                <img class="hero-bg" src="assets/hero-bg.jpg" alt="Sea Buckthorn berries in Ladakh mountains" width="1920" height="1080" loading="lazy" decoding="async">
+                <div class="hero-overlay"></div>
+                <div class="container">
+                  <div class="hero-content">
+                    <span class="kicker">From Ladakh, with WellWith</span>
+                    <h1>Pure WellWith<br><span class="golden-shimmer">Sea Buckthorn</span></h1>
+                    <div class="fact-strip" id="fact-strip"></div>
+                    <p class="lead">Ladakh-grown Sea Buckthorn in daily wellness formats, from pure pulp and capsules to tea and skincare.</p>
+                    <div class="hero-ctas">
+                      <a class="btn btn-green" href="assets/solution-finder.html">Find My Solution</a>
+                      <a class="btn btn-outline" target="_blank" rel="noopener" href="https://wa.me/919266086554?text=Namaste%20Palak!%20I%20want%20to%20learn%20more%20about%20WellWith%20Sea%20Buckthorn%20products.">Chat with Us</a>
+                    </div>
+                  </div>
+                </div>
+              </header>
+            </div>
+            <div class="promo-slide-frame" data-promo-slide aria-label="3 of 4">
+              <article class="wellwith-promo-banner promo-cod" aria-labelledby="promo-cod-title">
+                <img class="wellwith-promo-art" src="assets/banner-cod-character.jpg" alt="Pixar-inspired WellWith delivery character holding a WellWith package" loading="lazy" decoding="async">
+                <div class="wellwith-promo-copy">
+                  <p class="wellwith-promo-kicker">Flexible payment</p>
+                  <h3 id="promo-cod-title">COD + PREPAID AVAILABLE</h3>
+                  <p class="wellwith-promo-lead">Choose the payment option that works for you</p>
+                  <p class="wellwith-promo-support">Easy ordering <span>•</span> Secure payment <span>•</span> Convenient delivery</p>
+                </div>
+              </article>
+            </div>
+            <div class="promo-slide-frame" data-promo-slide aria-label="4 of 4">
+              <article class="wellwith-promo-banner promo-whatsapp" aria-labelledby="promo-whatsapp-title">
+                <img class="wellwith-promo-art" src="assets/banner-whatsapp-character.jpg" alt="Pixar-inspired character holding a phone with a private WellWith WhatsApp offer" loading="lazy" decoding="async">
+                <div class="wellwith-promo-copy">
+                  <p class="wellwith-promo-badge"><span aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><rect x="5" y="10" width="14" height="10" rx="2"></rect><path d="M8 10V7a4 4 0 0 1 8 0v3"></path></svg></span> Exclusive for you</p>
+                  <h3 id="promo-whatsapp-title">YOUR EXCLUSIVE OFFER IS WAITING</h3>
+                  <p class="wellwith-promo-lead">Get your special discount on WhatsApp</p>
+                  <p class="wellwith-promo-support">Proceed with your cart and unlock your exclusive WhatsApp offer.</p>
+                  <p class="wellwith-promo-fine">Website prices are shown at MRP. Your special offer is revealed on WhatsApp.</p>
+                </div>
+              </article>
+            </div>
+          </div>
+        </div>
+        <button class="promo-arrow promo-arrow-prev" type="button" data-promo-prev aria-label="Previous offer">‹</button>
+        <button class="promo-arrow promo-arrow-next" type="button" data-promo-next aria-label="Next offer">›</button>
+        <div class="promo-dots" aria-label="Choose an offer">
+          <button class="active" type="button" data-promo="0" aria-label="Show offer 1" aria-current="true"></button>
+          <button type="button" data-promo="1" aria-label="Show offer 2"></button>
+          <button type="button" data-promo="2" aria-label="Show offer 3"></button>
+          <button type="button" data-promo="3" aria-label="Show offer 4"></button>
+        </div>
+      </div>
+    </section>
+
+    <section class="quick-section" id="products" aria-labelledby="products-zone-title">
+      <div class="quick-heading"><div><p>Complete collection</p><h2 id="products-zone-title">Products Zone</h2></div><button type="button" data-open-list="all">View list</button></div>
+      <div class="product-rail" id="rail-products"></div>
+    </section>
+  </div>
+</main>
+
+<section class="block berry-explorer" id="berry-explorer" aria-labelledby="berry-explorer-title">
   <div class="container">
-    <div class="center reveal">
-      <span class="kicker">Our Collection</span>
-      <h2 class="section-title display">Liquid Concentrates</h2>
-      <p class="section-sub">Seven powerful formulations, each crafted with Sea Buckthorn and time-tested Ayurvedic ingredients.</p>
+    <div class="berry-explorer-heading center reveal">
+      <span class="kicker">Inside the Golden Berry</span>
+      <h2 class="section-title display" id="berry-explorer-title">Berry Explorer</h2>
+      <p class="section-sub">Tap a hotspot to discover six naturally occurring nutrients in Sea Buckthorn and the role each one can play in everyday nutrition.</p>
     </div>
-    <div class="product-grid" id="grid-concentrates"></div>
-    <div class="center reveal" style="margin-top:70px">
-      <span class="kicker">Specialized</span>
-      <h2 class="section-title display">Premium Add-ons</h2>
-      <p class="section-sub">Teas, skincare, foods, and daily essentials — extending the golden berry's benefits across your daily routine.</p>
+    <div class="berry-explorer-grid reveal">
+      <div class="berry-visual" aria-label="Sea Buckthorn berries with six nutrient hotspots">
+        <img src="assets/hero-bg.jpg" alt="Clusters of ripe orange Sea Buckthorn berries growing in Ladakh" loading="lazy" decoding="async">
+        <button class="berry-hotspot is-active" type="button" style="--hotspot-x:20%;--hotspot-y:25%" data-nutrient="omega7" aria-label="Explore Omega-7" aria-pressed="true"><span>1</span></button>
+        <button class="berry-hotspot" type="button" style="--hotspot-x:35%;--hotspot-y:61%" data-nutrient="vitaminc" aria-label="Explore Vitamin C" aria-pressed="false"><span>2</span></button>
+        <button class="berry-hotspot" type="button" style="--hotspot-x:52%;--hotspot-y:48%" data-nutrient="vitamine" aria-label="Explore Vitamin E" aria-pressed="false"><span>3</span></button>
+        <button class="berry-hotspot" type="button" style="--hotspot-x:14%;--hotspot-y:78%" data-nutrient="antioxidants" aria-label="Explore antioxidants" aria-pressed="false"><span>4</span></button>
+        <button class="berry-hotspot" type="button" style="--hotspot-x:69%;--hotspot-y:72%" data-nutrient="omegas" aria-label="Explore Omega-3, 6 and 9" aria-pressed="false"><span>5</span></button>
+        <button class="berry-hotspot" type="button" style="--hotspot-x:81%;--hotspot-y:82%" data-nutrient="carotenoids" aria-label="Explore carotenoids" aria-pressed="false"><span>6</span></button>
+        <div class="berry-visual-note">Choose a numbered berry</div>
+      </div>
+      <div class="berry-detail" id="berry-detail" aria-live="polite">
+        <div class="berry-detail-count" id="berry-detail-count">Nutrient 1 of 6</div>
+        <h3 class="display" id="berry-detail-name">Omega-7</h3>
+        <p id="berry-detail-benefit">A signature fatty acid in Sea Buckthorn that helps support skin and mucous membrane health as part of a balanced diet.</p>
+        <div class="berry-nutrient-list" aria-label="Select a nutrient">
+          <button class="berry-chip is-active" type="button" data-nutrient="omega7" aria-pressed="true">Omega-7</button>
+          <button class="berry-chip" type="button" data-nutrient="vitaminc" aria-pressed="false">Vitamin C</button>
+          <button class="berry-chip" type="button" data-nutrient="vitamine" aria-pressed="false">Vitamin E</button>
+          <button class="berry-chip" type="button" data-nutrient="antioxidants" aria-pressed="false">Antioxidants</button>
+          <button class="berry-chip" type="button" data-nutrient="omegas" aria-pressed="false">Omega-3/6/9</button>
+          <button class="berry-chip" type="button" data-nutrient="carotenoids" aria-pressed="false">Carotenoids</button>
+        </div>
+      </div>
     </div>
-    <div class="product-grid" id="grid-addons"></div>
   </div>
 </section>
 
@@ -104,12 +206,12 @@
     <div class="story-inner reveal">
       <span class="kicker">Our Story</span>
       <h2 class="section-title display">The Golden Berry of Ladakh</h2>
-      <p>At 11,500 feet above sea level, in the pristine valleys of Ladakh, grows a remarkable berry. Sea Buckthorn — known as the "Wonder Berry" — has roots that plunge 200 feet deep into mineral-rich Himalayan soil, absorbing extraordinary nutrition that no other fruit can match.</p>
-      <p>Trusted by DRDO for military nutrition and used by Russian cosmonauts in space, Sea Buckthorn contains over 190 bioactive compounds including the rare Omega-7 fatty acid. WellWith brings this ancient Himalayan treasure directly to your doorstep.</p>
-      <div class="stats">
+      <p>Sea Buckthorn grows in Ladakh's high-altitude valleys, where its deep roots draw nutrients from mineral-rich Ladakh soil.</p>
+      <p>Known for its naturally occurring Omega-7 and wide range of bioactive compounds, Sea Buckthorn has been studied for high-altitude nutrition. WellWith brings this Ladakh-grown berry into a practical range of everyday wellness products.</p>
+      <div class="stats" aria-label="Sea Buckthorn facts">
         <div class="stat"><div class="num">190+</div><div class="lbl">Bioactive Compounds</div></div>
         <div class="stat"><div class="num">11,500</div><div class="lbl">Feet Altitude</div></div>
-        <div class="stat"><div class="num">200ft</div><div class="lbl">Deep Roots</div></div>
+        <div class="stat"><div class="num">200 ft</div><div class="lbl">Deep Roots</div></div>
       </div>
     </div>
   </div>
@@ -125,10 +227,8 @@
       <div>
         <h4>Quick Links</h4>
         <ul>
-          <li><a href="#products">Products</a></li>
-          <li><a href="solution-finder.html">Solution Finder</a></li>
+          <li><a href="assets/solution-finder.html">Solution Finder</a></li>
           <li><a href="#story">Our Story</a></li>
-          <li><a href="expert.html">Palak Luthra</a></li>
         </ul>
       </div>
       <div>
@@ -141,11 +241,11 @@
 </footer>
 
 <a class="wa-float" target="_blank" rel="noopener" aria-label="Chat on WhatsApp"
-   href="https://wa.me/919266086554?text=Namaste%20Palak!%20I%20am%20interested%20in%20WellWith%20Sea%20Buckthorn%20products.%20Please%20tell%20me%20more.">💬</a>
+   href="https://wa.me/919266086554?text=Namaste%20Palak!%20I%20am%20interested%20in%20WellWith%20Sea%20Buckthorn%20products.%20Please%20tell%20me%20more."><span class="wa-mark" aria-hidden="true"></span></a>
 
 <div id="modal-slot"></div>
 
-<script src="js/data.js"></script>
-<script src="js/app.js"></script>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/app.js"></script>
 </body>
 </html>
