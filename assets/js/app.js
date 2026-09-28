@@ -45,7 +45,16 @@ var WellWithHistory = (function () {
   function init() {
     if (started) return;
     started = true;
+    var isReload = false;
+    try {
+      var navEntries = performance.getEntriesByType("navigation");
+      if (navEntries && navEntries.length && navEntries[0].type === "reload") isReload = true;
+      else if (performance.navigation && performance.navigation.type === 1) isReload = true;
+    } catch (e) {}
     if (!currentState()) {
+      window.history.replaceState(makeState("root", {}), "", window.location.href);
+    } else if (isReload && currentView() !== "root") {
+      // Refresh should land on a clean page, not reopen a popup from history state.
       window.history.replaceState(makeState("root", {}), "", window.location.href);
     }
     window.addEventListener("popstate", function (event) { apply(event.state); });
@@ -75,6 +84,26 @@ var WellWithHistory = (function () {
   function preserveStateReplace(url) {
     window.history.replaceState(window.history.state, "", url);
   }
+  /* Navigate to another page while a popup/modal is open: first pop the
+     modal's history entry (so Back lands on a clean page, not the open
+     popup), then navigate. */
+  function navigate(url) {
+    if (!started || applying || currentView() === "root" || !url) {
+      window.location.href = url;
+      return;
+    }
+    var done = false;
+    var go = function () {
+      if (done) return;
+      done = true;
+      window.removeEventListener("popstate", onPop);
+      window.location.href = url;
+    };
+    var onPop = function () { setTimeout(go, 60); };
+    window.addEventListener("popstate", onPop);
+    setTimeout(go, 900);
+    try { window.history.back(); } catch (e) { go(); }
+  }
 
   return {
     init: init,
@@ -82,6 +111,7 @@ var WellWithHistory = (function () {
     open: open,
     replace: replace,
     close: close,
+    navigate: navigate,
     currentView: currentView,
     preserveStateReplace: preserveStateReplace
   };
@@ -1625,6 +1655,18 @@ function initQuickCommerce() {
 /* ---------- Boot ---------- */
 document.addEventListener("DOMContentLoaded", function () {
   WellWithHistory.init();
+  /* If a popup is open and user taps an internal link (e.g. View Details),
+     close the popup's history entry first so Back lands on a clean page. */
+  document.addEventListener("click", function (e) {
+    if (WellWithHistory.currentView() === "root") return;
+    var a = e.target && e.target.closest ? e.target.closest("a[href]") : null;
+    if (!a) return;
+    var href = a.getAttribute("href");
+    if (!href || href.charAt(0) === "#" || a.target === "_blank") return;
+    if (/^(?:https?:|mailto:|tel:|javascript:)/i.test(href)) return;
+    e.preventDefault();
+    WellWithHistory.navigate(a.href);
+  });
   initNavbar();
   initCart();
   initFactStrip();
