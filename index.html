@@ -13,7 +13,7 @@
   <meta property="og:title" content="WellWith Sea Buckthorn">
   <meta property="og:description" content="Premium WellWith Sea Buckthorn wellness products, including cold-pressed juices, capsules and tisanes.">
   <meta property="og:type" content="website">
-  <link rel="stylesheet" href="assets/css/styles.css?v=20260928-7">
+  <link rel="stylesheet" href="assets/css/styles.css?v=20260928-8">
 </head>
 <body>
 
@@ -31,97 +31,66 @@
       </form>
     </div>
     <!-- ============ OFFERS BANNER (red glowing kinetic typography, no video) ============ -->
-    <section class="offers-banner" aria-label="WellWith limited time offers">
-      <div class="offers-stage" id="offers-stage"></div>
+    <section class="kinetic-offer" id="kinetic-offer" aria-label="Limited-time offer animation">
+      <div class="kinetic-offer-stage" id="kinetic-offer-stage" aria-live="off"></div>
+      <span class="kinetic-siren" aria-hidden="true"><i></i><b></b></span>
+      <span class="kinetic-glow" aria-hidden="true"></span>
     </section>
     <script>
     /* ==========================================================================
        OFFER TEXTS — Palak, offer ka text yahin badlo!
        Jo bhi offer likhna ho, neeche wali lines me likh do. Bas yahi ek jagah.
        ========================================================================== */
-    const OFFER_CONFIG = {
-      hey: ["HEY!", "HEY!", "HEY!"],          // scene 1: stacked shouts
-      stop: "stop",                            // scene 2: red word
-      scrolling: "scrolling",                  // scene 2: black word
-      saleWords: ["MEGA", "SALE", "UP TO", "50% OFF"],  // scene 3: word-by-word
-      hurryRows: 4,                            // scene 4: kitni HURRY lines
-      hurryWord: "HURRY",                      // scene 4: repeating word
-      limitedTime: "LIMITED TIME",             // scene 4: highlighted row
-      cta: "SHOP NOW",                         // scene 5: button text
-      sceneMs: [2700, 2100, 3400, 3400, 2800]  // har scene kitne ms dikhe
-    };
+    var OFFER_KINETIC_CONFIG = [
+      { scene: "hey", words: ["HEY!", "HEY!", "HEY!"] },
+      { scene: "stop", words: ["stop", "scrolling"] },
+      { scene: "sale", words: ["MEGA", "SALE", "UP TO", "50% OFF"] },
+      { scene: "hurry", words: ["HURRY", "HURRY", "LIMITED TIME", "HURRY", "HURRY"] },
+      { scene: "cta", words: ["SHOP NOW"] }
+    ];
+    /* ======================= END OFFER TEXT CONFIG ======================= */
     (function () {
-      var cfg = window.OFFER_CONFIG || OFFER_CONFIG;
-      var stage = document.getElementById("offers-stage");
-      if (!stage) return;
-
-      function el(tag, cls, text) {
-        var d = document.createElement(tag);
-        if (cls) d.className = cls;
-        if (text != null) d.textContent = text;
-        return d;
-      }
-
-      // Scene 1: HEY x3 + pendulum ball
-      var s1 = el("div", "offer-scene");
-      cfg.hey.forEach(function (t) { s1.appendChild(el("div", "offer-hey", t)); });
-      s1.appendChild(el("div", "offer-pendulum"));
-
-      // Scene 2: stop / scrolling
-      var s2 = el("div", "offer-scene offer-scene-bright");
-      s2.appendChild(el("div", "offer-stop", cfg.stop));
-      s2.appendChild(el("div", "offer-scrolling", cfg.scrolling));
-
-      // Scene 3: word-by-word sale reveal
-      var s3 = el("div", "offer-scene");
-      cfg.saleWords.forEach(function (w) { s3.appendChild(el("div", "offer-saleword", w)); });
-
-      // Scene 4: HURRY rows + LIMITED TIME highlight
-      var s4 = el("div", "offer-scene");
-      for (var i = 0; i < cfg.hurryRows; i++) {
-        if (i === Math.floor(cfg.hurryRows / 2)) {
-          s4.appendChild(el("div", "offer-limited", cfg.limitedTime));
-        } else {
-          s4.appendChild(el("div", "offer-hurryrow", (cfg.hurryWord + " ").repeat(4).trim()));
+      function qs(sel, root) { return (root || document).querySelector(sel); }
+      function initKineticOffer() {
+        var root = qs("#kinetic-offer-stage");
+        if (!root || !OFFER_KINETIC_CONFIG.length) return;
+        var index = 0;
+        var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        function esc(value) {
+          var span = document.createElement("span");
+          span.textContent = value;
+          return span.innerHTML;
         }
+        function renderScene(config) {
+          var words = config.words.map(esc);
+          root.className = "kinetic-offer-stage scene-" + config.scene;
+          if (config.scene === "hey") {
+            root.innerHTML = '<span class="offer-pendulum" aria-hidden="true"><i></i></span><div class="offer-stack">' + words.map(function (word, i) { return '<strong style="--i:' + i + '">' + word + '</strong>'; }).join("") + '</div>';
+          } else if (config.scene === "stop") {
+            root.innerHTML = '<div class="offer-stop"><strong>' + words[0] + '</strong><b>' + words[1] + '</b></div>';
+          } else if (config.scene === "sale") {
+            root.innerHTML = '<div class="offer-sale">' + words.map(function (word, i) { return '<strong style="--i:' + i + '">' + word + '</strong>'; }).join("") + '</div>';
+          } else if (config.scene === "hurry") {
+            root.innerHTML = '<div class="offer-hurry">' + words.map(function (word, i) { return '<strong class="' + (i === 2 ? 'limited' : '') + '" style="--i:' + i + '">' + word + '</strong>'; }).join("") + '</div>';
+          } else {
+            root.innerHTML = '<button class="offer-shop" type="button" data-scroll-to="products">' + words[0] + '<span aria-hidden="true">→</span></button>';
+            qs(".offer-shop", root).addEventListener("click", function () {
+              var products = qs("#products");
+              if (products) products.scrollIntoView({ behavior: "smooth", block: "start" });
+            });
+          }
+        }
+        renderScene(OFFER_KINETIC_CONFIG[0]);
+        if (!reduceMotion) window.setInterval(function () {
+          index = (index + 1) % OFFER_KINETIC_CONFIG.length;
+          renderScene(OFFER_KINETIC_CONFIG[index]);
+        }, 1500);
       }
-
-      // Scene 5: SHOP NOW CTA (taps scroll to products)
-      var s5 = el("div", "offer-scene");
-      var cta = el("div", "offer-cta", cfg.cta);
-      cta.setAttribute("role", "button");
-      cta.setAttribute("tabindex", "0");
-      function goProducts() {
-        var p = document.getElementById("products") || document.querySelector("[data-scroll-to='products']");
-        if (p && p.scrollIntoView) p.scrollIntoView({ behavior: "smooth" });
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", initKineticOffer);
+      } else {
+        initKineticOffer();
       }
-      cta.addEventListener("click", goProducts);
-      cta.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") goProducts(); });
-      s5.appendChild(cta);
-
-      var scenes = [s1, s2, s3, s4, s5];
-      scenes.forEach(function (s) { stage.appendChild(s); });
-
-      var idx = -1, timer = null;
-      function restartAnims(scene) {
-        scene.querySelectorAll("div").forEach(function (n) {
-          n.style.animation = "none";
-          void n.offsetWidth;
-          n.style.animation = "";
-        });
-      }
-      function show(i) {
-        idx = i;
-        scenes.forEach(function (s, k) { s.classList.toggle("active", k === i); });
-        restartAnims(scenes[i]);
-        timer = setTimeout(function () { show((i + 1) % scenes.length); }, cfg.sceneMs[i] || 2800);
-      }
-      // Pause when tab hidden (saves battery), resume on return
-      document.addEventListener("visibilitychange", function () {
-        if (document.hidden) { clearTimeout(timer); }
-        else { show((idx + 1) % scenes.length); }
-      });
-      show(0);
     })();
     </script>
     <nav class="storefront-nav featureModule legacy-large" aria-label="WellWith experiences">
@@ -344,6 +313,6 @@
 <div id="modal-slot"></div>
 
 <script src="assets/js/data.js?v=20260928-2"></script>
-<script src="assets/js/app.js?v=20260928-7"></script>
+<script src="assets/js/app.js?v=20260928-8"></script>
 </body>
 </html>
