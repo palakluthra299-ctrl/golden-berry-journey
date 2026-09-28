@@ -445,6 +445,16 @@ document.addEventListener("DOMContentLoaded", function () {
       if (!gratitudeDestination) return;
       window.location.href = gratitudeDestination;
     }
+
+    function hideCheckoutGratitude() {
+      gratitude.classList.remove("active");
+      gratitude.setAttribute("aria-hidden", "true");
+      document.body.classList.remove("gratitude-open");
+      try {
+        gratitudeVideo.pause();
+        gratitudeAudio.pause();
+      } catch (e) {}
+    }
   
     function playCheckoutGratitude(destination) {
       if (gratitude.classList.contains("active")) return;
@@ -455,7 +465,11 @@ document.addEventListener("DOMContentLoaded", function () {
       document.body.classList.add("gratitude-open");
   
       window.clearTimeout(gratitudeTimer);
-      gratitudeTimer = window.setTimeout(redirectToWhatsApp, 4500);
+      /* 3-second flow: thank-you shows ~1.5s, auto-hides to normal screen, WhatsApp opens at 3s */
+      gratitudeTimer = window.setTimeout(function () {
+        hideCheckoutGratitude();
+        gratitudeTimer = window.setTimeout(redirectToWhatsApp, 1500);
+      }, 1500);
   
       try {
         gratitudeVideo.pause();
@@ -463,11 +477,6 @@ document.addEventListener("DOMContentLoaded", function () {
         gratitudeAudio.pause();
         gratitudeAudio.currentTime = 0;
         gratitudeAudio.volume = 1;
-  
-        gratitudeVideo.addEventListener("ended", function () {
-          window.clearTimeout(gratitudeTimer);
-          gratitudeTimer = window.setTimeout(redirectToWhatsApp, 650);
-        }, { once: true });
   
         var film = gratitudeVideo.play();
         var voice = gratitudeAudio.play();
