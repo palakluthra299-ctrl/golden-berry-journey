@@ -30,6 +30,100 @@
         <button type="submit">Search</button>
       </form>
     </div>
+    <!-- ============ OFFERS BANNER (red glowing kinetic typography, no video) ============ -->
+    <section class="offers-banner" aria-label="WellWith limited time offers">
+      <div class="offers-stage" id="offers-stage"></div>
+    </section>
+    <script>
+    /* ==========================================================================
+       OFFER TEXTS — Palak, offer ka text yahin badlo!
+       Jo bhi offer likhna ho, neeche wali lines me likh do. Bas yahi ek jagah.
+       ========================================================================== */
+    const OFFER_CONFIG = {
+      hey: ["HEY!", "HEY!", "HEY!"],          // scene 1: stacked shouts
+      stop: "stop",                            // scene 2: red word
+      scrolling: "scrolling",                  // scene 2: black word
+      saleWords: ["MEGA", "SALE", "UP TO", "50% OFF"],  // scene 3: word-by-word
+      hurryRows: 4,                            // scene 4: kitni HURRY lines
+      hurryWord: "HURRY",                      // scene 4: repeating word
+      limitedTime: "LIMITED TIME",             // scene 4: highlighted row
+      cta: "SHOP NOW",                         // scene 5: button text
+      sceneMs: [2700, 2100, 3400, 3400, 2800]  // har scene kitne ms dikhe
+    };
+    (function () {
+      var cfg = window.OFFER_CONFIG || OFFER_CONFIG;
+      var stage = document.getElementById("offers-stage");
+      if (!stage) return;
+
+      function el(tag, cls, text) {
+        var d = document.createElement(tag);
+        if (cls) d.className = cls;
+        if (text != null) d.textContent = text;
+        return d;
+      }
+
+      // Scene 1: HEY x3 + pendulum ball
+      var s1 = el("div", "offer-scene");
+      cfg.hey.forEach(function (t) { s1.appendChild(el("div", "offer-hey", t)); });
+      s1.appendChild(el("div", "offer-pendulum"));
+
+      // Scene 2: stop / scrolling
+      var s2 = el("div", "offer-scene offer-scene-bright");
+      s2.appendChild(el("div", "offer-stop", cfg.stop));
+      s2.appendChild(el("div", "offer-scrolling", cfg.scrolling));
+
+      // Scene 3: word-by-word sale reveal
+      var s3 = el("div", "offer-scene");
+      cfg.saleWords.forEach(function (w) { s3.appendChild(el("div", "offer-saleword", w)); });
+
+      // Scene 4: HURRY rows + LIMITED TIME highlight
+      var s4 = el("div", "offer-scene");
+      for (var i = 0; i < cfg.hurryRows; i++) {
+        if (i === Math.floor(cfg.hurryRows / 2)) {
+          s4.appendChild(el("div", "offer-limited", cfg.limitedTime));
+        } else {
+          s4.appendChild(el("div", "offer-hurryrow", (cfg.hurryWord + " ").repeat(4).trim()));
+        }
+      }
+
+      // Scene 5: SHOP NOW CTA (taps scroll to products)
+      var s5 = el("div", "offer-scene");
+      var cta = el("div", "offer-cta", cfg.cta);
+      cta.setAttribute("role", "button");
+      cta.setAttribute("tabindex", "0");
+      function goProducts() {
+        var p = document.getElementById("products") || document.querySelector("[data-scroll-to='products']");
+        if (p && p.scrollIntoView) p.scrollIntoView({ behavior: "smooth" });
+      }
+      cta.addEventListener("click", goProducts);
+      cta.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") goProducts(); });
+      s5.appendChild(cta);
+
+      var scenes = [s1, s2, s3, s4, s5];
+      scenes.forEach(function (s) { stage.appendChild(s); });
+
+      var idx = -1, timer = null;
+      function restartAnims(scene) {
+        scene.querySelectorAll("div").forEach(function (n) {
+          n.style.animation = "none";
+          void n.offsetWidth;
+          n.style.animation = "";
+        });
+      }
+      function show(i) {
+        idx = i;
+        scenes.forEach(function (s, k) { s.classList.toggle("active", k === i); });
+        restartAnims(scenes[i]);
+        timer = setTimeout(function () { show((i + 1) % scenes.length); }, cfg.sceneMs[i] || 2800);
+      }
+      // Pause when tab hidden (saves battery), resume on return
+      document.addEventListener("visibilitychange", function () {
+        if (document.hidden) { clearTimeout(timer); }
+        else { show((idx + 1) % scenes.length); }
+      });
+      show(0);
+    })();
+    </script>
     <nav class="storefront-nav featureModule legacy-large" aria-label="WellWith experiences">
       <article class="storefront-nav-card nav-listen" id="feature-listen-card" aria-label="Listen to WellWith product stories">
         <button class="listen-feature-main" id="feature-listen-open" type="button" data-open-listen data-listen-index="0">
@@ -62,7 +156,7 @@
 
         <button class="storefront-nav-card nav-reviews" type="button" data-open-reviews>
           <span class="nav-card-copy"><strong>Check<br>Reviews</strong></span>
-          <span class="nav-card-art nav-play-art nav-review-character-art" aria-hidden="true"><img src="assets/review-character-icon.png" alt=""><span>▶</span></span>
+          <span class="nav-card-art nav-review-stars-art" aria-hidden="true"><span class="review-stars">★★★★★</span><span class="review-play">▶</span></span>
         </button>
 
         <button class="storefront-nav-card nav-coach" type="button" data-open-coach>
