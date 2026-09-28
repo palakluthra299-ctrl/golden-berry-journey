@@ -3344,6 +3344,32 @@ body { padding-bottom: 0; }
 .featureModule.legacy-large .nav-farmer-art { width: 94px; height: 116px; margin: 0 -4px -18px 0; }
 .featureModule.legacy-large .nav-explore-copy strong { color: #8f3d12; font: 900 clamp(24px, 2.35vw, 34px)/.9 var(--font); letter-spacing: -.055em; }
 .featureModule.legacy-large .nav-explore-copy > span { display: block; margin-top: 7px; color: #3d2a20; font: 700 15px/1 var(--display); }
+.featureModule.legacy-large .nav-products { isolation: isolate; }
+.featureModule.legacy-large .nav-products .nav-card-copy { position: relative; z-index: 4; }
+.featureModule.legacy-large .explore-character-slider {
+  position: absolute;
+  right: -4%;
+  bottom: -7%;
+  width: 69%;
+  height: 104%;
+  margin: 0;
+  overflow: hidden;
+  border-radius: 0;
+}
+.featureModule.legacy-large .explore-character-slide {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 58% center;
+  opacity: 0;
+  transform: translateX(24px) scale(.96);
+  transition: opacity .6s ease, transform .6s ease;
+  filter: drop-shadow(0 10px 13px rgba(71, 39, 15, .2));
+}
+.featureModule.legacy-large .explore-character-slide:nth-child(2) { object-position: 63% center; }
+.featureModule.legacy-large .explore-character-slide.is-active { opacity: 1; transform: translateX(0) scale(1); }
 .featureModule.legacy-large .product-feature-art { width: 72px; height: 82px; }
 .featureModule.legacy-large .nav-play-art { width: 54px; height: 54px; }
 .featureModule.legacy-large .coach-feature-figure { width: 68px; height: 78px; justify-self: end; align-self: end; }

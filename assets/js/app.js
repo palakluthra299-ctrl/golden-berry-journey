@@ -448,9 +448,10 @@ function initListen() {
   }
 
   function openListenModal(selectedIndex, fromHistory) {
-    index = Math.max(0, Math.min(LISTEN_PRODUCTS.length - 1, Number(selectedIndex) || 0));
+    /* Every fresh Listen-card click starts the story sequence from item one. */
+    index = fromHistory ? Math.max(0, Math.min(LISTEN_PRODUCTS.length - 1, Number(selectedIndex) || 0)) : 0;
     if (!fromHistory) {
-      WellWithHistory.open("listen", { index: index });
+      WellWithHistory.open("listen", { index: 0 });
       return;
     }
     var p = LISTEN_PRODUCTS[index];
@@ -564,13 +565,8 @@ function initListen() {
 
   openers.forEach(function (opener) {
     opener.addEventListener("click", function () {
-      if (opener.id === "feature-listen-open") {
-        resetFeatureTimer();
-        openListenModal(featureIndex);
-        return;
-      }
-      var selected = parseInt(opener.getAttribute("data-listen-index") || "0", 10);
-      openListenModal(isNaN(selected) ? 0 : selected);
+      if (opener.id === "feature-listen-open") resetFeatureTimer();
+      openListenModal(0);
     });
   });
   render();
@@ -1685,6 +1681,17 @@ document.addEventListener("DOMContentLoaded", function () {
   /* Business card Pixar image slider */
   (function initBusinessSlider() {
     var slides = qsa(".nav-business-slider .biz-slide");
+    if (slides.length < 2) return;
+    var i = 0;
+    setInterval(function () {
+      slides[i].classList.remove("is-active");
+      i = (i + 1) % slides.length;
+      slides[i].classList.add("is-active");
+    }, 2800);
+  })();
+  /* Explore card: one Pixar-style character at a time, matching Business. */
+  (function initExploreCharacterSlider() {
+    var slides = qsa(".explore-character-slider .explore-character-slide");
     if (slides.length < 2) return;
     var i = 0;
     setInterval(function () {

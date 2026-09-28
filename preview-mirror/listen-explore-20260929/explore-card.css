@@ -1,0 +1,26 @@
+.featureModule.legacy-large .nav-products { isolation: isolate; }
+.featureModule.legacy-large .nav-products .nav-card-copy { position: relative; z-index: 4; }
+.featureModule.legacy-large .explore-character-slider {
+  position: absolute;
+  right: -4%;
+  bottom: -7%;
+  width: 69%;
+  height: 104%;
+  margin: 0;
+  overflow: hidden;
+  border-radius: 0;
+}
+.featureModule.legacy-large .explore-character-slide {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 58% center;
+  opacity: 0;
+  transform: translateX(24px) scale(.96);
+  transition: opacity .6s ease, transform .6s ease;
+  filter: drop-shadow(0 10px 13px rgba(71, 39, 15, .2));
+}
+.featureModule.legacy-large .explore-character-slide:nth-child(2) { object-position: 63% center; }
+.featureModule.legacy-large .explore-character-slide.is-active { opacity: 1; transform: translateX(0) scale(1); }
