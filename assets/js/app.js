@@ -1191,7 +1191,8 @@ function initQuickCommerce() {
         '<span class="quick-img-swap"><img src="' + p.image + '" alt="' + p.name + '" loading="lazy"></span>' +
       '</button>' +
       '<div class="quick-card-body"><button class="quick-name" type="button" data-open-list="' + p.category + '">' + p.name + '</button>' +
-      '<p>1 pack</p><div class="quick-price-row"><strong>' + formatMoney(p.price) + '</strong><span data-cart-control="' + p.slug + '">' + cartControlHTML(p.slug, "quick-stepper") + '</span></div></div></article>';
+      '<p>1 pack</p><div class="quick-price-row"><strong>' + formatMoney(p.price) + '</strong><span data-cart-control="' + p.slug + '">' + cartControlHTML(p.slug, "quick-stepper") + '</span></div>' +
+      '<a class="quick-details-link" href="product.html?slug=' + p.slug + '">View Details ›</a></div></article>';
   }
 
   function renderRails() {
