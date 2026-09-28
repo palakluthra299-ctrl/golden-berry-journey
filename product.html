@@ -10,35 +10,11 @@
 </head>
 <body>
 
-<nav class="navbar">
-  <div class="container navbar-inner">
-    <a class="brand" href="index.html">
-      <span class="brand-name">wellwith</span>
-      <span class="brand-tag">Sea Buckthorn</span>
-    </a>
-    <div class="nav-links">
-      <a href="index.html">Home</a>
-      <a href="index.html#products">Products</a>
-      <a href="solution-finder.html">Solution Finder</a>
-      <a href="index.html#story">Our Story</a>
-      <a href="expert.html">Palak Luthra</a>
-      <a class="cart-link" href="cart.html" aria-label="Shopping cart">🛒<span class="cart-count" style="display:none">0</span></a>
-      <a class="btn btn-gold nav-cta" target="_blank" rel="noopener" href="https://wa.me/919266086554?text=Namaste%20Palak!%20I%20want%20to%20know%20more%20about%20WellWith%20Sea%20Buckthorn%20products.">Chat with Us</a>
-    </div>
-    <div class="mobile-nav-actions">
-      <a class="cart-link mobile-cart-link" href="cart.html" aria-label="Shopping cart">🛒<span class="cart-count" style="display:none">0</span></a>
-      <button class="hamburger" id="hamburger" aria-label="Menu">☰</button>
-    </div>
+<header class="product-topbar">
+  <div class="container">
+    <a class="back-link" href="index.html#products">← Back</a>
   </div>
-  <div class="mobile-menu" id="mobile-menu">
-    <a href="index.html">Home</a>
-    <a href="index.html#products">Products</a>
-    <a href="solution-finder.html">Solution Finder</a>
-    <a href="index.html#story">Our Story</a>
-    <a href="expert.html">Palak Luthra</a>
-    <a href="cart.html">🛒 Cart</a>
-  </div>
-</nav>
+</header>
 
 <div class="container page-head" id="product-root"></div>
 
@@ -92,7 +68,7 @@
   root.innerHTML =
     '<a class="back-link" href="index.html#products">← Back to Products</a>' +
     '<div class="product-hero">' +
-      '<div class="img-box"><span class="anim-icon">' + p.animationIcon + '</span>' +
+      '<div class="img-box">' +
         '<img src="' + p.image + '" alt="' + p.name + '"></div>' +
       '<div>' +
         '<span class="cat">' + cat + '</span>' +
@@ -113,9 +89,9 @@
       '<div class="flash-grid" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr))">' +
         p.ingredientsList.map(function (ing) {
           return '<div class="flashcard reveal"><div class="inner">' +
-            '<div class="face"><div class="icon">' + ing.icon + '</div><h4>' + ing.name + '</h4>' +
+            '<div class="face"><h4>' + ing.name + '</h4>' +
             '<div class="hint">Tap to reveal benefit</div></div>' +
-            '<div class="face back"><div class="icon">' + ing.icon + '</div><h4>' + ing.name + '</h4>' +
+            '<div class="face back"><h4>' + ing.name + '</h4>' +
             '<p class="benefit">' + ing.benefit + '</p></div>' +
           '</div></div>';
         }).join("") +
@@ -126,16 +102,16 @@
       '<div class="center"><span class="kicker">From Berry to Bottle</span>' +
       '<h2 class="section-title display">How It\'s Made</h2></div>' +
       '<div class="juice-steps">' +
-        '<div class="juice-step reveal"><div class="step-icon">🏔️</div><div class="step-name">Wild Harvest<br>Ladakh 11,500 ft</div></div>' +
-        '<div class="juice-step reveal"><div class="step-icon">🫐</div><div class="step-name">Handpicked<br>Golden Berries</div></div>' +
-        '<div class="juice-step reveal"><div class="step-icon">❄️</div><div class="step-name">Cold-Pressed<br>Pure Pulp</div></div>' +
-        '<div class="juice-step reveal"><div class="step-icon">🧪</div><div class="step-name">Lab Tested<br>190+ Compounds</div></div>' +
-        '<div class="juice-step reveal"><div class="step-icon">🍶</div><div class="step-name">Bottled<br>Fresh</div></div>' +
+        '<div class="juice-step reveal"><div class="step-name">Wild Harvest<br>Ladakh 11,500 ft</div></div>' +
+        '<div class="juice-step reveal"><div class="step-name">Handpicked<br>Golden Berries</div></div>' +
+        '<div class="juice-step reveal"><div class="step-name">Cold-Pressed<br>Pure Pulp</div></div>' +
+        '<div class="juice-step reveal"><div class="step-name">Lab Tested<br>190+ Compounds</div></div>' +
+        '<div class="juice-step reveal"><div class="step-name">Bottled<br>Fresh</div></div>' +
       '</div>' +
     '</section>' +
 
     '<section class="block">' +
-      '<div class="center"><span class="anim-icon" style="font-size:56px">' + p.animationIcon + '</span>' +
+      '<div class="center">' +
       '<h2 class="section-title display">Why ' + p.name + '?</h2>' +
       '<p class="section-sub" style="max-width:640px">' + p.description + '</p></div>' +
       '<div class="trust-badges">' +
