@@ -589,9 +589,9 @@ function initPartner() {
       return;
     }
     var images = [
-      "assets/products-transparent/pulp.png",
-      "assets/products-transparent/omega-capsules.png",
-      "assets/products-transparent/tisane.png"
+      "assets/business/business-community.webp",
+      "assets/business/business-franchise.webp",
+      "assets/business/business-retail.webp"
     ];
 
     function renderBusinessExperience() {
@@ -1217,9 +1217,9 @@ function initQuickCommerce() {
 
   function quickCard(p) {
     return '<article class="quick-product-card">' +
-      '<button class="quick-product-open" type="button" data-open-list="' + p.category + '" aria-label="View ' + p.name + '">' +
+      '<a class="quick-product-open" href="product.html?slug=' + p.slug + '" aria-label="View ' + p.name + ' details">' +
         '<span class="quick-img-swap"><img src="' + p.image + '" alt="' + p.name + '" loading="lazy"></span>' +
-      '</button>' +
+      '</a>' +
       '<div class="quick-card-body"><button class="quick-name" type="button" data-open-list="' + p.category + '">' + p.name + '</button>' +
       '<p>1 pack</p><div class="quick-price-row"><strong>' + formatMoney(p.price) + '</strong><span data-cart-control="' + p.slug + '">' + cartControlHTML(p.slug, "quick-stepper") + '</span></div>' +
       '<a class="quick-details-link" href="product.html?slug=' + p.slug + '">View Details ›</a></div></article>';
@@ -1234,7 +1234,7 @@ function initQuickCommerce() {
   function listingCard(p) {
     var off = Math.max(0, (p.mrp || p.price) - p.price);
     return '<article class="listing-card">' +
-      '<div class="listing-image"><button class="wish-btn" type="button" aria-label="Add ' + p.name + ' to wishlist">♡</button><span class="quick-img-swap"><img src="' + p.image + '" alt="' + p.name + '"></span><span class="listing-add" data-cart-control="' + p.slug + '">' + cartControlHTML(p.slug, "listing-stepper") + '</span></div>' +
+      '<div class="listing-image"><button class="wish-btn" type="button" aria-label="Add ' + p.name + ' to wishlist">♡</button><a href="product.html?slug=' + p.slug + '" aria-label="View ' + p.name + ' details"><span class="quick-img-swap"><img src="' + p.image + '" alt="' + p.name + '"></span></a><span class="listing-add" data-cart-control="' + p.slug + '">' + cartControlHTML(p.slug, "listing-stepper") + '</span></div>' +
       '<div class="listing-price"><strong>' + formatMoney(p.price) + '</strong><del>' + formatMoney(p.mrp || p.price) + '</del></div>' +
       '<div class="listing-off">' + (off ? formatMoney(off) + ' OFF' : 'MRP pricing') + '</div>' +
       '<h3>' + p.name + '</h3><p>1 pack</p><button class="variant-link" type="button">1 variant ›</button>' +
@@ -1253,6 +1253,7 @@ function initQuickCommerce() {
     });
     qs("#catalog-title", catalog).textContent = query ? 'Search: “' + query + '”' : (catalogGroups.find(function (g) { return g[0] === activeFilter; }) || [0, "Products"])[1];
     qs("#catalog-grid", catalog).innerHTML = items.length ? items.map(listingCard).join("") : '<div class="catalog-empty"><h3>No products found</h3><p>Try a different search.</p></div>';
+    updateInternalCartLinks();
     qsa("[data-catalog-filter]", catalog).forEach(function (b) { b.classList.toggle("active", b.getAttribute("data-catalog-filter") === activeFilter); });
     catalog.classList.add("active");
     requestAnimationFrame(function () { catalog.classList.add("open"); });
@@ -1367,6 +1368,7 @@ function initQuickCommerce() {
 
   renderRails();
   syncQuickCart();
+  updateInternalCartLinks();
   var priorCartHandler = window.onCartChanged;
   window.onCartChanged = function () { if (typeof priorCartHandler === "function") priorCartHandler(); syncQuickCart(); };
 
@@ -1680,4 +1682,15 @@ document.addEventListener("DOMContentLoaded", function () {
   initQuickCommerce();
   initVisualPolish();
   initReveal();
+  /* Business card Pixar image slider */
+  (function initBusinessSlider() {
+    var slides = qsa(".nav-business-slider .biz-slide");
+    if (slides.length < 2) return;
+    var i = 0;
+    setInterval(function () {
+      slides[i].classList.remove("is-active");
+      i = (i + 1) % slides.length;
+      slides[i].classList.add("is-active");
+    }, 2800);
+  })();
 });
