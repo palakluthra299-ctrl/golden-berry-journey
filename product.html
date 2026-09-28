@@ -2,15 +2,59 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Product | WellWith Sea Buckthorn</title>
   <meta name="description" content="WellWith Sea Buckthorn products – pure Himalayan wellness from Ladakh.">
   <link rel="icon" href="assets/favicon.png" type="image/png">
-  <link rel="stylesheet" href="assets/css/styles.css?v=20260928-3">
+  <link rel="stylesheet" href="assets/css/styles.css?v=20260928-6">
   <style>
-    /* Minimal product-page topbar: back button only */
-    .product-topbar { padding: 18px 0 6px; }
+    /* Single-screen product page: no page scroll, tabbed info */
+    html, body { height: 100dvh; overflow: hidden; }
+    body { display: flex; flex-direction: column; }
+    .product-topbar { padding: 12px 0 4px; flex: 0 0 auto; }
     .product-topbar .back-link { font-size: 16px; font-weight: 600; }
+    .product-screen { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; }
+    .product-compact-hero { flex: 0 0 auto; display: flex; gap: 14px; align-items: center; padding: 6px 0 10px; }
+    .product-compact-hero .p-img { width: 92px; height: 92px; flex: 0 0 auto; border-radius: 18px; background: #fbf7ec; border: 1px solid var(--card-border); display: grid; place-items: center; padding: 8px; }
+    .product-compact-hero .p-img img { width: 100%; height: 100%; object-fit: contain; }
+    .product-compact-hero .p-info { min-width: 0; flex: 1 1 auto; }
+    .product-compact-hero .cat { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--gold); font-weight: 700; }
+    .product-compact-hero h1 { font-size: 22px; margin: 2px 0; line-height: 1.15; }
+    .product-compact-hero .tagline { font-size: 14px; font-weight: 700; color: var(--gold-light); margin: 0 0 6px; }
+    .product-compact-hero .p-price-row { display: flex; align-items: center; gap: 10px; }
+    .product-compact-hero .p-price { font-size: 19px; font-weight: 800; }
+    .product-tabs { flex: 0 0 auto; display: flex; gap: 6px; padding: 4px 0 10px; }
+    .product-tabs button { flex: 1 1 0; border: 1px solid var(--card-border); background: var(--surface); border-radius: 12px; padding: 9px 4px; font-size: 13px; font-weight: 700; color: var(--text); cursor: pointer; }
+    .product-tabs button.active { background: var(--gold); color: #241a05; border-color: var(--gold); }
+    .product-panels { flex: 1 1 auto; min-height: 0; position: relative; }
+    .product-panel { position: absolute; inset: 0; overflow: hidden; display: none; padding-bottom: 8px; }
+    .product-panel.active { display: flex; flex-direction: column; }
+    .product-panel .desc { font-size: 14.5px; line-height: 1.55; color: var(--text); margin: 0 0 12px; }
+    .product-panel .panel-actions { display: flex; gap: 10px; margin-top: auto; padding-top: 8px; }
+    .product-panel .panel-actions .btn { flex: 1 1 0; font-size: 15px; padding: 12px 8px; }
+    .ing-list { display: flex; flex-direction: column; gap: 8px; }
+    .ing-row { background: var(--surface); border: 1px solid var(--card-border); border-radius: 12px; padding: 10px 12px; }
+    .ing-row h4 { font-size: 14px; margin: 0 0 3px; }
+    .ing-row p { font-size: 13px; margin: 0; color: var(--muted); line-height: 1.45; }
+    .making-list { display: flex; flex-direction: column; gap: 8px; }
+    .making-step { display: flex; gap: 10px; align-items: center; background: var(--surface); border: 1px solid var(--card-border); border-radius: 12px; padding: 9px 12px; }
+    .making-step .n { flex: 0 0 auto; width: 28px; height: 28px; border-radius: 50%; background: var(--gold); color: #241a05; font-weight: 800; font-size: 14px; display: grid; place-items: center; }
+    .making-step .t { font-size: 13.5px; font-weight: 600; }
+    .why-badges { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 12px; }
+    .why-badge { background: var(--surface); border: 1px solid var(--card-border); border-radius: 12px; padding: 10px 8px; text-align: center; }
+    .why-badge strong { display: block; font-size: 13px; margin-bottom: 2px; }
+    .why-badge span { font-size: 11.5px; color: var(--muted); }
+    @media (min-width: 760px) {
+      .product-compact-hero .p-img { width: 130px; height: 130px; }
+      .product-compact-hero h1 { font-size: 30px; }
+      .product-compact-hero .tagline { font-size: 16px; }
+      .product-compact-hero .p-price { font-size: 24px; }
+      .product-tabs button { font-size: 15px; padding: 12px 4px; }
+      .product-panel .desc { font-size: 16px; }
+      .ing-row h4 { font-size: 16px; }
+      .ing-row p { font-size: 14px; }
+      .making-step .t { font-size: 15px; }
+    }
   </style>
 </head>
 <body>
@@ -21,34 +65,7 @@
   </div>
 </header>
 
-<div class="container page-head" id="product-root"></div>
-
-<footer>
-  <div class="container">
-    <div class="footer-grid">
-      <div>
-        <h3 class="brand-name">wellwith</h3>
-        <p style="margin-top:10px">The Original Sea Buckthorn Co.<br>Pure nutrition, directly from the hills of Ladakh to your home.</p>
-      </div>
-      <div>
-        <h4>Quick Links</h4>
-        <ul>
-          <li><a href="index.html#products">Products</a></li>
-          <li><a href="solution-finder.html">Solution Finder</a></li>
-          <li><a href="index.html#story">Our Story</a></li>
-          <li><a href="expert.html">Palak Luthra</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4>Contact</h4>
-        <p>WhatsApp: +91 9266086554<br>The Original Sea Buckthorn Co.</p>
-      </div>
-    </div>
-    <div class="footer-bottom">© 2026 WellWith Sea Buckthorn. All rights reserved.</div>
-  </div>
-</footer>
-
-<a class="wa-float" id="wa-float" target="_blank" rel="noopener" aria-label="Chat on WhatsApp" href="#">💬</a>
+<div class="container product-screen" id="product-root"></div>
 
 <script src="assets/js/data.js?v=20260928-2"></script>
 <script src="assets/js/app.js?v=20260928-6"></script>
@@ -68,73 +85,72 @@
 
   document.title = p.name + " | WellWith Sea Buckthorn";
   var cat = p.category === "concentrate" ? "Liquid Concentrate" : "Specialized Add-on";
-  var cols = p.ingredientsList.length <= 2 ? 2 : 3;
+  var price = (typeof formatPrice === "function") ? formatPrice(p.price) : ("₹" + p.price);
 
   root.innerHTML =
-    '<a class="back-link" href="index.html#products">← Back to Products</a>' +
-    '<div class="product-hero">' +
-      '<div class="img-box">' +
-        '<img src="' + p.image + '" alt="' + p.name + '"></div>' +
-      '<div>' +
+    '<div class="product-compact-hero">' +
+      '<div class="p-img"><img src="' + p.image + '" alt="' + p.name + '"></div>' +
+      '<div class="p-info">' +
         '<span class="cat">' + cat + '</span>' +
         '<h1>' + p.name + '</h1>' +
         '<p class="tagline">' + p.tagline + '</p>' +
-        '<p class="desc">' + p.description + '</p>' +
-        '<div class="row" style="display:flex;gap:10px;flex-wrap:wrap">' +
-          '<button class="btn btn-green" data-add-cart="' + p.slug + '" style="font-size:17px">Add to Cart</button>' +
-          '<a class="btn btn-gold" target="_blank" rel="noopener" style="font-size:17px" href="' + productWaLink(p.name) + '">💬 Order via WhatsApp</a>' +
-        '</div>' +
+        '<div class="p-price-row"><span class="p-price">' + price + '</span></div>' +
       '</div>' +
     '</div>' +
-
-    '<section class="block" style="padding-bottom:0">' +
-      '<div class="center"><span class="kicker">What\'s Inside</span>' +
-      '<h2 class="section-title display">Key Ingredients</h2>' +
-      '<p class="section-sub">Tap any card to discover the benefit of each ingredient</p></div>' +
-      '<div class="flash-grid" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr))">' +
-        p.ingredientsList.map(function (ing) {
-          return '<div class="flashcard reveal"><div class="inner">' +
-            '<div class="face"><h4>' + ing.name + '</h4>' +
-            '<div class="hint">Tap to reveal benefit</div></div>' +
-            '<div class="face back"><h4>' + ing.name + '</h4>' +
-            '<p class="benefit">' + ing.benefit + '</p></div>' +
-          '</div></div>';
-        }).join("") +
+    '<nav class="product-tabs" role="tablist">' +
+      '<button class="active" data-tab="about" role="tab">About</button>' +
+      '<button data-tab="ingredients" role="tab">Ingredients</button>' +
+      '<button data-tab="making" role="tab">Making</button>' +
+      '<button data-tab="why" role="tab">Why Us</button>' +
+    '</nav>' +
+    '<div class="product-panels">' +
+      '<div class="product-panel active" data-panel="about" role="tabpanel">' +
+        '<p class="desc">' + p.description + '</p>' +
+        '<div class="panel-actions">' +
+          '<button class="btn btn-green" data-add-cart="' + p.slug + '">Add to Cart</button>' +
+          '<a class="btn btn-gold" target="_blank" rel="noopener" href="' + productWaLink(p.name) + '">Order on WhatsApp</a>' +
+        '</div>' +
       '</div>' +
-    '</section>' +
-
-    '<section class="block" style="padding-bottom:0">' +
-      '<div class="center"><span class="kicker">From Berry to Bottle</span>' +
-      '<h2 class="section-title display">How It\'s Made</h2></div>' +
-      '<div class="juice-steps">' +
-        '<div class="juice-step reveal"><div class="step-name">Wild Harvest<br>Ladakh 11,500 ft</div></div>' +
-        '<div class="juice-step reveal"><div class="step-name">Handpicked<br>Golden Berries</div></div>' +
-        '<div class="juice-step reveal"><div class="step-name">Cold-Pressed<br>Pure Pulp</div></div>' +
-        '<div class="juice-step reveal"><div class="step-name">Lab Tested<br>190+ Compounds</div></div>' +
-        '<div class="juice-step reveal"><div class="step-name">Bottled<br>Fresh</div></div>' +
+      '<div class="product-panel" data-panel="ingredients" role="tabpanel">' +
+        '<div class="ing-list">' +
+          p.ingredientsList.map(function (ing) {
+            return '<div class="ing-row"><h4>' + ing.name + '</h4><p>' + ing.benefit + '</p></div>';
+          }).join("") +
+        '</div>' +
       '</div>' +
-    '</section>' +
-
-    '<section class="block">' +
-      '<div class="center">' +
-      '<h2 class="section-title display">Why ' + p.name + '?</h2>' +
-      '<p class="section-sub" style="max-width:640px">' + p.description + '</p></div>' +
-      '<div class="trust-badges">' +
-        '<div class="trust-badge reveal"><strong>100% Natural</strong><span>No synthetic additives</span></div>' +
-        '<div class="trust-badge reveal"><strong>Ladakh Sourced</strong><span>11,500 ft altitude</span></div>' +
-        '<div class="trust-badge reveal"><strong>DRDO Trusted</strong><span>Scientific validation</span></div>' +
+      '<div class="product-panel" data-panel="making" role="tabpanel">' +
+        '<div class="making-list">' +
+          ["Wild Harvest — Ladakh 11,500 ft", "Handpicked Golden Berries", "Cold-Pressed Pure Pulp", "Lab Tested — 190+ Compounds", "Bottled Fresh"].map(function (s, i) {
+            return '<div class="making-step"><span class="n">' + (i + 1) + '</span><span class="t">' + s + '</span></div>';
+          }).join("") +
+        '</div>' +
       '</div>' +
-      '<div class="center" style="margin-top:36px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap">' +
-        '<button class="btn btn-green" data-add-cart="' + p.slug + '" style="font-size:17px">Add to Cart</button>' +
-        '<a class="btn btn-gold" target="_blank" rel="noopener" style="font-size:17px" href="' + productWaLink(p.name) + '">💬 Order ' + p.name + ' on WhatsApp</a>' +
+      '<div class="product-panel" data-panel="why" role="tabpanel">' +
+        '<div class="why-badges">' +
+          '<div class="why-badge"><strong>100% Natural</strong><span>No synthetic additives</span></div>' +
+          '<div class="why-badge"><strong>Ladakh Sourced</strong><span>11,500 ft altitude</span></div>' +
+          '<div class="why-badge"><strong>DRDO Trusted</strong><span>Scientific validation</span></div>' +
+        '</div>' +
+        '<p class="desc">' + p.description + '</p>' +
+        '<div class="panel-actions">' +
+          '<button class="btn btn-green" data-add-cart="' + p.slug + '">Add to Cart</button>' +
+          '<a class="btn btn-gold" target="_blank" rel="noopener" href="' + productWaLink(p.name) + '">Order on WhatsApp</a>' +
+        '</div>' +
       '</div>' +
-    '</section>';
+    '</div>';
 
-  qsa(".flashcard").forEach(function (c) {
-    c.addEventListener("click", function () { c.classList.toggle("flipped"); });
+  // Tab switching
+  var tabs = root.querySelectorAll(".product-tabs button");
+  var panels = root.querySelectorAll(".product-panel");
+  tabs.forEach(function (t) {
+    t.addEventListener("click", function () {
+      tabs.forEach(function (x) { x.classList.remove("active"); });
+      panels.forEach(function (x) { x.classList.remove("active"); });
+      t.classList.add("active");
+      var panel = root.querySelector('.product-panel[data-panel="' + t.getAttribute("data-tab") + '"]');
+      if (panel) panel.classList.add("active");
+    });
   });
-  document.getElementById("wa-float").href = productWaLink(p.name);
-  initReveal();
 })();
 </script>
 </body>
