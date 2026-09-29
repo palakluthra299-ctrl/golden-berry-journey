@@ -133,8 +133,8 @@
       '</div>' +
       '<div class="cart-summary">' +
         '<div class="cart-total-row"><span>Total items</span><strong>' + totalQty + '</strong></div>' +
-        '<p class="cart-note">Prices and delivery details will be shared with you on WhatsApp.</p>' +
-        '<button class="btn btn-gold btn-block" id="proceed-btn">💬 Proceed to Order on WhatsApp</button>' +
+        '<p class="cart-note">Choose online payment, or consult with us on WhatsApp.</p>' +
+        '<button class="btn btn-gold btn-block" id="proceed-btn">Choose checkout option</button>' +
         '<a class="btn btn-outline btn-block" href="index.html#products">＋ Add More Products</a>' +
       '</div>';
 
@@ -158,12 +158,70 @@
       });
     });
 
+    /* ---------- checkout choice: CHECKOUT NOW / CONSULT FIRST / WHATSAPP EXCLUSIVE ---------- */
+    var choiceEl = null;
+    function closeChoice() {
+      if (!choiceEl) return;
+      choiceEl.classList.remove("open");
+      document.body.classList.remove("cc-open");
+      setTimeout(function () { if (choiceEl && !choiceEl.classList.contains("open")) choiceEl.classList.remove("active"); }, 240);
+    }
+    function openChoice(orderMsg) {
+      if (!cartItems().length) return;
+      if (!choiceEl) {
+        choiceEl = document.createElement("div");
+        choiceEl.className = "checkout-choice-backdrop";
+        choiceEl.id = "checkout-choice";
+        choiceEl.innerHTML =
+          '<section class="checkout-choice" role="dialog" aria-modal="true" aria-label="Choose checkout option">' +
+            '<header class="cc-topbar"><button type="button" class="cc-back" aria-label="Back to cart">\u2190 Cart</button>' +
+            '<button type="button" class="cc-close" aria-label="Close">\u00d7</button></header>' +
+            '<h2 class="cc-title">HOW WOULD YOU LIKE TO PROCEED?</h2>' +
+            '<p class="cc-sub">Your cart is ready. Choose how you\u2019d like to continue.</p>' +
+            '<div class="cc-cards">' +
+              '<div class="cc-card"><span class="cc-icon" aria-hidden="true">\uD83D\uDD12</span>' +
+                '<h3>CHECKOUT NOW</h3><p>Proceed with your order and payment.</p>' +
+                '<p class="cc-note">COD + Prepaid available</p>' +
+                '<a class="cc-btn cc-gold" id="cc-checkout-now" href="#">CHECKOUT NOW \u2192</a></div>' +
+              '<div class="cc-card"><span class="cc-icon" aria-hidden="true">\uD83D\uDCAC</span>' +
+                '<h3>CONSULT FIRST</h3><p>Have questions about your products or order?</p>' +
+                '<p class="cc-note">Talk to us on WhatsApp before confirming.</p>' +
+                '<a class="cc-btn cc-green" id="cc-consult" target="_blank" rel="noopener" href="#">CONSULT ON WHATSAPP \u2192</a></div>' +
+            '</div>' +
+            '<a class="cc-exclusive" id="cc-exclusive" target="_blank" rel="noopener" href="#">' +
+              '<span class="cc-badge">WHATSAPP EXCLUSIVE</span>' +
+              '<strong>Looking for a special offer?</strong>' +
+              '<span class="cc-exclusive-sub">Ask us on WhatsApp about your exclusive offer.</span></a>' +
+          '</section>';
+        document.body.appendChild(choiceEl);
+        choiceEl.querySelector(".cc-back").addEventListener("click", closeChoice);
+        choiceEl.querySelector(".cc-close").addEventListener("click", closeChoice);
+        choiceEl.addEventListener("click", function (e) { if (e.target === choiceEl) closeChoice(); });
+      }
+      var cartQ = encodeURIComponent(cartValue(getCart()));
+      choiceEl.querySelector("#cc-checkout-now").setAttribute("href", "checkout.html?cart=" + cartQ);
+      choiceEl.querySelector("#cc-consult").setAttribute("href", waLink(orderMsg));
+      choiceEl.querySelector("#cc-exclusive").setAttribute("href", waLink("Namaste Palak! I saw the WHATSAPP EXCLUSIVE offer on the WellWith website. Please share my exclusive offer. Dhanyavaad!"));
+      /* admin flag: hide the Cashfree (CHECKOUT NOW) card when disabled */
+      try {
+        fetch("/api/config/get", { cache: "no-store" })
+          .then(function (r) { return r.ok ? r.json() : null; })
+          .then(function (cfg) {
+            var btn = choiceEl.querySelector("#cc-checkout-now");
+            var card = btn && btn.closest ? btn.closest(".cc-card") : null;
+            if (card) card.style.display = (cfg && cfg.cashfree_enabled === false) ? "none" : "";
+          })
+          .catch(function () {});
+      } catch (e) {}
+      choiceEl.classList.add("active");
+      requestAnimationFrame(function () { if (choiceEl) choiceEl.classList.add("open"); });
+      document.body.classList.add("cc-open");
+    }
+
     var proceedBtn = document.getElementById("proceed-btn");
     if (proceedBtn) {
       proceedBtn.addEventListener("click", function () {
-        var destination = waLink(msg);
-        if (typeof window.startWellWithThankYou === "function") window.startWellWithThankYou(destination);
-        else window.location.href = destination;
+        openChoice(msg);
       });
     }
   }
