@@ -460,9 +460,16 @@ async function setProductOverrides(patch) {
     var isNew = !current[slug] || !!current[slug]._new;
     var c = cleanProductOverride(slug, val, isNew && val._new === true);
     if (c) {
-      if (val._new === true) c._new = true;
-      else if (current[slug] && current[slug]._new) c._new = true;
-      current[slug] = c;
+      /* Merge into the existing override (don't wipe fields the patch
+       * didn't include — e.g. name/image of an admin-added product when
+       * only its price is edited). */
+      var prev = (current[slug] && typeof current[slug] === "object") ? current[slug] : {};
+      var merged = Object.assign({}, prev, c);
+      /* Explicit "clear the drop": a patch price_drop of 0/empty removes it. */
+      if (val.price_drop === 0 || val.price_drop === "" || val.price_drop === null) delete merged.price_drop;
+      if (val._new === true) merged._new = true;
+      else if (prev._new) merged._new = true;
+      current[slug] = merged;
     }
   }
   await r.set(PRODUCTS_KEY, JSON.stringify(current));
