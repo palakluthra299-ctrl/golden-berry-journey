@@ -7,6 +7,7 @@ var out = path.join(root, "dist");
 var entries = [
   "index.html",
   "product.html",
+  "products.html",
   "cart.html",
   "checkout.html",
   "checkout-review.html",
@@ -14,6 +15,9 @@ var entries = [
   "admin.html",
   "expert.html",
   "solution-finder.html",
+  "contact.html",
+  "terms.html",
+  "refunds.html",
   "404.html",
   "css",
   "js",
