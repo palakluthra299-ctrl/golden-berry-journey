@@ -6,8 +6,9 @@
   <title>Checkout | WellWith Sea Buckthorn</title>
   <meta name="description" content="WellWith secure checkout — pay online with Cashfree or choose Cash on Delivery.">
   <link rel="icon" href="assets/favicon.png" type="image/png">
-  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="assets/css/styles.css">
   <style>
+    h1, h2, h3 { font-style: normal; }
     /* Checkout page — scoped styles, matches WellWith visual language */
     .co-wrap { max-width: 680px; margin: 0 auto; }
     .co-card { background: var(--card); border: 1px solid var(--card-border); border-radius: var(--radius);
@@ -55,35 +56,21 @@
 </head>
 <body>
 
-<nav class="navbar">
-  <div class="container navbar-inner">
-    <a class="brand" href="index.html">
-      <span class="brand-name">wellwith</span>
-      <span class="brand-tag">Sea Buckthorn</span>
-    </a>
-    <div class="nav-links">
-      <a href="index.html">Home</a>
-      <a href="index.html#products">Products</a>
-      <a href="solution-finder.html">Solution Finder</a>
-      <a href="index.html#story">Our Story</a>
-      <a href="expert.html">Palak Luthra</a>
-      <a class="cart-link" href="cart.html" aria-label="Shopping cart">🛒<span class="cart-count" style="display:none">0</span></a>
-      <a class="btn btn-gold nav-cta" target="_blank" rel="noopener" href="https://wa.me/919266086554?text=Namaste%20Palak!%20I%20want%20to%20know%20more%20about%20WellWith%20Sea%20Buckthorn%20products.">Chat with Us</a>
-    </div>
-    <div class="mobile-nav-actions">
-      <a class="cart-link mobile-cart-link" href="cart.html" aria-label="Shopping cart">🛒<span class="cart-count" style="display:none">0</span></a>
-      <button class="hamburger" id="hamburger" aria-label="Menu">☰</button>
+<header class="storefront-header">
+  <div class="container storefront-header-inner">
+    <div class="storefront-topbar">
+      <a class="brand" href="index.html" aria-label="WellWith home">
+        <span class="brand-name">wellwith</span>
+        <span class="brand-tag">Sea Buckthorn</span>
+      </a>
+      <form class="quick-search storefront-search" id="quick-search" role="search">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-4-4"></path></svg>
+        <input id="quick-search-input" type="search" placeholder="Search WellWith" aria-label="Search WellWith products">
+        <button type="submit">Search</button>
+      </form>
     </div>
   </div>
-  <div class="mobile-menu" id="mobile-menu">
-    <a href="index.html">Home</a>
-    <a href="index.html#products">Products</a>
-    <a href="solution-finder.html">Solution Finder</a>
-    <a href="index.html#story">Our Story</a>
-    <a href="expert.html">Palak Luthra</a>
-    <a href="cart.html">🛒 Cart</a>
-  </div>
-</nav>
+</header>
 
 <div class="container page-head">
   <a class="back-link" href="cart.html">← Back to Cart</a>
