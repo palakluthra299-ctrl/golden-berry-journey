@@ -459,22 +459,32 @@ async function setProductOverrides(patch) {
     if (val === null) { delete current[slug]; continue; } // null = remove override
     var isNew = !current[slug] || !!current[slug]._new;
     var c = cleanProductOverride(slug, val, isNew && val._new === true);
+    var prev = (current[slug] && typeof current[slug] === "object") ? current[slug] : {};
+    /* Explicit clears that must apply even when the patch carries no other
+     * settable field (c would be null and the merge below would be skipped):
+     * price_drop of 0/empty removes the drop; blank text fields remove the
+     * override key so catalog products fall back to base data. */
+    function applyClears(target) {
+      var changed = false;
+      if (val.price_drop === 0 || val.price_drop === "" || val.price_drop === null) {
+        if ("price_drop" in target) { delete target.price_drop; changed = true; }
+      }
+      ["image", "category", "tagline", "description"].forEach(function (k) {
+        if (val[k] === "" && (k in target)) { delete target[k]; changed = true; }
+      });
+      return changed;
+    }
     if (c) {
       /* Merge into the existing override (don't wipe fields the patch
        * didn't include — e.g. name/image of an admin-added product when
        * only its price is edited). */
-      var prev = (current[slug] && typeof current[slug] === "object") ? current[slug] : {};
       var merged = Object.assign({}, prev, c);
-      /* Explicit "clear the drop": a patch price_drop of 0/empty removes it. */
-      if (val.price_drop === 0 || val.price_drop === "" || val.price_drop === null) delete merged.price_drop;
-      /* Explicit clear of text fields: blanking removes the override key
-       * (catalog products fall back to base data, new products to defaults). */
-      ["image", "category", "tagline", "description"].forEach(function (k) {
-        if (val[k] === "") delete merged[k];
-      });
+      applyClears(merged);
       if (val._new === true) merged._new = true;
       else if (prev._new) merged._new = true;
       current[slug] = merged;
+    } else if (Object.keys(prev).length && applyClears(prev)) {
+      current[slug] = prev;
     }
   }
   await r.set(PRODUCTS_KEY, JSON.stringify(current));
