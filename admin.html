@@ -68,6 +68,13 @@
   .prod-fields .chk input{width:20px; height:20px; accent-color:var(--green);}
   .prod-actions{display:flex; flex-direction:column; gap:6px; flex:0 0 auto;}
   .prod-actions .btn{padding:8px 14px; font-size:13px;}
+  .prod-edit{display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+    gap:8px; margin-top:8px; padding-top:8px; border-top:1px dashed var(--line);}
+  .prod-edit label{font-size:11px; color:var(--mut); font-weight:600;
+    display:flex; flex-direction:column; gap:4px;}
+  .prod-edit .full{grid-column:1/-1;}
+  .prod-edit input,.prod-edit select,.prod-edit textarea{padding:8px 10px;
+    border:1px solid var(--line); border-radius:8px; font-size:13px; font-family:inherit;}
   .btn.ghost{background:#f1f5f1; color:var(--ink);}
   .ovr-tag{display:inline-block; font-size:10px; font-weight:800; color:#92400e;
     background:#fef3c7; border-radius:999px; padding:3px 9px; margin-left:6px;
@@ -270,7 +277,6 @@
         <div class="grid">
           <label class="full">Product name *<input id="npName" placeholder="e.g. Sea Buckthorn Honey"></label>
           <label>Slug (link)<input id="npSlug" placeholder="naam se auto"></label>
-          <label>SKU<input id="npSku" placeholder="e.g. WW-HONEY"></label>
           <label>Price ₹ *<input id="npPrice" type="number" min="1" placeholder="e.g. 499"></label>
           <label>Price Drop ₹<input id="npDrop" type="number" min="0" placeholder="khali = no drop"></label>
           <label>Category
@@ -587,7 +593,9 @@
             slug: p.slug,
             name: o.name || p.name,
             image: o.image || p.image,
-            sku: (typeof o.sku === "string") ? o.sku : "",
+            category: o.category || p.category || "addon",
+            tagline: o.tagline || p.tagline || "",
+            description: o.description || p.description || "",
             basePrice: base,
             price: (typeof o.price === "number" && o.price > 0) ? o.price : base,
             drop: (typeof o.price_drop === "number" && o.price_drop > 0) ? o.price_drop : 0,
@@ -603,7 +611,9 @@
           prodCache.push({
             slug: slug, name: o.name || slug,
             image: o.image || "assets/products/pulp.jpg",
-            sku: o.sku || "", basePrice: o.price, price: o.price,
+            category: o.category || "addon",
+            tagline: o.tagline || "", description: o.description || "",
+            basePrice: o.price, price: o.price,
             drop: o.price_drop || 0, active: o.active !== false,
             edited: true, isNew: true
           });
@@ -611,6 +621,12 @@
         productsLoaded = true;
         renderProducts();
       });
+  }
+
+  function catSelectHtml(sel){
+    return '<select data-f="category">' + ["concentrate","addon"].map(function(c){
+      return '<option value="' + c + '"' + (c === sel ? " selected" : "") + ">" + c + "</option>";
+    }).join("") + "</select>";
   }
 
   function prodRowHtml(m){
@@ -625,15 +641,23 @@
         '<div class="prod-base">Base: <b>₹' + m.basePrice + '</b> · Site pe: <b>₹' + sitePrice + '</b>' +
         (m.active ? "" : ' · <b style="color:var(--red)">HIDDEN</b>') + '</div>' +
         '<div class="prod-fields">' +
-          '<label>SKU<input data-f="sku" value="' + escHtml(m.sku) + '" placeholder="—" maxlength="40"></label>' +
           '<label>Price ₹<input data-f="price" type="number" min="1" value="' + m.price + '"></label>' +
           '<label>Price Drop ₹<input data-f="drop" type="number" min="0" value="' + (m.drop || "") + '" placeholder="—"></label>' +
           '<label class="chk"><input data-f="active" type="checkbox"' + (m.active ? " checked" : "") + '> Active</label>' +
         '</div>' +
+        '<div class="prod-edit" style="display:none">' +
+          '<label class="full">Name<input data-f="name" value="' + escHtml(m.name) + '" maxlength="80"></label>' +
+          '<label class="full">Image URL<input data-f="image" value="' + escHtml(m.image) + '" placeholder="https://… ya assets/…"></label>' +
+          '<label>Category' + catSelectHtml(m.category) + '</label>' +
+          '<label class="full">Tagline<input data-f="tagline" value="' + escHtml(m.tagline) + '" maxlength="120"></label>' +
+          '<label class="full">Description<textarea data-f="description" rows="2" maxlength="2000">' + escHtml(m.description) + '</textarea></label>' +
+        '</div>' +
       '</div>' +
       '<div class="prod-actions">' +
         '<button class="btn dark" data-act="save">Save</button>' +
+        '<button class="btn ghost" data-act="edit">Edit</button>' +
         (m.edited ? '<button class="btn ghost" data-act="reset">Reset</button>' : '') +
+        '<button class="btn ghost" data-act="del" style="color:var(--red)">Delete</button>' +
       '</div>' +
     '</div>';
   }
@@ -641,7 +665,7 @@
   function renderProducts(){
     var q = (prodSearchEl.value || "").trim().toLowerCase();
     var items = prodCache.filter(function(m){
-      return !q || (m.name + " " + m.slug + " " + m.sku).toLowerCase().indexOf(q) !== -1;
+      return !q || (m.name + " " + m.slug).toLowerCase().indexOf(q) !== -1;
     });
     prodCountEl.textContent = items.length + " / " + prodCache.length + " products";
     prodListEl.innerHTML = items.map(prodRowHtml).join("") ||
@@ -678,16 +702,41 @@
       postProducts(pw, rp, btn, "✓ Reset ho gaya");
       return;
     }
-    var sku = row.querySelector('[data-f="sku"]').value.trim();
+    if (act === "edit") {
+      var panel = row.querySelector(".prod-edit");
+      var hidden = panel.style.display === "none";
+      panel.style.display = hidden ? "grid" : "none";
+      btn.textContent = hidden ? "Close" : "Edit";
+      return;
+    }
+    if (act === "del") {
+      var isNew = prodCache.some(function(x){ return x.slug === slug && x.isNew; });
+      var dmsg = isNew
+        ? "'" + slug + "' ko hamesha ke liye DELETE karna hai? Ye wapas nahi aayega."
+        : "'" + slug + "' ko site se hatana hai? (Ye hide ho jayega; Active tick karke wapas laa sakte ho.)";
+      if (!confirm(dmsg)) return;
+      var dp = {};
+      if (isNew) dp[slug] = null;            /* khud ka banaya product: poori tarah delete */
+      else dp[slug] = { active: false };    /* site wala product: hide kar do */
+      postProducts(pw, dp, btn, "✓ Delete ho gaya");
+      return;
+    }
     var price = parseInt(row.querySelector('[data-f="price"]').value, 10);
     var dropRaw = row.querySelector('[data-f="drop"]').value.trim();
     var drop = dropRaw === "" ? 0 : parseInt(dropRaw, 10);
     var active = row.querySelector('[data-f="active"]').checked;
+    var name = row.querySelector('[data-f="name"]').value.trim();
+    var image = row.querySelector('[data-f="image"]').value.trim();
+    var category = row.querySelector('[data-f="category"]').value;
+    var tagline = row.querySelector('[data-f="tagline"]').value.trim();
+    var description = row.querySelector('[data-f="description"]').value.trim();
+    if (!name) { toast("Naam khaali nahi ho sakta"); return; }
     if (!(price > 0)) { toast("Price sahi daalo (₹1 se zyada)"); return; }
     if (drop < 0) { toast("Price Drop 0 ya usse zyada hona chahiye"); return; }
     if (drop >= price) { toast("Price Drop, Price se KAM hona chahiye"); return; }
     var patch = {};
-    patch[slug] = {sku: sku, price: price, price_drop: drop, active: active};
+    patch[slug] = {name: name, price: price, price_drop: drop, active: active,
+      image: image, category: category, tagline: tagline, description: description};
     postProducts(pw, patch, btn, "✓ Saved — site pe 1–2 min me dikhega");
   });
 
@@ -728,7 +777,6 @@
     patch[slug] = {
       _new: true,
       name: name,
-      sku: document.getElementById("npSku").value.trim(),
       price: price,
       price_drop: drop,
       category: document.getElementById("npCat").value,
@@ -738,7 +786,7 @@
       active: true
     };
     postProducts(pw, patch, btn, "✓ Product add ho gaya");
-    ["npName","npSlug","npSku","npPrice","npDrop","npImg","npTag","npDesc"].forEach(function(id){
+    ["npName","npSlug","npPrice","npDrop","npImg","npTag","npDesc"].forEach(function(id){
       document.getElementById(id).value = "";
     });
     prodAddWrap.style.display = "none";
