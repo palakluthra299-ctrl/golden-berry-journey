@@ -3951,7 +3951,7 @@ body.cc-open { overflow: hidden; }
   place-items: center;
   overflow: hidden;
   padding: 16px 72px;
-  font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+  font-family: "Anton", Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
   text-transform: uppercase;
 }
 .kinetic-offer-stage.scene-hey,
@@ -4038,7 +4038,7 @@ body.cc-open { overflow: hidden; }
   color: #fff; background: #250006; padding: .13em .35em; text-shadow: 0 0 7px #fff, 0 0 23px #ff2649; box-shadow: 0 0 24px rgba(255,12,48,.72);
 }
 .offer-shop {
-  min-height: 70px; padding: 12px 34px; border: 2px solid #fff; border-radius: 3px; background: #e31032; color: #fff; font: 900 clamp(42px,8vw,92px)/.9 Impact,Haettenschweiler,"Arial Narrow Bold",sans-serif; letter-spacing: -.025em; text-transform: uppercase; text-shadow: 0 0 8px #fff, 0 0 24px #ff173e; box-shadow: 0 0 22px rgba(255,25,60,.9), inset 0 0 18px rgba(255,255,255,.22); animation: offerCta .58s cubic-bezier(.16,1.4,.3,1) both, offerCtaGlow .58s .6s ease-in-out infinite alternate; cursor: pointer;
+  min-height: 70px; padding: 12px 34px; border: 2px solid #fff; border-radius: 3px; background: #e31032; color: #fff; font: 400 clamp(42px,8vw,92px)/.9 "Anton",Impact,Haettenschweiler,"Arial Narrow Bold",sans-serif; letter-spacing: -.025em; text-transform: uppercase; text-shadow: 0 0 8px #fff, 0 0 24px #ff173e; box-shadow: 0 0 22px rgba(255,25,60,.9), inset 0 0 18px rgba(255,255,255,.22); animation: offerCta .58s cubic-bezier(.16,1.4,.3,1) both, offerCtaGlow .58s .6s ease-in-out infinite alternate; cursor: pointer;
 }
 .offer-shop span {
   display: inline-block; margin-left: .12em; animation: offerArrow .4s ease-in-out infinite alternate;
