@@ -8,6 +8,8 @@ var entries = [
   "index.html",
   "product.html",
   "cart.html",
+  "checkout.html",
+  "order-confirmation.html",
   "expert.html",
   "solution-finder.html",
   "404.html",
