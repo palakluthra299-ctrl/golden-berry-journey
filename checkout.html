@@ -172,7 +172,7 @@
       '</div>' +
       '<div class="co-field"><label for="co-pin">PIN Code *</label>' +
         '<input id="co-pin" name="pin" type="text" inputmode="numeric" maxlength="6" autocomplete="postal-code" placeholder="6-digit PIN"></div>' +
-      '<div class="co-field"><label for="co-coupon">Coupon Code <span style="font-weight:400;color:var(--muted)">(optional)</span></label>' +
+      '<div class="co-field" id="co-coupon-wrap"><label for="co-coupon">Coupon Code <span style="font-weight:400;color:var(--muted)">(optional)</span></label>' +
         '<input id="co-coupon" name="coupon" type="text" autocapitalize="characters" placeholder="Enter code if you have one"></div>' +
     "</div>" +
 
@@ -213,8 +213,19 @@
   });
   document.getElementById("opt-prepaid").classList.add("selected");
 
-  /* pre-fill coupon: ?coupon= in URL wins, else a coupon applied on the cart */
+  /* pre-fill coupon: ?coupon= in URL wins, else a coupon applied on the cart.
+     If the admin hid the coupon offer, the field is removed entirely. */
   (function () {
+    function hideCouponField() {
+      var wrap = document.getElementById("co-coupon-wrap");
+      if (wrap) wrap.style.display = "none";
+    }
+    try {
+      fetch("/api/config/get", { cache: "no-store" })
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (cfg) { if (cfg && cfg.coupon_visible === false) hideCouponField(); })
+        .catch(function () {});
+    } catch (e) {}
     var pre = "";
     try {
       var qs = new URLSearchParams(window.location.search);

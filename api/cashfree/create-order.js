@@ -10,6 +10,7 @@
 
 var PRICES = require("./prices.json");
 var COUPONS = require("./coupons.json");
+var store = require("./order-store.js");
 
 var COD_ADVANCE = 100; // Rs 100 advance for Cash-on-Delivery orders
 
@@ -119,7 +120,14 @@ module.exports = async function (req, res) {
   var discount = 0;
   var appliedCoupon = null;
   if (couponCode) {
-    var c = COUPONS[couponCode];
+    /* if the admin hid the coupon offer, coupons are silently ignored */
+    var couponOfferOn = true;
+    try {
+      var siteCfg = await store.getConfig();
+      couponOfferOn = siteCfg.coupon_visible !== false;
+    } catch (e) { couponOfferOn = true; }
+    if (couponOfferOn) {
+      var c = COUPONS[couponCode];
     if (!c || typeof c.value !== "number" || !(c.value > 0) ||
         (c.type !== "percent" && c.type !== "flat")) {
       return send(res, 400, { error: "INVALID_COUPON", message: "This coupon code is not valid." });
@@ -134,6 +142,7 @@ module.exports = async function (req, res) {
     if (c.max_discount && discount > c.max_discount) discount = c.max_discount;
     discount = Math.min(round2(discount), subtotal);
     appliedCoupon = couponCode;
+    }
   }
 
   var total = round2(subtotal - discount);
@@ -219,7 +228,6 @@ module.exports = async function (req, res) {
   /* ---------- persist order snapshot for the admin page (best-effort) ----------
      Checkout must never fail because storage is down: capped at ~2.5s. */
   try {
-    var store = require("./order-store.js");
     var nowMs = Date.now();
     await Promise.race([
       store.saveOrder({

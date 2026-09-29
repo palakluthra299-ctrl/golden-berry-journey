@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex,nofollow">
-<title>WellWith — Admin Orders</title>
+<title>WellWith — Admin</title>
 <style>
   :root{
     --green:#1e7a3c; --green-d:#155e2d; --gold:#c9a227;
@@ -37,6 +37,12 @@
   .login input:focus{outline:none; border-color:var(--green);}
   .err{background:var(--red-bg); color:var(--red); border-radius:10px; padding:10px 12px;
     font-size:13px; margin-bottom:12px; display:none;}
+  /* tabs */
+  .tabs{display:flex; gap:8px; margin:16px 0 4px;}
+  .tab{flex:1; padding:12px; border:0; border-radius:12px; background:var(--card);
+    font-weight:800; font-size:14px; cursor:pointer; color:var(--mut);
+    box-shadow:0 2px 10px rgba(0,0,0,.05);}
+  .tab.on{background:var(--green); color:#fff;}
   /* stats */
   .stats{display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin:16px 0;}
   .stat{background:var(--card); border-radius:14px; padding:14px 12px; text-align:center;
@@ -59,6 +65,7 @@
   .pill.active{background:var(--blue-bg); color:var(--blue);}
   .pill.prepaid{background:#e0e7ff; color:#3730a3;}
   .pill.cod{background:#fae8ff; color:#86198f;}
+  .pill.wa{background:#dcfce7; color:#166534;}
   .order-body{display:none; border-top:1px solid var(--line); padding:14px 16px; font-size:13px;}
   .order.open .order-body{display:block;}
   .kv{display:grid; grid-template-columns:110px 1fr; gap:6px 10px; margin-bottom:10px;}
@@ -78,6 +85,45 @@
     color:var(--mut);}
   .toolbar{display:flex; gap:10px; align-items:center; margin:4px 0 0;}
   .toolbar .note{font-size:12px; color:var(--mut);}
+  .secttl{font-size:16px; font-weight:800; margin:22px 0 4px;}
+  .secnote{font-size:12px; color:var(--mut); margin:0 0 12px; line-height:1.5;}
+  /* leads */
+  .lead{background:var(--card); border-radius:14px; padding:14px 16px; margin-bottom:10px;
+    box-shadow:0 2px 10px rgba(0,0,0,.05);}
+  .lead .lt{display:flex; align-items:center; gap:10px; flex-wrap:wrap;}
+  .lead .lt .sp{flex:1;}
+  .lead .lm{font-size:12px; color:var(--mut);}
+  .lead .lc{font-size:13px; margin-top:8px; line-height:1.6; color:var(--ink);}
+  /* controls */
+  .ctl{background:var(--card); border-radius:14px; padding:16px; margin-bottom:12px;
+    box-shadow:0 2px 10px rgba(0,0,0,.05);}
+  .ctl h3{margin:0 0 4px; font-size:15px;}
+  .ctl p{margin:0 0 6px; font-size:12.5px; color:var(--mut); line-height:1.5;}
+  .ctl-row{display:flex; align-items:center; justify-content:space-between; gap:12px;
+    padding:10px 0;}
+  .ctl-row + .ctl-row{border-top:1px solid var(--line);}
+  .ctl-row .lab b{display:block; font-size:14px;}
+  .ctl-row .lab span{font-size:12px; color:var(--mut); line-height:1.4; display:block; margin-top:2px;}
+  .switch{position:relative; width:54px; height:31px; flex:none;}
+  .switch input{opacity:0; width:100%; height:100%; position:absolute; margin:0;
+    cursor:pointer; z-index:2;}
+  .switch .tr{position:absolute; inset:0; background:#cfd8cf; border-radius:999px;
+    transition:background .2s;}
+  .switch .tr:before{content:""; position:absolute; width:25px; height:25px;
+    border-radius:50%; background:#fff; top:3px; left:3px; transition:left .2s;
+    box-shadow:0 1px 3px rgba(0,0,0,.25);}
+  .switch input:checked + .tr{background:var(--green);}
+  .switch input:checked + .tr:before{left:26px;}
+  .flabel{font-size:11.5px; font-weight:700; color:var(--mut); text-transform:uppercase;
+    letter-spacing:.4px; margin:14px 0 0; display:block;}
+  .banner-in{width:100%; padding:11px 12px; font-size:14px; border:1.5px solid var(--line);
+    border-radius:10px; margin-top:6px; font-family:inherit;}
+  .banner-in:focus{outline:none; border-color:var(--green);}
+  .hintline{font-size:11.5px; color:var(--mut); margin-top:10px; line-height:1.5;}
+  .toast{position:fixed; left:50%; bottom:24px; transform:translateX(-50%);
+    background:#1c2b21; color:#fff; padding:12px 20px; border-radius:12px;
+    font-size:14px; display:none; z-index:50; box-shadow:0 8px 24px rgba(0,0,0,.25);
+    max-width:90vw; text-align:center;}
   @media(max-width:560px){
     .stats{grid-template-columns:repeat(2,1fr);}
     .kv{grid-template-columns:96px 1fr;}
@@ -90,7 +136,7 @@
   <div class="wrap">
     <div>
       <h1>🌿 WellWith Admin</h1>
-      <p>Cashfree checkout orders</p>
+      <p>Orders &amp; site controls</p>
     </div>
     <div class="toolbar" id="topActions" style="display:none">
       <button class="btn ghost" id="refreshBtn">↻ Refresh</button>
@@ -103,24 +149,81 @@
   <!-- login -->
   <div class="login" id="loginBox">
     <h2>Admin login</h2>
-    <p>Enter the admin password to view orders.</p>
+    <p>Enter the admin password to continue.</p>
     <div class="err" id="loginErr"></div>
     <input type="password" id="pw" placeholder="Password" autocomplete="current-password">
-    <button class="btn dark" id="loginBtn">View orders</button>
+    <button class="btn dark" id="loginBtn">Login</button>
   </div>
 
   <!-- dashboard -->
   <div id="dash" style="display:none">
-    <div class="stats">
-      <div class="stat"><b id="stTotal">0</b><span>Orders</span></div>
-      <div class="stat"><b id="stPaid">0</b><span>Paid</span></div>
-      <div class="stat"><b id="stPending">0</b><span>Pending</span></div>
-      <div class="stat"><b id="stRevenue">₹0</b><span>Collected</span></div>
+    <div class="tabs">
+      <button class="tab on" id="tabOrders">🧾 Orders</button>
+      <button class="tab" id="tabControls">⚙️ Site Controls</button>
     </div>
-    <div class="toolbar"><span class="note" id="listNote"></span></div>
-    <div id="orders"></div>
+
+    <!-- ORDERS PANE -->
+    <div id="paneOrders">
+      <div class="stats">
+        <div class="stat"><b id="stTotal">0</b><span>Orders</span></div>
+        <div class="stat"><b id="stPaid">0</b><span>Paid</span></div>
+        <div class="stat"><b id="stPending">0</b><span>Pending</span></div>
+        <div class="stat"><b id="stRevenue">₹0</b><span>Collected</span></div>
+      </div>
+      <div class="toolbar"><span class="note" id="listNote"></span></div>
+      <div id="orders"></div>
+
+      <h2 class="secttl">💬 WhatsApp leads</h2>
+      <p class="secnote">Customers who tapped a WhatsApp checkout option. Unka naam/phone
+        humein nahi milta (wo WhatsApp pe baat karte hain) — yahan unki cart aur
+        time dikhta hai, taaki aap follow-up kar sako.</p>
+      <div id="leads"></div>
+    </div>
+
+    <!-- CONTROLS PANE -->
+    <div id="paneControls" style="display:none">
+      <div class="ctl">
+        <h3>Website switches</h3>
+        <p>Ye buttons turant site pe asar karte hain (save dabane ke baad).</p>
+        <div class="ctl-row">
+          <div class="lab"><b>Cashfree payment</b>
+            <span>ON = site pe CHECKOUT NOW (online payment / COD) dikhega.<br>
+              OFF = sirf WhatsApp wale options dikhenge.</span></div>
+          <label class="switch"><input type="checkbox" id="cfgCashfree" checked><span class="tr"></span></label>
+        </div>
+        <div class="ctl-row">
+          <div class="lab"><b>speacial20 offer</b>
+            <span>ON = cart me "Apply Coupon" aur 20% OFF dikhega.<br>
+              OFF = coupon chhup jayega aur code kaam nahi karega.</span></div>
+          <label class="switch"><input type="checkbox" id="cfgCoupon" checked><span class="tr"></span></label>
+        </div>
+      </div>
+
+      <div class="ctl">
+        <h3>🔴 Offer banner text</h3>
+        <p>Homepage pe jo laal (red) banner me text ghoomta hai, wo yahan se badlo.
+          Har line me words ko <b>|</b> se alag karo.</p>
+        <label class="flabel" for="bn_hey">Scene 1 — Hey</label>
+        <input class="banner-in" id="bn_hey">
+        <label class="flabel" for="bn_stop">Scene 2 — Stop</label>
+        <input class="banner-in" id="bn_stop">
+        <label class="flabel" for="bn_sale">Scene 3 — Sale</label>
+        <input class="banner-in" id="bn_sale">
+        <label class="flabel" for="bn_hurry">Scene 4 — Hurry (laal text)</label>
+        <input class="banner-in" id="bn_hurry">
+        <label class="flabel" for="bn_cta">Scene 5 — Button</label>
+        <input class="banner-in" id="bn_cta">
+        <p class="hintline">Example: <b>HURRY | HURRY | LIMITED TIME | HURRY | HURRY</b><br>
+          Khali chhodoge to purana text hi rahega.</p>
+      </div>
+
+      <button class="btn dark" id="saveBtn">Save settings</button>
+      <p class="hintline" style="text-align:center">Save ke baad site pe dikhne me 1–2 minute lag sakta hai.</p>
+    </div>
   </div>
 </div>
+
+<div class="toast" id="toast"></div>
 
 <script>
 (function(){
@@ -132,6 +235,11 @@
   var loginBtn = document.getElementById("loginBtn");
   var loginErr = document.getElementById("loginErr");
   var ordersEl = document.getElementById("orders");
+  var leadsEl = document.getElementById("leads");
+  var saveBtn = document.getElementById("saveBtn");
+  var toastEl = document.getElementById("toast");
+  var SCENES = ["hey", "stop", "sale", "hurry", "cta"];
+  var loadedBanner = null;
 
   function esc(s){
     return String(s == null ? "" : s).replace(/[&<>"']/g, function(c){
@@ -153,6 +261,12 @@
     s = String(s || "PENDING").toUpperCase();
     var cls = s === "PAID" ? "paid" : s === "FAILED" ? "failed" : s === "ACTIVE" ? "active" : "pending";
     return '<span class="pill ' + cls + '">' + esc(s) + "</span>";
+  }
+  function toast(msg){
+    toastEl.textContent = msg;
+    toastEl.style.display = "block";
+    clearTimeout(toastEl._t);
+    toastEl._t = setTimeout(function(){ toastEl.style.display = "none"; }, 3500);
   }
 
   function orderCard(o){
@@ -176,6 +290,7 @@
       "</div>" +
       '<div class="order-body">' +
         '<dl class="kv">' +
+          "<dt>Channel</dt><dd>Cashfree — " + esc(o.paymentMethod || "—") + "</dd>" +
           "<dt>Customer</dt><dd>" + esc(c.name || "—") + "</dd>" +
           '<dt>Phone</dt><dd><a href="tel:+91' + esc(c.phone || "") + '">+91 ' + esc(c.phone || "—") + "</a></dd>" +
           '<dt>Address</dt><dd class="addr">' + esc(addr || "—") + "</dd>" +
@@ -196,7 +311,18 @@
     "</div>";
   }
 
-  function render(orders){
+  function leadCard(l){
+    var pretty = String(l.cart || "").replace(/-/g, " ").replace(/x(\d+)/g, " × $1");
+    return '<div class="lead">' +
+      '<div class="lt"><div><b>' + dt(l.tsIso) + '</b>' +
+        '<div class="lm">' + esc(l.id) + " · " + esc(String(l.itemCount)) + " items</div></div>" +
+        '<div class="sp"></div><span class="pill wa">WHATSAPP</span>' +
+        '<div style="font-weight:800">' + money(l.total) + "</div></div>" +
+      '<div class="lc">' + esc(pretty) + "</div>" +
+    "</div>";
+  }
+
+  function renderOrders(orders){
     var paid = 0, pending = 0, revenue = 0;
     orders.forEach(function(o){
       var s = String(o.status || "").toUpperCase();
@@ -217,44 +343,138 @@
     });
   }
 
+  function renderLeads(leads){
+    leadsEl.innerHTML = leads.length
+      ? leads.map(leadCard).join("")
+      : '<div class="empty">No WhatsApp leads yet.</div>';
+  }
+
+  function api(path, pw, extra){
+    var body = Object.assign({password: pw}, extra || {});
+    return fetch(path, {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify(body)
+    }).then(function(r){ return r.json().then(function(j){ return {ok: r.ok, j: j}; }); });
+  }
+
+  function loadOrders(pw){
+    return api("/api/admin/orders", pw).then(function(res){
+      if (!res.ok) throw new Error((res.j && res.j.message) || "Could not load orders.");
+      renderOrders(res.j.orders || []);
+    });
+  }
+  function loadLeads(pw){
+    return api("/api/admin/leads", pw).then(function(res){
+      if (!res.ok) throw new Error((res.j && res.j.message) || "Could not load leads.");
+      renderLeads(res.j.leads || []);
+    });
+  }
+
   function showErr(msg){
     loginErr.textContent = msg;
     loginErr.style.display = "block";
   }
 
-  function load(pw){
-    loginBtn.disabled = true;
-    loginBtn.textContent = "Loading…";
-    return fetch("/api/admin/orders", {
-      method: "POST",
-      headers: {"Content-Type": "application/json"},
-      body: JSON.stringify({password: pw})
-    }).then(function(r){ return r.json().then(function(j){ return {ok: r.ok, j: j}; }); })
-    .then(function(res){
-      loginBtn.disabled = false;
-      loginBtn.textContent = "View orders";
-      if (!res.ok) throw new Error((res.j && res.j.message) || "Could not load orders.");
-      sessionStorage.setItem("ww_admin_pw", pw);
-      loginBox.style.display = "none";
-      dash.style.display = "block";
-      topActions.style.display = "flex";
-      render(res.j.orders || []);
-      return true;
-    });
+  function afterLogin(pw){
+    sessionStorage.setItem("ww_admin_pw", pw);
+    loginBox.style.display = "none";
+    dash.style.display = "block";
+    topActions.style.display = "flex";
+    return loadOrders(pw).then(function(){ return loadLeads(pw); });
   }
 
   function doLogin(){
     loginErr.style.display = "none";
     var pw = pwInput.value;
     if (!pw) { showErr("Please enter the password."); return; }
-    load(pw).catch(function(e){ showErr(e.message); });
+    loginBtn.disabled = true;
+    loginBtn.textContent = "Loading…";
+    afterLogin(pw).then(function(){
+      loginBtn.disabled = false;
+      loginBtn.textContent = "Login";
+    }).catch(function(e){
+      loginBtn.disabled = false;
+      loginBtn.textContent = "Login";
+      showErr(e.message);
+    });
   }
+
+  /* tabs */
+  var tabOrders = document.getElementById("tabOrders");
+  var tabControls = document.getElementById("tabControls");
+  var paneOrders = document.getElementById("paneOrders");
+  var paneControls = document.getElementById("paneControls");
+  var configLoaded = false;
+  function showTab(name){
+    var isOrders = name === "orders";
+    tabOrders.classList.toggle("on", isOrders);
+    tabControls.classList.toggle("on", !isOrders);
+    paneOrders.style.display = isOrders ? "block" : "none";
+    paneControls.style.display = isOrders ? "none" : "block";
+    if (!isOrders && !configLoaded) loadConfig();
+  }
+  tabOrders.addEventListener("click", function(){ showTab("orders"); });
+  tabControls.addEventListener("click", function(){ showTab("controls"); });
+
+  /* site controls */
+  function loadConfig(){
+    var pw = sessionStorage.getItem("ww_admin_pw") || "";
+    fetch("/api/config/get", {cache: "no-store"})
+      .then(function(r){ return r.ok ? r.json() : null; })
+      .then(function(cfg){
+        if (!cfg) throw new Error("Could not load settings.");
+        configLoaded = true;
+        document.getElementById("cfgCashfree").checked = cfg.cashfree_enabled !== false;
+        document.getElementById("cfgCoupon").checked = cfg.coupon_visible !== false;
+        loadedBanner = cfg.banner || {};
+        SCENES.forEach(function(s){
+          var words = loadedBanner[s];
+          document.getElementById("bn_" + s).value =
+            Array.isArray(words) ? words.join(" | ") : "";
+        });
+      })
+      .catch(function(e){ toast("Settings load nahi hui: " + e.message); });
+  }
+
+  saveBtn.addEventListener("click", function(){
+    var pw = sessionStorage.getItem("ww_admin_pw") || "";
+    var patch = {
+      cashfree_enabled: document.getElementById("cfgCashfree").checked,
+      coupon_visible: document.getElementById("cfgCoupon").checked,
+      banner: {}
+    };
+    SCENES.forEach(function(s){
+      var v = document.getElementById("bn_" + s).value;
+      var words = v.split("|").map(function(x){ return x.trim(); }).filter(Boolean);
+      if (!words.length && loadedBanner && Array.isArray(loadedBanner[s])) {
+        words = loadedBanner[s]; /* khali chhoda to purana text rahe */
+      }
+      patch.banner[s] = words;
+    });
+    saveBtn.disabled = true;
+    saveBtn.textContent = "Saving…";
+    api("/api/admin/config", pw, {patch: patch}).then(function(res){
+      saveBtn.disabled = false;
+      saveBtn.textContent = "Save settings";
+      if (!res.ok) throw new Error((res.j && res.j.message) || "Could not save.");
+      loadedBanner = (res.j.config && res.j.config.banner) || loadedBanner;
+      configLoaded = true;
+      toast("✓ Settings saved — site pe 1–2 min me dikhega");
+    }).catch(function(e){
+      saveBtn.disabled = false;
+      saveBtn.textContent = "Save settings";
+      toast("Error: " + e.message);
+    });
+  });
 
   loginBtn.addEventListener("click", doLogin);
   pwInput.addEventListener("keydown", function(e){ if (e.key === "Enter") doLogin(); });
   document.getElementById("refreshBtn").addEventListener("click", function(){
     var pw = sessionStorage.getItem("ww_admin_pw") || "";
-    load(pw).catch(function(e){ showErr(e.message); loginBox.style.display = "block"; dash.style.display = "none"; });
+    loadOrders(pw).then(function(){ return loadLeads(pw); })
+      .then(function(){ toast("✓ Refreshed"); })
+      .catch(function(e){ showErr(e.message); loginBox.style.display = "block"; dash.style.display = "none"; });
   });
   document.getElementById("logoutBtn").addEventListener("click", function(){
     sessionStorage.removeItem("ww_admin_pw");
@@ -265,7 +485,7 @@
   // auto-login if the tab already has the password
   var saved = sessionStorage.getItem("ww_admin_pw");
   if (saved) {
-    load(saved).catch(function(){ sessionStorage.removeItem("ww_admin_pw"); });
+    afterLogin(saved).catch(function(){ sessionStorage.removeItem("ww_admin_pw"); });
   }
 })();
 </script>

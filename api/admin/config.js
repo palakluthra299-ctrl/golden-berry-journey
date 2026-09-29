@@ -1,10 +1,9 @@
-/* WellWith — admin orders API.
+/* WellWith — admin site-config API.
  *
- * POST /api/admin/orders   body: { "password": "..." }
+ * POST /api/admin/config   body: { "password": "...", "patch": {...} }
  *
- * Returns the latest order snapshots (newest first) for the admin page.
- * The password is checked against the ADMIN_PASSWORD env var with a
- * timing-safe comparison. Nothing about orders is exposed without it.
+ * Saves admin-controllable site settings (feature flags + banner text).
+ * Same password + brute-force protection as the orders API.
  */
 
 var store = require("../cashfree/order-store.js");
@@ -15,8 +14,8 @@ module.exports = async function (req, res) {
   if (!check.ok) return;
 
   try {
-    var orders = await store.listOrders(100);
-    return auth.send(res, 200, { orders: orders, count: orders.length });
+    var config = await store.setConfig(check.body.patch);
+    return auth.send(res, 200, { ok: true, config: config });
   } catch (e) {
     if (e && e.code === "STORE_NOT_CONFIGURED") {
       return auth.send(res, 503, {
@@ -24,9 +23,12 @@ module.exports = async function (req, res) {
         message: "Order storage is not connected yet. Add the Upstash Redis integration in Vercel."
       });
     }
+    if (e && e.code === "BAD_PATCH") {
+      return auth.send(res, 400, { error: "BAD_PATCH", message: e.message });
+    }
     return auth.send(res, 502, {
       error: "STORE_ERROR",
-      message: "Could not load orders. Please try again."
+      message: "Could not save settings. Please try again."
     });
   }
 };

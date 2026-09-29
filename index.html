@@ -49,6 +49,29 @@
       { scene: "cta", words: ["SHOP NOW"] }
     ];
     /* ======================= END OFFER TEXT CONFIG ======================= */
+    /* Admin override: /api/config/get se banner scenes aate hain (admin page >
+       Site Controls me badle ja sakte hain). Config aane pe scenes update ho
+       jate hain — agle animation cycle se naya text dikhega. */
+    (function () {
+      function applyBannerConfig(cfg) {
+        if (!cfg || !cfg.banner || typeof cfg.banner !== "object") return;
+        var order = ["hey", "stop", "sale", "hurry", "cta"];
+        for (var i = 0; i < OFFER_KINETIC_CONFIG.length; i++) {
+          var scene = OFFER_KINETIC_CONFIG[i];
+          var words = cfg.banner[scene.scene];
+          if (Array.isArray(words) && words.length &&
+              words.every(function (w) { return typeof w === "string" && w.trim(); })) {
+            scene.words = words.map(function (w) { return w.trim(); });
+          }
+        }
+      }
+      try {
+        fetch("/api/config/get", { cache: "no-store" })
+          .then(function (r) { return r.ok ? r.json() : null; })
+          .then(applyBannerConfig)
+          .catch(function () {});
+      } catch (e) {}
+    })();
     (function () {
       function qs(sel, root) { return (root || document).querySelector(sel); }
       function initKineticOffer() {
