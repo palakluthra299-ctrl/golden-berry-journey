@@ -1301,6 +1301,27 @@ function initQuickCommerce() {
     setTimeout(function () { if (!business.classList.contains("open")) business.classList.remove("active"); }, 430);
   }
 
+  /* ---------- coupons: SPECIAL20, 20% off on orders Rs 849+ (BigBasket-style) ---------- */
+  var COUPON_CODE = "SPECIAL20";
+  var COUPON_PCT = 20;
+  var COUPON_MIN = 849;
+  function wwRound2(n) { return Math.round(n * 100) / 100; }
+  function storedCoupon() {
+    try { return window.localStorage.getItem("ww_coupon") || ""; } catch (e) { return ""; }
+  }
+  function setStoredCoupon(code) {
+    try {
+      if (code) window.localStorage.setItem("ww_coupon", code);
+      else window.localStorage.removeItem("ww_coupon");
+    } catch (e) {}
+  }
+  function couponDiscount(total) {
+    if (storedCoupon() === COUPON_CODE && total >= COUPON_MIN) {
+      return Math.min(wwRound2(total * COUPON_PCT / 100), total);
+    }
+    return 0;
+  }
+
   function renderSheet() {
     var items = cartItems(), total = cartTotal();
     var root = qs("#cart-sheet-body", sheet);
@@ -1311,16 +1332,52 @@ function initQuickCommerce() {
     var orderLines = items.map(function (it, i) {
       return (i + 1) + ". " + it.product.name + ", Qty: " + it.qty;
     }).join("\n");
-    var orderMessage = "Namaste Palak! I want to place this order:\n\n" + orderLines +
-      "\n\nEstimated total: " + formatMoney(total) +
-      "\n\nPlease confirm availability, delivery and payment details. Dhanyavaad!";
+    var discount = couponDiscount(total);
+    var payable = wwRound2(total - discount);
+    var couponStored = storedCoupon() === COUPON_CODE;
+    var orderMessage = "Namaste Palak! I want to place this order:\n\n" + orderLines;
+    if (discount > 0) {
+      orderMessage += "\n\nCart total: " + formatMoney(total) +
+        "\nCoupon " + COUPON_CODE + " applied (20% OFF): -" + formatMoney(discount) +
+        "\nTotal payable: " + formatMoney(payable);
+    } else {
+      orderMessage += "\n\nEstimated total: " + formatMoney(total);
+    }
+    orderMessage += "\n\nPlease confirm availability, delivery and payment details. Dhanyavaad!";
     root.innerHTML =
       '<div class="cart-savings">Your health is on the way <span aria-hidden="true">🌿</span></div>' +
       '<div class="cart-delivery-row"><span class="delivery-clock" aria-hidden="true">' + icon('M12 7v5l3 2M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z') + '</span><div><strong>Delivery timing</strong><p>Confirmed based on your delivery address</p></div></div>' +
       '<div class="cart-delivery-row"><span class="delivery-clock" aria-hidden="true">' + icon('M5 12l4 4L19 6') + '</span><div><strong>Delivery updates</strong><p>Shared directly with you on WhatsApp</p></div></div>' +
       '<div class="sheet-items">' + items.map(function (it) { return '<div class="sheet-item"><img src="' + it.product.image + '" alt="' + it.product.name + '"><div><h3>' + it.product.name + '</h3><p>1 pack</p><strong>' + formatMoney(it.product.price * it.qty) + '</strong></div><div class="qty-stepper"><button data-cart-dec="' + it.product.slug + '" aria-label="Decrease ' + it.product.name + '">−</button><span>' + it.qty + '</span><button data-cart-inc="' + it.product.slug + '" aria-label="Increase ' + it.product.name + '">+</button></div></div>'; }).join("") + '</div>' +
       '<button class="sheet-add-more" type="button">Forgot something? <strong>Add More Items</strong></button>' +
-      '<div class="sheet-summary"><div><span>Item total</span><strong>' + formatMoney(total) + '</strong></div><a class="sheet-checkout" target="_blank" rel="noopener" href="' + waLink(orderMessage) + '"><span>Proceed with WhatsApp</span><strong>' + formatMoney(total) + ' →</strong></a></div>';
+      buildCouponHtml(total, discount, couponStored) +
+      '<div class="sheet-summary"><div class="sheet-totals">' +
+        '<div class="sheet-total-row"><span>Item total</span><strong>' + formatMoney(total) + '</strong></div>' +
+        (discount > 0 ? '<div class="sheet-total-row coupon-row"><span>Coupon discount (' + COUPON_CODE + ')</span><strong>\u2212 ' + formatMoney(discount) + '</strong></div>' : '') +
+        (discount > 0 ? '<div class="sheet-total-row payable"><span>To Pay</span><strong>' + formatMoney(payable) + '</strong></div>' : '') +
+      '</div><a class="sheet-checkout" target="_blank" rel="noopener" href="' + waLink(orderMessage) + '"><span>Proceed with WhatsApp</span><strong>' + formatMoney(payable) + ' →</strong></a></div>';
+  function buildCouponHtml(total, discount, couponStored) {
+    if (discount > 0) {
+      return '<div class="sheet-coupon applied">' +
+        '<div class="coupon-applied-row"><span class="coupon-tick">\u2713</span><div><strong>' + COUPON_CODE + '</strong>' +
+        '<p>20% OFF applied \u2014 you save ' + formatMoney(discount) + '</p></div>' +
+        '<button type="button" class="coupon-remove" id="coupon-remove">Remove</button></div>' +
+      '</div>';
+    }
+    var needMore = COUPON_MIN - total;
+    var hint = (couponStored && needMore > 0)
+      ? '<p class="coupon-hint show">Add items worth ' + formatMoney(needMore) + ' more to unlock ' + COUPON_CODE + '</p>'
+      : '<p class="coupon-hint" id="coupon-hint"></p>';
+    return '<div class="sheet-coupon">' +
+      '<button type="button" class="coupon-toggle" id="coupon-toggle"><span>🏷️ Apply Coupon</span><span class="coupon-chev">\u25BE</span></button>' +
+      '<div class="coupon-list" id="coupon-list" hidden>' +
+        '<div class="coupon-card"><span class="coupon-code">' + COUPON_CODE + '</span>' +
+        '<p>Get 20% OFF on orders \u20B9849 &amp; above</p>' +
+        '<button type="button" class="coupon-apply" id="coupon-apply">APPLY</button></div>' +
+      '</div>' + hint +
+    '</div>';
+  }
+
     var addMore = qs(".sheet-add-more", root);
     if (addMore) addMore.addEventListener("click", function () { openCatalog("all"); });
     var checkout = qs(".sheet-checkout", root);
@@ -1328,6 +1385,26 @@ function initQuickCommerce() {
       event.preventDefault();
       playCheckoutGratitude(checkout.href);
     });
+    var couponToggle = qs("#coupon-toggle", root);
+    if (couponToggle) couponToggle.addEventListener("click", function () {
+      var list = qs("#coupon-list", root);
+      var opening = list.hasAttribute("hidden");
+      if (opening) { list.removeAttribute("hidden"); couponToggle.classList.add("open"); }
+      else { list.setAttribute("hidden", ""); couponToggle.classList.remove("open"); }
+    });
+    var couponApply = qs("#coupon-apply", root);
+    if (couponApply) couponApply.addEventListener("click", function () {
+      if (cartTotal() >= COUPON_MIN) { setStoredCoupon(COUPON_CODE); renderSheet(); }
+      else {
+        var h = qs("#coupon-hint", root);
+        if (h) {
+          h.textContent = "Add items worth " + formatMoney(COUPON_MIN - cartTotal()) + " more to unlock " + COUPON_CODE;
+          h.classList.add("show");
+        }
+      }
+    });
+    var couponRemove = qs("#coupon-remove", root);
+    if (couponRemove) couponRemove.addEventListener("click", function () { setStoredCoupon(""); renderSheet(); });
   }
   function openSheet(fromHistory) {
     if (!fromHistory) {

@@ -213,6 +213,20 @@
   });
   document.getElementById("opt-prepaid").classList.add("selected");
 
+  /* pre-fill coupon: ?coupon= in URL wins, else a coupon applied on the cart */
+  (function () {
+    var pre = "";
+    try {
+      var qs = new URLSearchParams(window.location.search);
+      pre = (qs.get("coupon") || "").trim().toUpperCase();
+      if (!pre) pre = (window.localStorage.getItem("ww_coupon") || "").trim().toUpperCase();
+    } catch (e) {}
+    if (pre) {
+      var ci = document.getElementById("co-coupon");
+      if (ci) ci.value = pre;
+    }
+  })();
+
   function field(id) { return document.getElementById(id).value.trim(); }
 
   document.getElementById("co-form").addEventListener("submit", function (ev) {
