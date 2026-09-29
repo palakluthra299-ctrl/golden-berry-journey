@@ -467,6 +467,11 @@ async function setProductOverrides(patch) {
       var merged = Object.assign({}, prev, c);
       /* Explicit "clear the drop": a patch price_drop of 0/empty removes it. */
       if (val.price_drop === 0 || val.price_drop === "" || val.price_drop === null) delete merged.price_drop;
+      /* Explicit clear of text fields: blanking removes the override key
+       * (catalog products fall back to base data, new products to defaults). */
+      ["image", "category", "tagline", "description"].forEach(function (k) {
+        if (val[k] === "") delete merged[k];
+      });
       if (val._new === true) merged._new = true;
       else if (prev._new) merged._new = true;
       current[slug] = merged;

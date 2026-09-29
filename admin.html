@@ -68,6 +68,13 @@
   .prod-fields .chk input{width:20px; height:20px; accent-color:var(--green);}
   .prod-actions{display:flex; flex-direction:column; gap:6px; flex:0 0 auto;}
   .prod-actions .btn{padding:8px 14px; font-size:13px;}
+  .prod-edit{display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+    gap:8px; margin-top:8px; padding-top:8px; border-top:1px dashed var(--line);}
+  .prod-edit label{font-size:11px; color:var(--mut); font-weight:600;
+    display:flex; flex-direction:column; gap:4px;}
+  .prod-edit .full{grid-column:1/-1;}
+  .prod-edit input,.prod-edit select,.prod-edit textarea{padding:8px 10px;
+    border:1px solid var(--line); border-radius:8px; font-size:13px; font-family:inherit;}
   .btn.ghost{background:#f1f5f1; color:var(--ink);}
   .ovr-tag{display:inline-block; font-size:10px; font-weight:800; color:#92400e;
     background:#fef3c7; border-radius:999px; padding:3px 9px; margin-left:6px;
@@ -586,6 +593,9 @@
             slug: p.slug,
             name: o.name || p.name,
             image: o.image || p.image,
+            category: o.category || p.category || "addon",
+            tagline: o.tagline || p.tagline || "",
+            description: o.description || p.description || "",
             basePrice: base,
             price: (typeof o.price === "number" && o.price > 0) ? o.price : base,
             drop: (typeof o.price_drop === "number" && o.price_drop > 0) ? o.price_drop : 0,
@@ -601,6 +611,8 @@
           prodCache.push({
             slug: slug, name: o.name || slug,
             image: o.image || "assets/products/pulp.jpg",
+            category: o.category || "addon",
+            tagline: o.tagline || "", description: o.description || "",
             basePrice: o.price, price: o.price,
             drop: o.price_drop || 0, active: o.active !== false,
             edited: true, isNew: true
@@ -609,6 +621,12 @@
         productsLoaded = true;
         renderProducts();
       });
+  }
+
+  function catSelectHtml(sel){
+    return '<select data-f="category">' + ["concentrate","addon"].map(function(c){
+      return '<option value="' + c + '"' + (c === sel ? " selected" : "") + ">" + c + "</option>";
+    }).join("") + "</select>";
   }
 
   function prodRowHtml(m){
@@ -627,9 +645,17 @@
           '<label>Price Drop ₹<input data-f="drop" type="number" min="0" value="' + (m.drop || "") + '" placeholder="—"></label>' +
           '<label class="chk"><input data-f="active" type="checkbox"' + (m.active ? " checked" : "") + '> Active</label>' +
         '</div>' +
+        '<div class="prod-edit" style="display:none">' +
+          '<label class="full">Name<input data-f="name" value="' + escHtml(m.name) + '" maxlength="80"></label>' +
+          '<label class="full">Image URL<input data-f="image" value="' + escHtml(m.image) + '" placeholder="https://… ya assets/…"></label>' +
+          '<label>Category' + catSelectHtml(m.category) + '</label>' +
+          '<label class="full">Tagline<input data-f="tagline" value="' + escHtml(m.tagline) + '" maxlength="120"></label>' +
+          '<label class="full">Description<textarea data-f="description" rows="2" maxlength="2000">' + escHtml(m.description) + '</textarea></label>' +
+        '</div>' +
       '</div>' +
       '<div class="prod-actions">' +
         '<button class="btn dark" data-act="save">Save</button>' +
+        '<button class="btn ghost" data-act="edit">Edit</button>' +
         (m.edited ? '<button class="btn ghost" data-act="reset">Reset</button>' : '') +
         '<button class="btn ghost" data-act="del" style="color:var(--red)">Delete</button>' +
       '</div>' +
@@ -676,6 +702,13 @@
       postProducts(pw, rp, btn, "✓ Reset ho gaya");
       return;
     }
+    if (act === "edit") {
+      var panel = row.querySelector(".prod-edit");
+      var hidden = panel.style.display === "none";
+      panel.style.display = hidden ? "grid" : "none";
+      btn.textContent = hidden ? "Close" : "Edit";
+      return;
+    }
     if (act === "del") {
       var isNew = prodCache.some(function(x){ return x.slug === slug && x.isNew; });
       var dmsg = isNew
@@ -692,11 +725,18 @@
     var dropRaw = row.querySelector('[data-f="drop"]').value.trim();
     var drop = dropRaw === "" ? 0 : parseInt(dropRaw, 10);
     var active = row.querySelector('[data-f="active"]').checked;
+    var name = row.querySelector('[data-f="name"]').value.trim();
+    var image = row.querySelector('[data-f="image"]').value.trim();
+    var category = row.querySelector('[data-f="category"]').value;
+    var tagline = row.querySelector('[data-f="tagline"]').value.trim();
+    var description = row.querySelector('[data-f="description"]').value.trim();
+    if (!name) { toast("Naam khaali nahi ho sakta"); return; }
     if (!(price > 0)) { toast("Price sahi daalo (₹1 se zyada)"); return; }
     if (drop < 0) { toast("Price Drop 0 ya usse zyada hona chahiye"); return; }
     if (drop >= price) { toast("Price Drop, Price se KAM hona chahiye"); return; }
     var patch = {};
-    patch[slug] = {price: price, price_drop: drop, active: active};
+    patch[slug] = {name: name, price: price, price_drop: drop, active: active,
+      image: image, category: category, tagline: tagline, description: description};
     postProducts(pw, patch, btn, "✓ Saved — site pe 1–2 min me dikhega");
   });
 
