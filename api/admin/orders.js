@@ -44,9 +44,25 @@ module.exports = async function (req, res) {
     try { body = JSON.parse(body); } catch (e) { body = {}; }
   }
 
+  /* brute-force guard: 5 wrong tries from one IP -> 15 min lock */
+  var ip = "";
+  try {
+    ip = String((req.headers && req.headers["x-forwarded-for"]) || "")
+      .split(",")[0].trim();
+  } catch (e) { ip = ""; }
+  if (!ip && req.socket && req.socket.remoteAddress) ip = String(req.socket.remoteAddress);
+  if (await store.loginBlocked(ip || "unknown")) {
+    return send(res, 429, {
+      error: "TOO_MANY_ATTEMPTS",
+      message: "Too many wrong attempts. Try again in 15 minutes."
+    });
+  }
+
   if (!safeEqual(body.password, expected)) {
+    await store.recordFailedLogin(ip);
     return send(res, 401, { error: "WRONG_PASSWORD", message: "Incorrect password." });
   }
+  await store.clearFailedLogins(ip);
 
   try {
     var orders = await store.listOrders(100);

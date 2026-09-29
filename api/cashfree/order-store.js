@@ -103,5 +103,49 @@ async function listOrders(limit) {
 module.exports = {
   saveOrder: saveOrder,
   updateOrderStatus: updateOrderStatus,
-  listOrders: listOrders
+  listOrders: listOrders,
+  loginBlocked: loginBlocked,
+  recordFailedLogin: recordFailedLogin,
+  clearFailedLogins: clearFailedLogins
 };
+
+/* ---------- admin login brute-force protection ----------
+ * 5 wrong password attempts from one IP within 15 minutes -> locked for 15 min.
+ * Counters live in the same Redis store. If Redis is missing, no blocking
+ * happens (the admin API already 503s without Redis anyway). */
+
+var RL_PREFIX = "ww:admin:rl:";
+var RL_MAX_ATTEMPTS = 5;
+var RL_WINDOW_SECONDS = 900; // 15 minutes
+
+async function loginBlocked(ip) {
+  var r = client();
+  if (!r || !ip) return false;
+  try {
+    var n = await r.get(RL_PREFIX + ip);
+    return Number(n) >= RL_MAX_ATTEMPTS;
+  } catch (e) {
+    return false;
+  }
+}
+
+async function recordFailedLogin(ip) {
+  var r = client();
+  if (!r || !ip) return 0;
+  try {
+    var key = RL_PREFIX + ip;
+    var n = await r.incr(key);
+    if (n === 1) await r.expire(key, RL_WINDOW_SECONDS);
+    return n;
+  } catch (e) {
+    return 0;
+  }
+}
+
+async function clearFailedLogins(ip) {
+  var r = client();
+  if (!r || !ip) return;
+  try {
+    await r.del(RL_PREFIX + ip);
+  } catch (e) { /* ignore */ }
+}
