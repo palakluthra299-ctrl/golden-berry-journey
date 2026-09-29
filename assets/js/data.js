@@ -404,7 +404,7 @@ var PRODUCT_PRICES = {
   "gummies-30": 599, "vitc-capsules": 699, "collagen-200": 2865,
   "dry-berry-100": 499, "berry-powder-100": 399, "jam-250": 459,
   "superfruit-tea": 449, "ctc-tea-250": 175, "effervescent-15": 553,
-  "black-rice-250": 195, "dentowin-100": 360, "ubtan-facewash-110": 399,
+  "black-rice-250": 195, "dentowin-100": 180, "ubtan-facewash-110": 399,
   "sunscreen-50": 650, "gentle-cleanser-100": 650, "gluta-facewash": 385,
   "night-cream": 790, "moisturizing-cream-50": 399, "scar-cream-50": 499,
   "soap-100": 285, "foot-cream-50": 299, "pain-oil": 340
