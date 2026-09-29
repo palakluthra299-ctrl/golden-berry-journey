@@ -166,7 +166,7 @@ var CONFIG_KEY = "ww:config";
 var BANNER_SCENES = ["hey", "stop", "sale", "hurry", "cta"];
 
 var DEFAULT_CONFIG = {
-  cashfree_enabled: true,   // show the CHECKOUT NOW (Cashfree) option on the site
+  cashfree_enabled: false,  // default OFF: Palak turns it ON from admin when ready
   coupon_visible: true,     // show the speacial20 Apply Coupon offer
   banner: {
     hey: ["HEY!", "HEY!", "HEY!"],
