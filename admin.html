@@ -43,6 +43,45 @@
     font-weight:800; font-size:14px; cursor:pointer; color:var(--mut);
     box-shadow:0 2px 10px rgba(0,0,0,.05);}
   .tab.on{background:var(--green); color:#fff;}
+  /* products */
+  .prod-toolbar{display:flex; gap:8px; margin:12px 0;}
+  .prod-toolbar input{flex:1; padding:10px 12px; border:1px solid var(--line);
+    border-radius:10px; font-size:14px;}
+  .prod-row{background:var(--card); border-radius:14px; margin-bottom:10px;
+    box-shadow:0 2px 10px rgba(0,0,0,.05); padding:12px 14px;
+    display:flex; gap:12px; align-items:flex-start;}
+  .prod-row img{width:52px; height:52px; object-fit:contain; border-radius:10px;
+    background:#f7f5f0; flex:0 0 auto;}
+  .prod-main{flex:1; min-width:0;}
+  .prod-name{font-weight:800; font-size:14px;}
+  .prod-slug{font-size:11px; color:var(--mut); margin-left:6px;}
+  .prod-base{font-size:12px; color:var(--mut); margin:2px 0 8px;}
+  .prod-base b{color:var(--ink);}
+  .prod-fields{display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
+    gap:8px;}
+  .prod-fields label{font-size:11px; color:var(--mut); font-weight:600;
+    text-transform:uppercase; letter-spacing:.3px; display:flex; flex-direction:column; gap:4px;}
+  .prod-fields input{padding:8px 10px; border:1px solid var(--line); border-radius:8px;
+    font-size:14px; width:100%; box-sizing:border-box; color:var(--ink);}
+  .prod-fields .chk{flex-direction:row; align-items:center; gap:8px; font-size:13px;
+    color:var(--ink); text-transform:none; letter-spacing:0;}
+  .prod-fields .chk input{width:20px; height:20px; accent-color:var(--green);}
+  .prod-actions{display:flex; flex-direction:column; gap:6px; flex:0 0 auto;}
+  .prod-actions .btn{padding:8px 14px; font-size:13px;}
+  .btn.ghost{background:#f1f5f1; color:var(--ink);}
+  .ovr-tag{display:inline-block; font-size:10px; font-weight:800; color:#92400e;
+    background:#fef3c7; border-radius:999px; padding:3px 9px; margin-left:6px;
+    text-transform:uppercase; letter-spacing:.4px;}
+  .prod-add{background:var(--card); border-radius:14px; padding:14px 16px;
+    margin-bottom:12px; box-shadow:0 2px 10px rgba(0,0,0,.05);}
+  .prod-add .grid{display:grid; grid-template-columns:1fr 1fr; gap:8px;}
+  .prod-add label{font-size:11px; color:var(--mut); font-weight:600;
+    text-transform:uppercase; letter-spacing:.3px; display:flex; flex-direction:column; gap:4px;}
+  .prod-add input,.prod-add select,.prod-add textarea{padding:9px 10px;
+    border:1px solid var(--line); border-radius:8px; font-size:14px; color:var(--ink);
+    width:100%; box-sizing:border-box;}
+  .prod-add .full{grid-column:1 / -1;}
+  .prod-note{font-size:12px; color:var(--mut); margin:8px 0 0; line-height:1.5;}
   /* stats */
   .stats{display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin:16px 0;}
   .stat{background:var(--card); border-radius:14px; padding:14px 12px; text-align:center;
@@ -160,6 +199,7 @@
     <div class="tabs">
       <button class="tab on" id="tabOrders">🧾 Orders</button>
       <button class="tab" id="tabControls">⚙️ Site Controls</button>
+      <button class="tab" id="tabProducts">📦 Products</button>
     </div>
 
     <!-- ORDERS PANE -->
@@ -188,7 +228,8 @@
         <div class="ctl-row">
           <div class="lab"><b>Cashfree payment</b>
             <span>ON = site pe CHECKOUT NOW (online payment / COD) dikhega.<br>
-              OFF = sirf WhatsApp wale options dikhenge.</span></div>
+              OFF = sirf WhatsApp wale options dikhenge.</span>
+            <span class="hintline" id="cfEnvLine">Server mode: …</span></div>
           <label class="switch"><input type="checkbox" id="cfgCashfree" checked><span class="tr"></span></label>
         </div>
         <div class="ctl-row">
@@ -221,10 +262,43 @@
       <p class="hintline" style="text-align:center">Save ke baad site pe dikhne me 1–2 minute lag sakta hai.</p>
     </div>
   </div>
+
+    <!-- PRODUCTS PANE -->
+    <div id="paneProducts" style="display:none">
+      <div class="prod-add" id="prodAddWrap" style="display:none">
+        <h3 style="margin:0 0 10px">+ Naya product add karo</h3>
+        <div class="grid">
+          <label class="full">Product name *<input id="npName" placeholder="e.g. Sea Buckthorn Honey"></label>
+          <label>Slug (link)<input id="npSlug" placeholder="naam se auto"></label>
+          <label>SKU<input id="npSku" placeholder="e.g. WW-HONEY"></label>
+          <label>Price ₹ *<input id="npPrice" type="number" min="1" placeholder="e.g. 499"></label>
+          <label>Price Drop ₹<input id="npDrop" type="number" min="0" placeholder="khali = no drop"></label>
+          <label>Category
+            <select id="npCat"><option value="concentrate">Concentrate</option><option value="addon">Add-on</option></select>
+          </label>
+          <label class="full">Image URL<input id="npImg" placeholder="khali = default image"></label>
+          <label class="full">Tagline<input id="npTag" placeholder="chhoti si line"></label>
+          <label class="full">Description<textarea id="npDesc" rows="2" placeholder="2-3 line description"></textarea></label>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:10px">
+          <button class="btn dark" id="npSave">Add product</button>
+          <button class="btn ghost" id="npCancel">Cancel</button>
+        </div>
+      </div>
+
+      <div class="prod-toolbar">
+        <input id="prodSearch" placeholder="🔍 Search products…">
+        <button class="btn dark" id="prodAddBtn">+ Add</button>
+      </div>
+      <p class="prod-note" id="prodCount"></p>
+      <div id="prodList"></div>
+      <p class="prod-note">💡 <b>Price</b> = normal rate. <b>Price Drop</b> = sale rate — site pe purana rate <del>kata hua</del> dikhega aur naya rate glowing animation me. <b>Active</b> band karne pe product site se chhup jayega. <b>Reset</b> dabane pe product wapas original rate pe aa jayega.</p>
+    </div>
 </div>
 
 <div class="toast" id="toast"></div>
 
+<script src="assets/js/data.js?v=20260929-1"></script>
 <script>
 (function(){
   "use strict";
@@ -403,23 +477,43 @@
   /* tabs */
   var tabOrders = document.getElementById("tabOrders");
   var tabControls = document.getElementById("tabControls");
+  var tabProducts = document.getElementById("tabProducts");
   var paneOrders = document.getElementById("paneOrders");
   var paneControls = document.getElementById("paneControls");
+  var paneProducts = document.getElementById("paneProducts");
   var configLoaded = false;
+  var productsLoaded = false;
   function showTab(name){
-    var isOrders = name === "orders";
-    tabOrders.classList.toggle("on", isOrders);
-    tabControls.classList.toggle("on", !isOrders);
-    paneOrders.style.display = isOrders ? "block" : "none";
-    paneControls.style.display = isOrders ? "none" : "block";
-    if (!isOrders && !configLoaded) loadConfig();
+    tabOrders.classList.toggle("on", name === "orders");
+    tabControls.classList.toggle("on", name === "controls");
+    tabProducts.classList.toggle("on", name === "products");
+    paneOrders.style.display = name === "orders" ? "block" : "none";
+    paneControls.style.display = name === "controls" ? "block" : "none";
+    paneProducts.style.display = name === "products" ? "block" : "none";
+    if (name === "controls" && !configLoaded) loadConfig();
+    if (name === "products" && !productsLoaded) {
+      loadProducts().catch(function(e){ toast("Products load nahi hue: " + e.message); });
+    }
   }
   tabOrders.addEventListener("click", function(){ showTab("orders"); });
   tabControls.addEventListener("click", function(){ showTab("controls"); });
+  tabProducts.addEventListener("click", function(){ showTab("products"); });
 
   /* site controls */
   function loadConfig(){
     var pw = sessionStorage.getItem("ww_admin_pw") || "";
+    api("/api/admin/cashfree-status", pw, {}).then(function(res){
+      var el = document.getElementById("cfEnvLine");
+      if (res.ok && res.j) {
+        var prod = res.j.env === "production";
+        el.innerHTML = "Server mode: <b style=\"color:" + (prod ? "var(--green)" : "var(--amber)") + "\">" +
+          res.j.env.toUpperCase() + "</b>" +
+          (res.j.keysConfigured ? " · keys set ✓" : " · <b style=\"color:var(--red)\">keys MISSING</b>") +
+          (prod ? "" : "<br>Real payment ke liye Vercel me CASHFREE_ENV=production + production keys chahiye.");
+      } else {
+        el.textContent = "Server mode: pata nahi chala";
+      }
+    }).catch(function(){});
     fetch("/api/config/get", {cache: "no-store"})
       .then(function(r){ return r.ok ? r.json() : null; })
       .then(function(cfg){
@@ -466,6 +560,188 @@
       saveBtn.textContent = "Save settings";
       toast("Error: " + e.message);
     });
+  });
+
+  /* ---------- products ---------- */
+  var prodCache = [];
+  var prodListEl = document.getElementById("prodList");
+  var prodSearchEl = document.getElementById("prodSearch");
+  var prodCountEl = document.getElementById("prodCount");
+
+  function escHtml(s){
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
+    });
+  }
+
+  function loadProducts(){
+    return fetch("/api/products/get", {cache: "no-store"})
+      .then(function(r){ return r.ok ? r.json() : {overrides: {}}; })
+      .then(function(d){
+        var ovr = (d && d.overrides) || {};
+        var basePrices = (typeof PRODUCT_PRICES !== "undefined") ? PRODUCT_PRICES : {};
+        prodCache = (typeof PRODUCTS !== "undefined" ? PRODUCTS : []).map(function(p){
+          var o = ovr[p.slug] || {};
+          var base = basePrices[p.slug] || p.price;
+          return {
+            slug: p.slug,
+            name: o.name || p.name,
+            image: o.image || p.image,
+            sku: (typeof o.sku === "string") ? o.sku : "",
+            basePrice: base,
+            price: (typeof o.price === "number" && o.price > 0) ? o.price : base,
+            drop: (typeof o.price_drop === "number" && o.price_drop > 0) ? o.price_drop : 0,
+            active: o.active !== false,
+            edited: !!ovr[p.slug],
+            isNew: false
+          };
+        });
+        Object.keys(ovr).forEach(function(slug){
+          if (prodCache.some(function(x){ return x.slug === slug; })) return;
+          var o = ovr[slug] || {};
+          if (!o._new) return;
+          prodCache.push({
+            slug: slug, name: o.name || slug,
+            image: o.image || "assets/products/pulp.jpg",
+            sku: o.sku || "", basePrice: o.price, price: o.price,
+            drop: o.price_drop || 0, active: o.active !== false,
+            edited: true, isNew: true
+          });
+        });
+        productsLoaded = true;
+        renderProducts();
+      });
+  }
+
+  function prodRowHtml(m){
+    var sitePrice = m.drop > 0 ? m.drop : m.price;
+    var tag = m.edited ? '<span class="ovr-tag">edited</span>' : "";
+    if (m.isNew) tag += '<span class="ovr-tag" style="background:#dbeafe;color:#1d4ed8">new</span>';
+    return '<div class="prod-row" data-slug="' + escHtml(m.slug) + '">' +
+      '<img src="' + escHtml(m.image) + '" alt="" loading="lazy">' +
+      '<div class="prod-main">' +
+        '<div><span class="prod-name">' + escHtml(m.name) + '</span>' +
+        '<span class="prod-slug">' + escHtml(m.slug) + '</span>' + tag + '</div>' +
+        '<div class="prod-base">Base: <b>₹' + m.basePrice + '</b> · Site pe: <b>₹' + sitePrice + '</b>' +
+        (m.active ? "" : ' · <b style="color:var(--red)">HIDDEN</b>') + '</div>' +
+        '<div class="prod-fields">' +
+          '<label>SKU<input data-f="sku" value="' + escHtml(m.sku) + '" placeholder="—" maxlength="40"></label>' +
+          '<label>Price ₹<input data-f="price" type="number" min="1" value="' + m.price + '"></label>' +
+          '<label>Price Drop ₹<input data-f="drop" type="number" min="0" value="' + (m.drop || "") + '" placeholder="—"></label>' +
+          '<label class="chk"><input data-f="active" type="checkbox"' + (m.active ? " checked" : "") + '> Active</label>' +
+        '</div>' +
+      '</div>' +
+      '<div class="prod-actions">' +
+        '<button class="btn dark" data-act="save">Save</button>' +
+        (m.edited ? '<button class="btn ghost" data-act="reset">Reset</button>' : '') +
+      '</div>' +
+    '</div>';
+  }
+
+  function renderProducts(){
+    var q = (prodSearchEl.value || "").trim().toLowerCase();
+    var items = prodCache.filter(function(m){
+      return !q || (m.name + " " + m.slug + " " + m.sku).toLowerCase().indexOf(q) !== -1;
+    });
+    prodCountEl.textContent = items.length + " / " + prodCache.length + " products";
+    prodListEl.innerHTML = items.map(prodRowHtml).join("") ||
+      '<p class="prod-note">Koi product nahi mila.</p>';
+  }
+
+  function postProducts(pw, patch, btn, okMsg){
+    btn.disabled = true;
+    var old = btn.textContent;
+    btn.textContent = "Saving…";
+    api("/api/admin/products", pw, {patch: patch}).then(function(res){
+      btn.disabled = false;
+      btn.textContent = old;
+      if (!res.ok) throw new Error((res.j && res.j.message) || "Save nahi hua.");
+      toast(okMsg);
+      return loadProducts();
+    }).catch(function(e){
+      btn.disabled = false;
+      btn.textContent = old;
+      toast("Error: " + e.message);
+    });
+  }
+
+  prodListEl.addEventListener("click", function(e){
+    var btn = e.target.closest ? e.target.closest("[data-act]") : null;
+    if (!btn) return;
+    var row = btn.closest(".prod-row");
+    var slug = row.getAttribute("data-slug");
+    var pw = sessionStorage.getItem("ww_admin_pw") || "";
+    var act = btn.getAttribute("data-act");
+    if (act === "reset") {
+      if (!confirm("'" + slug + "' ko original pe wapas laana hai?")) return;
+      var rp = {}; rp[slug] = null;
+      postProducts(pw, rp, btn, "✓ Reset ho gaya");
+      return;
+    }
+    var sku = row.querySelector('[data-f="sku"]').value.trim();
+    var price = parseInt(row.querySelector('[data-f="price"]').value, 10);
+    var dropRaw = row.querySelector('[data-f="drop"]').value.trim();
+    var drop = dropRaw === "" ? 0 : parseInt(dropRaw, 10);
+    var active = row.querySelector('[data-f="active"]').checked;
+    if (!(price > 0)) { toast("Price sahi daalo (₹1 se zyada)"); return; }
+    if (drop < 0) { toast("Price Drop 0 ya usse zyada hona chahiye"); return; }
+    if (drop >= price) { toast("Price Drop, Price se KAM hona chahiye"); return; }
+    var patch = {};
+    patch[slug] = {sku: sku, price: price, price_drop: drop, active: active};
+    postProducts(pw, patch, btn, "✓ Saved — site pe 1–2 min me dikhega");
+  });
+
+  prodSearchEl.addEventListener("input", renderProducts);
+
+  /* add-product form */
+  var prodAddWrap = document.getElementById("prodAddWrap");
+  document.getElementById("prodAddBtn").addEventListener("click", function(){
+    prodAddWrap.style.display = prodAddWrap.style.display === "none" ? "block" : "none";
+  });
+  document.getElementById("npCancel").addEventListener("click", function(){
+    prodAddWrap.style.display = "none";
+  });
+  document.getElementById("npName").addEventListener("input", function(){
+    var s = document.getElementById("npSlug");
+    if (!s.value) {
+      s.value = this.value.toLowerCase().trim()
+        .replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 60);
+    }
+  });
+  document.getElementById("npSave").addEventListener("click", function(){
+    var btn = this;
+    var name = document.getElementById("npName").value.trim();
+    var slug = document.getElementById("npSlug").value.trim().toLowerCase()
+      .replace(/[^a-z0-9-]/g, "");
+    var price = parseInt(document.getElementById("npPrice").value, 10);
+    var dropRaw = document.getElementById("npDrop").value.trim();
+    var drop = dropRaw === "" ? 0 : parseInt(dropRaw, 10);
+    if (!name) { toast("Product name daalo"); return; }
+    if (!slug) { toast("Slug daalo (link ke liye)"); return; }
+    if (!(price > 0)) { toast("Price sahi daalo"); return; }
+    if (drop && drop >= price) { toast("Price Drop, Price se KAM hona chahiye"); return; }
+    if (prodCache.some(function(x){ return x.slug === slug; })) {
+      toast("Ye slug pehle se hai — alag slug use karo"); return;
+    }
+    var pw = sessionStorage.getItem("ww_admin_pw") || "";
+    var patch = {};
+    patch[slug] = {
+      _new: true,
+      name: name,
+      sku: document.getElementById("npSku").value.trim(),
+      price: price,
+      price_drop: drop,
+      category: document.getElementById("npCat").value,
+      image: document.getElementById("npImg").value.trim(),
+      tagline: document.getElementById("npTag").value.trim(),
+      description: document.getElementById("npDesc").value.trim(),
+      active: true
+    };
+    postProducts(pw, patch, btn, "✓ Product add ho gaya");
+    ["npName","npSlug","npSku","npPrice","npDrop","npImg","npTag","npDesc"].forEach(function(id){
+      document.getElementById(id).value = "";
+    });
+    prodAddWrap.style.display = "none";
   });
 
   loginBtn.addEventListener("click", doLogin);

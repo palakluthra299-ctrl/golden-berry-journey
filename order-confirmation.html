@@ -62,9 +62,12 @@
 <a class="wa-float" id="wa-float" target="_blank" rel="noopener" aria-label="Chat on WhatsApp" href="https://wa.me/919266086554?text=Namaste%20Palak!%20I%20want%20to%20know%20more%20about%20WellWith%20Sea%20Buckthorn%20products.">💬</a>
 
 <script src="js/data.js"></script>
+<script src="assets/js/site-overrides.js?v=20260929-6"></script>
 <script src="js/app.js?v=20260928-3"></script>
 <script>
 (function () {
+"use strict";
+  function boot() {
   "use strict";
   var root = document.getElementById("oc-root");
   var WA_NUMBER = (typeof WA_PHONE !== "undefined") ? WA_PHONE : "919266086554";
@@ -178,6 +181,16 @@
     .catch(function () {
       renderError("Could not verify payment", "Network error. Please check your connection and refresh, or ask us on WhatsApp.");
     });
+  }
+
+  function ready(fn) {
+    if (window.__overridesReady && typeof window.__overridesReady.then === "function") {
+      var t = setTimeout(function () { try { fn(); } catch (e) {} }, 2500);
+      window.__overridesReady.then(function () { clearTimeout(t); fn(); },
+        function () { clearTimeout(t); fn(); });
+    } else { fn(); }
+  }
+  ready(boot);
 })();
 </script>
 </body>

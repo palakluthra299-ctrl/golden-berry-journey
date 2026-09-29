@@ -4,7 +4,8 @@
  * - Cashfree secrets are read ONLY from process.env
  *   (CASHFREE_CLIENT_ID, CASHFREE_CLIENT_SECRET, CASHFREE_ENV).
  * - NEVER commit keys. NEVER expose them to the browser.
- * - The payable amount is RECOMPUTED here from api/cashfree/prices.json.
+ * - The payable amount is RECOMPUTED here from api/cashfree/prices.json,
+ *   merged with admin product overrides (price / price drop) from Redis.
  *   The browser only sends slugs + quantities; any client-side total is ignored.
  */
 
@@ -62,6 +63,10 @@ module.exports = async function (req, res) {
   if (!cartLines.length) {
     return send(res, 400, { error: "EMPTY_CART", message: "Your cart is empty." });
   }
+  /* Admin product overrides (price / price drop / active / new products / SKU)
+     live in Redis; best-effort so checkout never breaks if Redis is down. */
+  var prodOverrides = {};
+  try { prodOverrides = await store.getProductOverrides(); } catch (e) { prodOverrides = {}; }
   var lines = [];
   var subtotal = 0;
   for (var i = 0; i < cartLines.length; i++) {
@@ -71,7 +76,11 @@ module.exports = async function (req, res) {
     if (!slug || !(qty > 0) || qty > 99) {
       return send(res, 400, { error: "INVALID_CART", message: "Invalid cart item." });
     }
-    var price = PRICES[slug];
+    var ovr = prodOverrides[slug] || {};
+    if (ovr.active === false) {
+      return send(res, 400, { error: "PRODUCT_UNAVAILABLE", message: "One of the items in your cart is currently unavailable. Please remove it and try again." });
+    }
+    var price = store.effectivePrice(slug, PRICES[slug], prodOverrides);
     if (typeof price !== "number" || !(price > 0)) {
       return send(res, 503, {
         error: "PRICES_NOT_CONFIGURED",
@@ -79,7 +88,7 @@ module.exports = async function (req, res) {
       });
     }
     var lineTotal = round2(price * qty);
-    lines.push({ slug: slug, qty: qty, price: price, lineTotal: lineTotal });
+    lines.push({ slug: slug, qty: qty, price: price, lineTotal: lineTotal, sku: ovr.sku || "" });
     subtotal = round2(subtotal + lineTotal);
   }
 

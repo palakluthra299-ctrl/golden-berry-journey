@@ -59,7 +59,7 @@ function cartItems() {
   if (typeof PRODUCTS === "undefined") return [];
   var cart = getCart(), out = [];
   PRODUCTS.forEach(function (p) {
-    if (cart[p.slug]) out.push({ product: p, qty: cart[p.slug] });
+    if (cart[p.slug] && p.active !== false) out.push({ product: p, qty: cart[p.slug] });
   });
   return out;
 }
@@ -67,6 +67,10 @@ function addToCart(slug, qty) {
   if (typeof PRODUCTS === "undefined") return;
   var p = PRODUCTS.find(function (x) { return x.slug === slug; });
   if (!p) return;
+  if (p.active === false) {
+    if (typeof showToast === "function") showToast(p.name + " is currently unavailable");
+    return;
+  }
   var cart = getCart();
   cart[slug] = (cart[slug] || 0) + (qty || 1);
   saveCart(cart);
