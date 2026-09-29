@@ -18,11 +18,13 @@ try {
 
 function client() {
   if (!Redis) return null;
-  if (!process.env.UPSTASH_REDIS_REST_URL || !process.env.UPSTASH_REDIS_REST_TOKEN) {
-    return null;
-  }
+  /* Vercel injects either UPSTASH_REDIS_* or KV_* names depending on how the
+     Upstash integration was connected — accept both. */
+  var url = process.env.UPSTASH_REDIS_REST_URL || process.env.KV_REST_API_URL;
+  var token = process.env.UPSTASH_REDIS_REST_TOKEN || process.env.KV_REST_API_TOKEN;
+  if (!url || !token) return null;
   try {
-    return Redis.fromEnv();
+    return new Redis({ url: url, token: token });
   } catch (e) {
     return null;
   }
