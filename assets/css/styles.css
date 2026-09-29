@@ -4291,7 +4291,7 @@ body.cc-open { overflow: hidden; }
 
 /* ---------- Admin price-drop display (animated + glowing) ---------- */
 .ww-price { display: inline-flex; align-items: center; flex-wrap: wrap; }
-.ww-price-strike { opacity: .5; margin-right: 8px; font-weight: 600; }
+.ww-price-strike { opacity: .5; margin-right: 8px; font-weight: 600; text-decoration: line-through; }
 .ww-price-drop {
   font-weight: 800;
   color: #c25e00;
@@ -4312,3 +4312,6 @@ body.cc-open { overflow: hidden; }
   vertical-align: middle;
 }
 @keyframes wwBadgeShine { to { background-position: 200% 0; } }
+@media (prefers-reduced-motion: reduce) {
+  .ww-price-drop, .ww-drop-badge { animation: none; }
+}
