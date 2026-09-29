@@ -1,0 +1,107 @@
+/* WellWith — order snapshot store (Upstash Redis, added via Vercel Marketplace).
+ *
+ * Every Cashfree checkout saves a full order snapshot here so the admin page
+ * (/admin.html) can list orders. Cashfree's PG API has no "list all orders"
+ * endpoint, so without this store the admin page would have nothing to show.
+ *
+ * All ops are best-effort: if the Upstash env vars are missing, save/update
+ * become silent no-ops (checkout must NEVER fail because storage is down).
+ * listOrders() throws STORE_NOT_CONFIGURED so the admin API can answer honestly.
+ */
+
+var Redis = null;
+try {
+  Redis = require("@upstash/redis").Redis;
+} catch (e) {
+  Redis = null;
+}
+
+function client() {
+  if (!Redis) return null;
+  if (!process.env.UPSTASH_REDIS_REST_URL || !process.env.UPSTASH_REDIS_REST_TOKEN) {
+    return null;
+  }
+  try {
+    return Redis.fromEnv();
+  } catch (e) {
+    return null;
+  }
+}
+
+function orderKey(id) { return "ww:order:" + id; }
+var ORDERS_ZSET = "ww:orders";
+
+function parse(raw) {
+  if (raw == null) return null;
+  if (typeof raw === "string") {
+    try { return JSON.parse(raw); } catch (e) { return null; }
+  }
+  return raw;
+}
+
+/* Save a full order snapshot at checkout time. Never throws. */
+async function saveOrder(snapshot) {
+  var r = client();
+  if (!r || !snapshot || !snapshot.orderId) return false;
+  try {
+    var key = orderKey(snapshot.orderId);
+    await r.set(key, JSON.stringify(snapshot));
+    await r.zadd(ORDERS_ZSET, {
+      score: snapshot.createdAtMs || Date.now(),
+      member: snapshot.orderId
+    });
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+/* Update the payment status of a stored snapshot (called from verify). Never throws. */
+async function updateOrderStatus(orderId, status, extra) {
+  var r = client();
+  if (!r || !orderId) return false;
+  try {
+    var snap = parse(await r.get(orderKey(orderId)));
+    if (!snap) return false;
+    snap.status = status;
+    if (extra) {
+      for (var k in extra) {
+        if (Object.prototype.hasOwnProperty.call(extra, k)) snap[k] = extra[k];
+      }
+    }
+    await r.set(orderKey(orderId), JSON.stringify(snap));
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+/* Newest-first order snapshots for the admin page. Throws STORE_NOT_CONFIGURED. */
+async function listOrders(limit) {
+  var r = client();
+  if (!r) {
+    var err = new Error("Order storage is not configured.");
+    err.code = "STORE_NOT_CONFIGURED";
+    throw err;
+  }
+  limit = parseInt(limit, 10);
+  if (!(limit >= 1)) limit = 50;
+  if (limit > 200) limit = 200;
+
+  var ids = await r.zrange(ORDERS_ZSET, 0, limit - 1, { rev: true });
+  if (!ids || !ids.length) return [];
+  var keys = ids.map(orderKey);
+  var raws = await r.mget(keys);
+  var out = [];
+  for (var i = 0; i < raws.length; i++) {
+    var snap = parse(raws[i]);
+    if (snap) out.push(snap);
+  }
+  return out;
+}
+
+module.exports = {
+  saveOrder: saveOrder,
+  updateOrderStatus: updateOrderStatus,
+  listOrders: listOrders
+};

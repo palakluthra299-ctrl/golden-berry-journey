@@ -11,6 +11,7 @@ var entries = [
   "checkout.html",
   "checkout-review.html",
   "order-confirmation.html",
+  "admin.html",
   "expert.html",
   "solution-finder.html",
   "404.html",

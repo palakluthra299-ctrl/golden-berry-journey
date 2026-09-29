@@ -216,6 +216,35 @@ module.exports = async function (req, res) {
     });
   }
 
+  /* ---------- persist order snapshot for the admin page (best-effort) ----------
+     Checkout must never fail because storage is down: capped at ~2.5s. */
+  try {
+    var store = require("./order-store.js");
+    var nowMs = Date.now();
+    await Promise.race([
+      store.saveOrder({
+        orderId: orderId,
+        cfOrderId: (cfData && cfData.cf_order_id) || null,
+        env: env,
+        createdAtMs: nowMs,
+        createdAt: new Date(nowMs).toISOString(),
+        customer: { name: name, phone: phone },
+        address: { line: addrLine, city: addrCity, state: addrState, pin: addrPin },
+        lines: lines,
+        subtotal: subtotal,
+        discount: discount,
+        coupon: appliedCoupon,
+        total: total,
+        payNow: payNow,
+        payOnDelivery: payOnDelivery,
+        paymentMethod: paymentMethod,
+        status: "PENDING",
+        paidAt: null
+      }),
+      new Promise(function (resolve) { setTimeout(resolve, 2500); })
+    ]);
+  } catch (e) { /* storage is optional */ }
+
   return send(res, 200, {
     payment_session_id: cfData.payment_session_id,
     order_id: orderId,

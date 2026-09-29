@@ -60,6 +60,18 @@ module.exports = async function (req, res) {
     });
   }
 
+  /* ---------- update stored snapshot for the admin page (best-effort) ----------
+     Capped at ~2.5s so verification never hangs because storage is down. */
+  try {
+    var store = require("./order-store.js");
+    var extra = {};
+    if (data.order_status === "PAID") extra.paidAt = new Date().toISOString();
+    await Promise.race([
+      store.updateOrderStatus(orderId, data.order_status, extra),
+      new Promise(function (resolve) { setTimeout(resolve, 2500); })
+    ]);
+  } catch (e) { /* storage is optional */ }
+
   var payments = Array.isArray(data.payments) ? data.payments : [];
   return send(res, 200, {
     order_id: data.order_id,
