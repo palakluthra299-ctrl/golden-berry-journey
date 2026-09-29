@@ -77,31 +77,6 @@
   <div class="co-wrap" id="checkout-root"></div>
 </div>
 
-<footer>
-  <div class="container">
-    <div class="footer-grid">
-      <div>
-        <h3 class="brand-name">wellwith</h3>
-        <p style="margin-top:10px">The Original Sea Buckthorn Co.<br>Pure nutrition, directly from the hills of Ladakh to your home.</p>
-      </div>
-      <div>
-        <h4>Quick Links</h4>
-        <ul>
-          <li><a href="index.html#products">Products</a></li>
-          <li><a href="solution-finder.html">Solution Finder</a></li>
-          <li><a href="index.html#story">Our Story</a></li>
-          <li><a href="expert.html">Palak Luthra</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4>Contact</h4>
-        <p>WhatsApp: +91 9266086554<br>The Original Sea Buckthorn Co.</p>
-      </div>
-    </div>
-    <div class="footer-bottom">© 2026 WellWith Sea Buckthorn. All rights reserved.</div>
-  </div>
-</footer>
-
 <a class="wa-float" id="wa-float" target="_blank" rel="noopener" aria-label="Chat on WhatsApp" href="https://wa.me/919266086554?text=Namaste%20Palak!%20I%20want%20to%20know%20more%20about%20WellWith%20Sea%20Buckthorn%20products.">💬</a>
 
 <script src="js/data.js"></script>
@@ -217,9 +192,7 @@
       '<button type="submit" class="btn btn-gold btn-block" id="co-continue">Review &amp; Continue →</button>' +
       '<div class="co-secure">🔒 Payments are processed securely by Cashfree. We never see your card details.</div>' +
     "</div>" +
-    "</form>" +
-
-    '<div class="co-card" id="co-review" style="display:none"></div>';
+    "</form>";
 
   function showError(msg) {
     var e = document.getElementById("co-error");
@@ -294,7 +267,13 @@
         showError(data.message || "Something went wrong. Please try again.");
         return;
       }
-      renderReview(data, payload);
+      try {
+        sessionStorage.setItem("ww_review_pending", JSON.stringify({ data: data, payload: payload }));
+      } catch (e) {
+        showError("Could not continue. Please try again.");
+        return;
+      }
+      window.location.href = "checkout-review.html" + window.location.search;
     }).catch(function () {
       btn.disabled = false;
       btn.textContent = "Review & Continue →";
@@ -302,75 +281,6 @@
     });
   });
 
-  function money(n) {
-    return "₹" + Number(n).toLocaleString("en-IN", { maximumFractionDigits: 2 });
-  }
-
-  /* ---------- review + Cashfree launch ---------- */
-  function renderReview(data, payload) {
-    var b = data.breakdown;
-    var review = document.getElementById("co-review");
-
-    var lineHtml = b.lines.map(function (ln) {
-      var prod = items.filter(function (it) { return it.product.slug === ln.slug; })[0];
-      var nm = prod ? prod.product.name : ln.slug;
-      return '<div class="co-review-line"><span>' + esc(nm) + " × " + ln.qty +
-        '</span><strong>' + money(ln.lineTotal) + "</strong></div>";
-    }).join("");
-
-    var codNote = "";
-    if (b.paymentMethod === "COD") {
-      codNote = '<div class="co-cod-note">COD: Pay ' + money(b.payNow) +
-        " now + " + money(b.payOnDelivery) + " at delivery</div>";
-      document.getElementById("cod-sub").textContent =
-        "Pay only ₹100 online now as advance. Remaining " + money(b.payOnDelivery) + " is payable at delivery.";
-    }
-
-    var couponLine = b.coupon
-      ? '<div class="co-review-line"><span>Coupon ' + esc(b.coupon) + '</span><strong>− ' + money(b.discount) + "</strong></div>"
-      : "";
-
-    var testBadge = data.env === "sandbox"
-      ? '<span class="co-testbadge">TEST MODE — no real money moves</span><br>' : "";
-
-    review.innerHTML =
-      "<span class='co-step'>Review your order</span><h2>Almost done 🎉</h2>" +
-      testBadge + lineHtml +
-      '<div class="co-review-line"><span>Subtotal</span><strong>' + money(b.subtotal) + "</strong></div>" +
-      couponLine +
-      '<div class="co-review-total"><span>Total</span><span>' + money(b.total) + "</span></div>" +
-      codNote +
-      '<button class="btn btn-green btn-block" id="co-pay">Pay ' + money(b.payNow) + " securely →</button>" +
-      '<div class="co-secure">🔒 You will be taken to Cashfree\u2019s secure payment page.</div>';
-    review.style.display = "block";
-    review.scrollIntoView({ behavior: "smooth" });
-
-    document.getElementById("co-pay").addEventListener("click", function () {
-      /* snapshot for the confirmation page (address + items never leave this device) */
-      try {
-        sessionStorage.setItem("ww_order_" + data.order_id, JSON.stringify({
-          lines: b.lines.map(function (ln) {
-            var prod = items.filter(function (it) { return it.product.slug === ln.slug; })[0];
-            return { name: prod ? prod.product.name : ln.slug, qty: ln.qty, price: ln.price };
-          }),
-          address: payload.address,
-          customer: { name: payload.customer.name, phone: payload.customer.phone },
-          breakdown: b
-        }));
-      } catch (e) { /* ignore */ }
-
-      if (typeof Cashfree === "undefined") {
-        showError("Payment gateway failed to load. Please refresh and try again.");
-        return;
-      }
-      try {
-        var cf = Cashfree({ mode: data.env === "production" ? "production" : "sandbox" });
-        cf.checkout({ paymentSessionId: data.payment_session_id, redirectTarget: "_self" });
-      } catch (e) {
-        showError("Could not open the payment page. Please try again.");
-      }
-    });
-  }
 })();
 </script>
 </body>

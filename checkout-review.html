@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Review Your Order | WellWith Sea Buckthorn</title>
+<style>
+    h1, h2, h3 { font-style: normal; }
+    /* Checkout header: no logo/wordmark — search only, single column */
+    .co-topbar { grid-template-columns: 1fr; }
+    /* Checkout page — scoped styles, matches WellWith visual language */
+    .co-wrap { max-width: 680px; margin: 0 auto; }
+    .co-card { background: var(--card); border: 1px solid var(--card-border); border-radius: var(--radius);
+      padding: 22px; margin: 18px 0; box-shadow: 0 10px 30px -18px rgba(140,105,25,.35); }
+    .co-card h2 { font-family: var(--display); font-size: 20px; margin-bottom: 4px; }
+    .co-step { display: inline-block; font-size: 12px; font-weight: 700; letter-spacing: .12em;
+      color: var(--gold-dark); text-transform: uppercase; margin-bottom: 8px; }
+    .co-item { display: flex; gap: 14px; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--card-border); }
+    .co-item:last-child { border-bottom: 0; }
+    .co-item img { width: 64px; height: 64px; object-fit: cover; border-radius: 12px; }
+    .co-item-info { flex: 1; }
+    .co-item-info h3 { font-size: 15px; }
+    .co-item-info p { font-size: 13px; color: var(--muted); }
+    .co-field { margin-bottom: 14px; }
+    .co-field label { display: block; font-size: 13px; font-weight: 700; margin-bottom: 6px; }
+    .co-field input, .co-field textarea, .co-field select {
+      width: 100%; padding: 12px 14px; font-size: 15px; font-family: inherit;
+      border: 1px solid var(--card-border); border-radius: 12px; background: #fff; color: var(--text); }
+    .co-field input:focus, .co-field textarea:focus { outline: 2px solid var(--gold); border-color: var(--gold); }
+    .co-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .co-payopt { display: flex; gap: 12px; align-items: flex-start; border: 1px solid var(--card-border);
+      border-radius: 14px; padding: 14px; margin-bottom: 12px; cursor: pointer; }
+    .co-payopt input { margin-top: 4px; accent-color: var(--green); width: 18px; height: 18px; }
+    .co-payopt.selected { border-color: var(--green); box-shadow: 0 0 0 2px rgba(43,138,92,.25); }
+    .co-payopt strong { display: block; font-size: 15px; }
+    .co-payopt span { font-size: 13px; color: var(--muted); }
+    .co-error { display: none; background: #fdecea; color: #8f1d12; border: 1px solid #f3b7ac;
+      border-radius: 12px; padding: 12px 14px; font-size: 14px; margin: 12px 0; }
+    .co-review-line { display: flex; justify-content: space-between; padding: 8px 0; font-size: 15px;
+      border-bottom: 1px dashed var(--card-border); }
+    .co-review-total { display: flex; justify-content: space-between; padding: 12px 0 4px;
+      font-size: 18px; font-weight: 800; }
+    .co-cod-note { background: #eef7f1; border: 1px solid #bfe0cd; color: #1c5c3c; border-radius: 12px;
+      padding: 12px 14px; font-size: 14px; margin: 12px 0; font-weight: 600; }
+    .co-secure { text-align: center; font-size: 12px; color: var(--muted); margin-top: 10px; }
+    .co-testbadge { display: inline-block; background: #fff4d6; color: #8a5a00; border: 1px solid #e8c86a;
+      font-size: 12px; font-weight: 700; border-radius: 999px; padding: 4px 12px; margin-bottom: 10px; }
+    .co-wa-fallback { text-align: center; }
+    .co-wa-fallback .big-icon { font-size: 44px; }
+    .btn-block { display: block; width: 100%; text-align: center; margin-top: 10px; }
+    .btn-outline { background: #fff; border: 1px solid var(--card-border); color: var(--text); }
+    .btn { display: inline-block; padding: 13px 22px; border-radius: 999px; font-weight: 700; font-size: 15px; border: 0; }
+    @media (max-width: 520px) { .co-row { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+<header class="storefront-header">
+  <div class="container storefront-header-inner">
+    <div class="storefront-topbar co-topbar">
+      <form class="quick-search storefront-search" id="quick-search" role="search">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-4-4"></path></svg>
+        <input id="quick-search-input" type="search" placeholder="Search WellWith" aria-label="Search WellWith products">
+        <button type="submit">Search</button>
+      </form>
+    </div>
+  </div>
+</header>
+<div class="container page-head">
+  <a class="back-link" id="back-link" href="checkout.html">&larr; Back to details</a>
+  <h1 class="display">Review Your Order</h1>
+  <p class="section-sub">Check everything once before you pay.</p>
+</div>
+<div class="co-wrap" id="review-root"></div>
+<a class="wa-float" id="wa-float" target="_blank" rel="noopener" aria-label="Chat on WhatsApp" href="https://wa.me/919266086554?text=Namaste%20Palak!%20I%20want%20to%20know%20more%20about%20WellWith%20Sea%20Buckthorn%20products.">💬</a>
+<script src="js/data.js"></script>
+<script src="js/app.js?v=20260928-3"></script>
+<script src="https://sdk.cashfree.com/js/v3/cashfree.js"></script>
+<script>
+(function () {
+  "use strict";
+  var root = document.getElementById("review-root");
+  var WA_NUMBER = (typeof WA_PHONE !== "undefined") ? WA_PHONE : "919266086554";
+
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" };
+    });
+  }
+
+  /* keep the back link carrying the same cart */
+  document.getElementById("back-link").href = "checkout.html" + window.location.search;
+
+  var saved = null;
+  try { saved = JSON.parse(sessionStorage.getItem("ww_review_pending") || "null"); } catch (e) {}
+
+  if (!saved || !saved.data || !saved.payload) {
+    root.innerHTML =
+      '<div class="co-card" style="text-align:center">' +
+        '<div style="font-size:44px">🧾</div>' +
+        '<h2 class="display">No order to review</h2>' +
+        '<p style="color:var(--muted)">Please fill your details and press "Review &amp; Continue" first.</p>' +
+        '<a class="btn btn-gold btn-block" id="go-back" href="checkout.html">Back to Checkout</a>' +
+      "</div>";
+    document.getElementById("go-back").href = "checkout.html" + window.location.search;
+    return;
+  }
+
+  var data = saved.data, payload = saved.payload;
+  var b = data.breakdown;
+  var items = (typeof cartItems === "function") ? cartItems() : [];
+
+  function money(n) {
+    return "₹" + Number(n).toLocaleString("en-IN", { maximumFractionDigits: 2 });
+  }
+
+  var lineHtml = b.lines.map(function (ln) {
+    var prod = items.filter(function (it) { return it.product.slug === ln.slug; })[0];
+    var nm = prod ? prod.product.name : ln.slug;
+    return '<div class="co-review-line"><span>' + esc(nm) + " × " + ln.qty +
+      '</span><strong>' + money(ln.lineTotal) + "</strong></div>";
+  }).join("");
+
+  var codNote = "";
+  if (b.paymentMethod === "COD") {
+    codNote = '<div class="co-cod-note">COD: Pay ' + money(b.payNow) +
+      " now + " + money(b.payOnDelivery) + " at delivery</div>";
+  }
+
+  var couponLine = b.coupon
+    ? '<div class="co-review-line"><span>Coupon ' + esc(b.coupon) + '</span><strong>− ' + money(b.discount) + "</strong></div>"
+    : "";
+
+  var testBadge = data.env === "sandbox"
+    ? '<span class="co-testbadge">TEST MODE — no real money moves</span><br>' : "";
+
+  root.innerHTML =
+    '<div class="co-card">' +
+      "<span class='co-step'>Review your order</span><h2>Almost done 🎉</h2>" +
+      testBadge + lineHtml +
+      '<div class="co-review-line"><span>Subtotal</span><strong>' + money(b.subtotal) + "</strong></div>" +
+      couponLine +
+      '<div class="co-review-total"><span>Total</span><span>' + money(b.total) + "</span></div>" +
+      codNote +
+      '<button class="btn btn-green btn-block" id="co-pay">Pay ' + money(b.payNow) + " securely →</button>" +
+      '<div class="co-secure">🔒 You will be taken to Cashfree\u2019s secure payment page.</div>' +
+    "</div>";
+
+  document.getElementById("co-pay").addEventListener("click", function () {
+    /* snapshot for the confirmation page (address + items never leave this device) */
+    try {
+      sessionStorage.setItem("ww_order_" + data.order_id, JSON.stringify({
+        lines: b.lines.map(function (ln) {
+          var prod = items.filter(function (it) { return it.product.slug === ln.slug; })[0];
+          return { name: prod ? prod.product.name : ln.slug, qty: ln.qty, price: ln.price };
+        }),
+        address: payload.address,
+        customer: { name: payload.customer.name, phone: payload.customer.phone },
+        breakdown: b
+      }));
+    } catch (e) { /* ignore */ }
+
+    if (typeof Cashfree === "undefined") {
+      alert("Payment gateway failed to load. Please refresh and try again.");
+      return;
+    }
+    try {
+      var cf = Cashfree({ mode: data.env === "production" ? "production" : "sandbox" });
+      cf.checkout({ paymentSessionId: data.payment_session_id, redirectTarget: "_self" });
+    } catch (e) {
+      alert("Could not open the payment page. Please try again.");
+    }
+  });
+})();
+</script>
+</body>
+</html>
