@@ -13,7 +13,7 @@
   <meta property="og:title" content="WellWith Sea Buckthorn">
   <meta property="og:description" content="Premium WellWith Sea Buckthorn wellness products, including cold-pressed juices, capsules and tisanes.">
   <meta property="og:type" content="website">
-  <link rel="stylesheet" href="assets/css/styles.css?v=20260929-3">
+  <link rel="stylesheet" href="assets/css/styles.css?v=20260929-4">
 </head>
 <body>
 
@@ -44,11 +44,34 @@
     var OFFER_KINETIC_CONFIG = [
       { scene: "hey", words: ["HEY!", "HEY!", "HEY!"] },
       { scene: "stop", words: ["stop", "scrolling"] },
-      { scene: "sale", words: ["MEGA", "SALE", "UP TO", "50% OFF"] },
+      { scene: "sale", words: ["MEGA", "SALE", "UP TO", "20% OFF"] },
       { scene: "hurry", words: ["HURRY", "HURRY", "LIMITED TIME", "HURRY", "HURRY"] },
       { scene: "cta", words: ["SHOP NOW"] }
     ];
     /* ======================= END OFFER TEXT CONFIG ======================= */
+    /* Admin override: /api/config/get se banner scenes aate hain (admin page >
+       Site Controls me badle ja sakte hain). Config aane pe scenes update ho
+       jate hain — agle animation cycle se naya text dikhega. */
+    (function () {
+      function applyBannerConfig(cfg) {
+        if (!cfg || !cfg.banner || typeof cfg.banner !== "object") return;
+        var order = ["hey", "stop", "sale", "hurry", "cta"];
+        for (var i = 0; i < OFFER_KINETIC_CONFIG.length; i++) {
+          var scene = OFFER_KINETIC_CONFIG[i];
+          var words = cfg.banner[scene.scene];
+          if (Array.isArray(words) && words.length &&
+              words.every(function (w) { return typeof w === "string" && w.trim(); })) {
+            scene.words = words.map(function (w) { return w.trim(); });
+          }
+        }
+      }
+      try {
+        fetch("/api/config/get", { cache: "no-store" })
+          .then(function (r) { return r.ok ? r.json() : null; })
+          .then(applyBannerConfig)
+          .catch(function () {});
+      } catch (e) {}
+    })();
     (function () {
       function qs(sel, root) { return (root || document).querySelector(sel); }
       function initKineticOffer() {
@@ -327,6 +350,6 @@
 <div id="modal-slot"></div>
 
 <script src="assets/js/data.js?v=20260929-1"></script>
-<script src="assets/js/app.js?v=20260929-3"></script>
+<script src="assets/js/app.js?v=20260929-4"></script>
 </body>
 </html>

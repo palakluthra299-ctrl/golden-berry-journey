@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout | WellWith Sea Buckthorn</title>
+  <meta name="description" content="WellWith secure checkout — pay online with Cashfree or choose Cash on Delivery.">
+  <link rel="icon" href="assets/favicon.png" type="image/png">
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <style>
+    h1, h2, h3 { font-style: normal; }
+    /* Checkout header: no logo/wordmark — search only, single column */
+    .co-topbar { grid-template-columns: 1fr; }
+    /* Checkout page — scoped styles, matches WellWith visual language */
+    .co-wrap { max-width: 680px; margin: 0 auto; }
+    .co-card { background: var(--card); border: 1px solid var(--card-border); border-radius: var(--radius);
+      padding: 22px; margin: 18px 0; box-shadow: 0 10px 30px -18px rgba(140,105,25,.35); }
+    .co-card h2 { font-family: var(--display); font-size: 20px; margin-bottom: 4px; }
+    .co-step { display: inline-block; font-size: 12px; font-weight: 700; letter-spacing: .12em;
+      color: var(--gold-dark); text-transform: uppercase; margin-bottom: 8px; }
+    .co-item { display: flex; gap: 14px; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--card-border); }
+    .co-item:last-child { border-bottom: 0; }
+    .co-item img { width: 64px; height: 64px; object-fit: cover; border-radius: 12px; }
+    .co-item-info { flex: 1; }
+    .co-item-info h3 { font-size: 15px; }
+    .co-item-info p { font-size: 13px; color: var(--muted); }
+    .co-field { margin-bottom: 14px; }
+    .co-field label { display: block; font-size: 13px; font-weight: 700; margin-bottom: 6px; }
+    .co-field input, .co-field textarea, .co-field select {
+      width: 100%; padding: 12px 14px; font-size: 15px; font-family: inherit;
+      border: 1px solid var(--card-border); border-radius: 12px; background: #fff; color: var(--text); }
+    .co-field input:focus, .co-field textarea:focus { outline: 2px solid var(--gold); border-color: var(--gold); }
+    .co-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .co-payopt { display: flex; gap: 12px; align-items: flex-start; border: 1px solid var(--card-border);
+      border-radius: 14px; padding: 14px; margin-bottom: 12px; cursor: pointer; }
+    .co-payopt input { margin-top: 4px; accent-color: var(--green); width: 18px; height: 18px; }
+    .co-payopt.selected { border-color: var(--green); box-shadow: 0 0 0 2px rgba(43,138,92,.25); }
+    .co-payopt strong { display: block; font-size: 15px; }
+    .co-payopt span { font-size: 13px; color: var(--muted); }
+    .co-error { display: none; background: #fdecea; color: #8f1d12; border: 1px solid #f3b7ac;
+      border-radius: 12px; padding: 12px 14px; font-size: 14px; margin: 12px 0; }
+    .co-review-line { display: flex; justify-content: space-between; padding: 8px 0; font-size: 15px;
+      border-bottom: 1px dashed var(--card-border); }
+    .co-review-total { display: flex; justify-content: space-between; padding: 12px 0 4px;
+      font-size: 18px; font-weight: 800; }
+    .co-cod-note { background: #eef7f1; border: 1px solid #bfe0cd; color: #1c5c3c; border-radius: 12px;
+      padding: 12px 14px; font-size: 14px; margin: 12px 0; font-weight: 600; }
+    .co-secure { text-align: center; font-size: 12px; color: var(--muted); margin-top: 10px; }
+    .co-testbadge { display: inline-block; background: #fff4d6; color: #8a5a00; border: 1px solid #e8c86a;
+      font-size: 12px; font-weight: 700; border-radius: 999px; padding: 4px 12px; margin-bottom: 10px; }
+    .co-wa-fallback { text-align: center; }
+    .co-wa-fallback .big-icon { font-size: 44px; }
+    .btn-block { display: block; width: 100%; text-align: center; margin-top: 10px; }
+    .btn-outline { background: #fff; border: 1px solid var(--card-border); color: var(--text); }
+    .btn { display: inline-block; padding: 13px 22px; border-radius: 999px; font-weight: 700; font-size: 15px; border: 0; }
+    @media (max-width: 520px) { .co-row { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+
+<header class="storefront-header">
+  <div class="container storefront-header-inner">
+    <div class="storefront-topbar co-topbar">
+      <form class="quick-search storefront-search" id="quick-search" role="search">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-4-4"></path></svg>
+        <input id="quick-search-input" type="search" placeholder="Search WellWith" aria-label="Search WellWith products">
+        <button type="submit">Search</button>
+      </form>
+    </div>
+  </div>
+</header>
+
+<div class="container page-head">
+  <a class="back-link" href="cart.html">← Back to Cart</a>
+  <h1 class="display">Checkout</h1>
+  <p class="section-sub">Pay securely online, or choose Cash on Delivery.</p>
+  <div class="co-wrap" id="checkout-root"></div>
+</div>
+
+<a class="wa-float" id="wa-float" target="_blank" rel="noopener" aria-label="Chat on WhatsApp" href="https://wa.me/919266086554?text=Namaste%20Palak!%20I%20want%20to%20know%20more%20about%20WellWith%20Sea%20Buckthorn%20products.">💬</a>
+
+<script src="js/data.js"></script>
+<script src="js/app.js?v=20260928-3"></script>
+<script src="https://sdk.cashfree.com/js/v3/cashfree.js"></script>
+<script>
+(function () {
+  "use strict";
+  var root = document.getElementById("checkout-root");
+  var WA_NUMBER = (typeof WA_PHONE !== "undefined") ? WA_PHONE : "919266086554";
+
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+  function waLink(msg) {
+    return "https://wa.me/" + WA_NUMBER + "?text=" + encodeURIComponent(msg);
+  }
+
+  var items = (typeof cartItems === "function") ? cartItems() : [];
+
+  if (!items.length) {
+    root.innerHTML =
+      '<div class="co-card" style="text-align:center">' +
+        '<div style="font-size:44px">🛒</div>' +
+        '<h2 class="display">Your cart is empty</h2>' +
+        '<p style="color:var(--muted)">Add some Himalayan wellness to your cart first.</p>' +
+        '<a class="btn btn-gold btn-block" href="index.html#products">Browse Products</a>' +
+      "</div>";
+    return;
+  }
+
+  var totalQty = items.reduce(function (n, it) { return n + it.qty; }, 0);
+
+  function waOrderMessage() {
+    var lines = items.map(function (it, i) {
+      return (i + 1) + ". " + it.product.name + " — Qty: " + it.qty;
+    });
+    return "Namaste Palak! I want to place this order:\n\n" + lines.join("\n") +
+      "\n\nTotal items: " + totalQty +
+      "\nPlease share payment and delivery details. Dhanyavaad!";
+  }
+
+  /* ---------- WhatsApp fallback (shown when online payment is not configured) ---------- */
+  function renderWaFallback(reason) {
+    root.innerHTML =
+      '<div class="co-card co-wa-fallback">' +
+        '<div class="big-icon">💬</div>' +
+        '<h2 class="display">Online payment is being configured</h2>' +
+        '<p style="color:var(--muted);margin:8px 0 4px">' +
+          (reason === "prices"
+            ? "We are finalising online prices. Meanwhile, place your order directly on WhatsApp — your exclusive offer will be shared there."
+            : "Our online payment setup is almost ready. Meanwhile, place your order directly on WhatsApp.") +
+        "</p>" +
+        '<p style="font-size:13px;color:var(--muted)">Your cart (' + totalQty + ' item' + (totalQty > 1 ? "s" : "") + ') is attached to the message.</p>' +
+        '<a class="btn btn-green btn-block" target="_blank" rel="noopener" href="' + waLink(waOrderMessage()) + '">💬 Order on WhatsApp</a>' +
+        '<a class="btn btn-outline btn-block" href="cart.html">← Back to Cart</a>' +
+      "</div>";
+  }
+
+  /* ---------- main form ---------- */
+  var itemsHtml = items.map(function (it) {
+    var p = it.product;
+    return '<div class="co-item">' +
+      '<img src="' + esc(p.image) + '" alt="' + esc(p.name) + '">' +
+      '<div class="co-item-info"><h3>' + esc(p.name) + '</h3>' +
+      '<p>' + esc(p.tagline || "") + '</p></div>' +
+      '<div><strong>Qty: ' + it.qty + '</strong></div>' +
+    "</div>";
+  }).join("");
+
+  root.innerHTML =
+    '<div class="co-card">' +
+      '<span class="co-step">Step 1 of 3</span><h2>Your Order</h2>' +
+      itemsHtml +
+      '<p style="font-size:13px;color:var(--muted);margin-top:10px">' + totalQty + ' item' + (totalQty > 1 ? "s" : "") +
+      ' · Final amount is calculated securely at the payment step.</p>' +
+    "</div>" +
+
+    '<form id="co-form" novalidate>' +
+    '<div class="co-card">' +
+      '<span class="co-step">Step 2 of 3</span><h2>Delivery Details</h2>' +
+      '<div class="co-field"><label for="co-name">Full Name *</label>' +
+        '<input id="co-name" name="name" type="text" autocomplete="name" placeholder="e.g. Palak Luthra"></div>' +
+      '<div class="co-field"><label for="co-phone">Mobile Number *</label>' +
+        '<input id="co-phone" name="phone" type="tel" inputmode="numeric" autocomplete="tel" maxlength="10" placeholder="10-digit mobile number"></div>' +
+      '<div class="co-field"><label for="co-addr">Delivery Address *</label>' +
+        '<textarea id="co-addr" name="address" rows="2" autocomplete="street-address" placeholder="House no, street, area, landmark"></textarea></div>' +
+      '<div class="co-row">' +
+        '<div class="co-field"><label for="co-city">City *</label><input id="co-city" name="city" type="text" autocomplete="address-level2"></div>' +
+        '<div class="co-field"><label for="co-state">State *</label><input id="co-state" name="state" type="text" autocomplete="address-level1"></div>' +
+      '</div>' +
+      '<div class="co-field"><label for="co-pin">PIN Code *</label>' +
+        '<input id="co-pin" name="pin" type="text" inputmode="numeric" maxlength="6" autocomplete="postal-code" placeholder="6-digit PIN"></div>' +
+      '<div class="co-field" id="co-coupon-wrap"><label for="co-coupon">Coupon Code <span style="font-weight:400;color:var(--muted)">(optional)</span></label>' +
+        '<input id="co-coupon" name="coupon" type="text" autocapitalize="characters" placeholder="Enter code if you have one"></div>' +
+    "</div>" +
+
+    '<div class="co-card">' +
+      '<span class="co-step">Step 3 of 3</span><h2>Payment Method</h2>' +
+      '<label class="co-payopt" id="opt-prepaid">' +
+        '<input type="radio" name="paymethod" value="PREPAID" checked>' +
+        '<div><strong>💳 Prepaid — Pay Online</strong>' +
+        '<span>Pay the complete order amount securely online right now.</span></div>' +
+      "</label>" +
+      '<label class="co-payopt" id="opt-cod">' +
+        '<input type="radio" name="paymethod" value="COD">' +
+        '<div><strong>📦 Cash on Delivery</strong>' +
+        '<span id="cod-sub">Pay only ₹100 online now as advance. The remaining amount is payable at delivery.</span></div>' +
+      "</label>" +
+      '<div class="co-error" id="co-error"></div>' +
+      '<button type="submit" class="btn btn-gold btn-block" id="co-continue">Review &amp; Continue →</button>' +
+      '<div class="co-secure">🔒 Payments are processed securely by Cashfree. We never see your card details.</div>' +
+    "</div>" +
+    "</form>";
+
+  function showError(msg) {
+    var e = document.getElementById("co-error");
+    e.textContent = msg;
+    e.style.display = "block";
+    e.scrollIntoView({ behavior: "smooth", block: "center" });
+  }
+  function hideError() {
+    var e = document.getElementById("co-error");
+    e.style.display = "none";
+  }
+
+  qsa(".co-payopt").forEach(function (el) {
+    el.addEventListener("click", function () {
+      qsa(".co-payopt").forEach(function (x) { x.classList.remove("selected"); });
+      el.classList.add("selected");
+    });
+  });
+  document.getElementById("opt-prepaid").classList.add("selected");
+
+  /* pre-fill coupon: ?coupon= in URL wins, else a coupon applied on the cart.
+     If the admin hid the coupon offer, the field is removed entirely. */
+  (function () {
+    function hideCouponField() {
+      var wrap = document.getElementById("co-coupon-wrap");
+      if (wrap) wrap.style.display = "none";
+    }
+    try {
+      fetch("/api/config/get", { cache: "no-store" })
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (cfg) { if (cfg && cfg.coupon_visible === false) hideCouponField(); })
+        .catch(function () {});
+    } catch (e) {}
+    var pre = "";
+    try {
+      var qs = new URLSearchParams(window.location.search);
+      pre = (qs.get("coupon") || "").trim().toUpperCase();
+      if (!pre) pre = (window.localStorage.getItem("ww_coupon") || "").trim().toUpperCase();
+    } catch (e) {}
+    if (pre) {
+      var ci = document.getElementById("co-coupon");
+      if (ci) ci.value = pre;
+    }
+  })();
+
+  function field(id) { return document.getElementById(id).value.trim(); }
+
+  document.getElementById("co-form").addEventListener("submit", function (ev) {
+    ev.preventDefault();
+    hideError();
+
+    var name = field("co-name");
+    var phone = field("co-phone").replace(/\D/g, "");
+    var addr = field("co-addr");
+    var city = field("co-city");
+    var state = field("co-state");
+    var pin = field("co-pin").replace(/\D/g, "");
+    var coupon = field("co-coupon").toUpperCase();
+    var payMethod = (document.querySelector('input[name="paymethod"]:checked') || {}).value;
+
+    if (name.length < 2) return showError("Please enter your full name.");
+    if (!/^[6-9]\d{9}$/.test(phone)) return showError("Please enter a valid 10-digit mobile number.");
+    if (addr.length < 8) return showError("Please enter your full delivery address.");
+    if (city.length < 2) return showError("Please enter your city.");
+    if (state.length < 2) return showError("Please enter your state.");
+    if (!/^\d{6}$/.test(pin)) return showError("Please enter a valid 6-digit PIN code.");
+    if (!payMethod) return showError("Please choose a payment method.");
+
+    var btn = document.getElementById("co-continue");
+    btn.disabled = true;
+    btn.textContent = "Calculating securely…";
+
+    var payload = {
+      cartLines: items.map(function (it) { return { slug: it.product.slug, qty: it.qty }; }),
+      customer: { name: name, phone: phone },
+      address: { line: addr, city: city, state: state, pin: pin },
+      paymentMethod: payMethod,
+      coupon: coupon
+    };
+
+    fetch("/api/cashfree/create-order", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    }).then(function (r) {
+      return r.json().then(function (data) { return { status: r.status, data: data }; });
+    }).then(function (resp) {
+      btn.disabled = false;
+      btn.textContent = "Review & Continue →";
+      var data = resp.data || {};
+      if (resp.status === 503) {
+        renderWaFallback(data.error === "PRICES_NOT_CONFIGURED" ? "prices" : "keys");
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        return;
+      }
+      if (resp.status !== 200) {
+        showError(data.message || "Something went wrong. Please try again.");
+        return;
+      }
+      try {
+        sessionStorage.setItem("ww_review_pending", JSON.stringify({ data: data, payload: payload }));
+      } catch (e) {
+        showError("Could not continue. Please try again.");
+        return;
+      }
+      window.location.href = "checkout-review.html" + window.location.search;
+    }).catch(function () {
+      btn.disabled = false;
+      btn.textContent = "Review & Continue →";
+      showError("Network error. Please check your connection and try again.");
+    });
+  });
+
+})();
+</script>
+</body>
+</html>

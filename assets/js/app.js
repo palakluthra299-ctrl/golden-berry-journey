@@ -1169,6 +1169,121 @@ function initQuickCommerce() {
 
   window.startWellWithThankYou = playCheckoutGratitude;
 
+  /* ---------- site config (admin-controlled flags: cashfree on/off, coupon show/hide) ---------- */
+  var WW_DEFAULT_CONFIG = { cashfree_enabled: true, coupon_visible: true };
+  var wwSiteConfig = null;
+  var wwSiteConfigPromise = null;
+  function getSiteConfig() {
+    if (!wwSiteConfigPromise) {
+      wwSiteConfigPromise = fetch("/api/config/get", { cache: "no-store" })
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (j) {
+          wwSiteConfig = Object.assign({}, WW_DEFAULT_CONFIG, j || {});
+          return wwSiteConfig;
+        })
+        .catch(function () {
+          wwSiteConfig = Object.assign({}, WW_DEFAULT_CONFIG);
+          return wwSiteConfig;
+        });
+    }
+    return wwSiteConfigPromise;
+  }
+  function cashfreeEnabled() { return !wwSiteConfig || wwSiteConfig.cashfree_enabled !== false; }
+  function couponVisible() { return !wwSiteConfig || wwSiteConfig.coupon_visible !== false; }
+  /* fetch early; if the coupon offer is hidden, re-render an open cart sheet */
+  getSiteConfig().then(function () {
+    try {
+      if (!couponVisible() && sheet && sheet.classList.contains("active")) renderSheet();
+    } catch (e) {}
+  });
+
+  /* ---------- WhatsApp lead capture (for the admin page) ---------- */
+  function logWhatsAppLead() {
+    try {
+      var items = cartItems();
+      if (!items.length) return;
+      var summary = items.map(function (it) { return it.product.slug + "x" + it.qty; }).join(", ");
+      var total = 0;
+      try { total = cartTotal(); } catch (e) {}
+      fetch("/api/lead/log", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ channel: "WHATSAPP", cart: summary, itemCount: items.length, total: total })
+      }).catch(function () {});
+    } catch (e) {}
+  }
+
+  /* ---------- checkout choice screen: CHECKOUT NOW / CONSULT FIRST / WHATSAPP EXCLUSIVE ---------- */
+  var checkoutChoiceEl = null;
+  function closeCheckoutChoice() {
+    if (!checkoutChoiceEl) return;
+    checkoutChoiceEl.classList.remove("open");
+    document.body.classList.remove("cc-open");
+    setTimeout(function () { if (checkoutChoiceEl && !checkoutChoiceEl.classList.contains("open")) checkoutChoiceEl.classList.remove("active"); }, 240);
+  }
+  function openCheckoutChoice(opts) {
+    if (!cartItems().length) return;
+    opts = opts || {};
+    if (!checkoutChoiceEl) {
+      checkoutChoiceEl = document.createElement("div");
+      checkoutChoiceEl.className = "checkout-choice-backdrop";
+      checkoutChoiceEl.id = "checkout-choice";
+      checkoutChoiceEl.innerHTML =
+        '<section class="checkout-choice" role="dialog" aria-modal="true" aria-label="Choose checkout option">' +
+          '<header class="cc-topbar"><button type="button" class="cc-back" aria-label="Back to cart">\u2190 Cart</button>' +
+          '<button type="button" class="cc-close" aria-label="Close">\u00d7</button></header>' +
+          '<h2 class="cc-title">HOW WOULD YOU LIKE TO PROCEED?</h2>' +
+          '<p class="cc-sub">Your cart is ready. Choose how you\u2019d like to continue.</p>' +
+          '<div class="cc-cards">' +
+            '<div class="cc-card"><span class="cc-icon" aria-hidden="true">\uD83D\uDD12</span>' +
+              '<h3>CHECKOUT NOW</h3><p>Proceed with your order and payment.</p>' +
+              '<p class="cc-note">COD + Prepaid available</p>' +
+              '<a class="cc-btn cc-gold" id="cc-checkout-now" target="_blank" rel="noopener" href="#">CHECKOUT NOW \u2192</a></div>' +
+            '<div class="cc-card"><span class="cc-icon" aria-hidden="true">\uD83D\uDCAC</span>' +
+              '<h3>CONSULT FIRST</h3><p>Have questions about your products or order?</p>' +
+              '<p class="cc-note">Talk to us on WhatsApp before confirming.</p>' +
+              '<a class="cc-btn cc-green" id="cc-consult" href="#">CONSULT ON WHATSAPP \u2192</a></div>' +
+          '</div>' +
+          '<a class="cc-exclusive" id="cc-exclusive" target="_blank" rel="noopener" href="#">' +
+            '<span class="cc-badge">WHATSAPP EXCLUSIVE</span>' +
+            '<strong>Looking for a special offer?</strong>' +
+            '<span class="cc-exclusive-sub">Ask us on WhatsApp about your exclusive offer.</span></a>' +
+        '</section>';
+      document.body.appendChild(checkoutChoiceEl);
+      qs(".cc-back", checkoutChoiceEl).addEventListener("click", closeCheckoutChoice);
+      qs(".cc-close", checkoutChoiceEl).addEventListener("click", function () { closeCheckoutChoice(); closeSheet(); });
+      qs("#cc-consult", checkoutChoiceEl).addEventListener("click", function (event) {
+        event.preventDefault();
+        var dest = this.getAttribute("href");
+        logWhatsAppLead();
+        closeCheckoutChoice();
+        playCheckoutGratitude(dest);
+      });
+      qs("#cc-exclusive", checkoutChoiceEl).addEventListener("click", function () {
+        logWhatsAppLead(); /* let the link open normally */
+      });
+      checkoutChoiceEl.addEventListener("click", function (e) { if (e.target === checkoutChoiceEl) closeCheckoutChoice(); });
+    }
+    var cartQ = encodeURIComponent(cartValue(getCart()));
+    var couponQ = opts.coupon ? "&coupon=" + encodeURIComponent(opts.coupon) : "";
+    qs("#cc-checkout-now", checkoutChoiceEl).setAttribute("href", "checkout.html?cart=" + cartQ + couponQ);
+    var consultMsg = opts.orderMessage || "Namaste Palak! I want to place an order with WellWith. Please confirm availability, delivery and payment details. Dhanyavaad!";
+    qs("#cc-consult", checkoutChoiceEl).setAttribute("href", waLink(consultMsg));
+    qs("#cc-exclusive", checkoutChoiceEl).setAttribute("href", waLink("Namaste Palak! I saw the WHATSAPP EXCLUSIVE offer on the WellWith website. Please share my exclusive offer. Dhanyavaad!"));
+    /* admin flag: hide the Cashfree (CHECKOUT NOW) card when disabled */
+    getSiteConfig().then(function (cfg) {
+      try {
+        var btn = qs("#cc-checkout-now", checkoutChoiceEl);
+        var card = btn && btn.closest ? btn.closest(".cc-card") : null;
+        if (card) card.style.display = cfg.cashfree_enabled === false ? "none" : "";
+      } catch (e) {}
+    });
+    checkoutChoiceEl.classList.add("active");
+    requestAnimationFrame(function () { if (checkoutChoiceEl) checkoutChoiceEl.classList.add("open"); });
+    document.body.classList.add("cc-open");
+  }
+  window.openWellWithCheckoutChoice = openCheckoutChoice;
+
   var catalog = document.createElement("div");
   catalog.className = "catalog-view"; catalog.id = "catalog-view";
   catalog.innerHTML = '<div class="catalog-shell"><header class="catalog-header"><button type="button" class="catalog-back" aria-label="Back">←</button><div><p>WellWith Shop</p><h2 id="catalog-title">All Products</h2></div><button type="button" class="catalog-heart" aria-label="Wishlist">♡</button><button type="button" class="catalog-search-btn" aria-label="Search">' + icon('m21 21-4.35-4.35m2.35-5.65a8 8 0 1 1-16 0 8 8 0 0 1 16 0Z') + '</button></header><div class="catalog-promo"><strong>Pure WellWith wellness</strong><span>Explore the complete WellWith collection</span></div><div class="catalog-layout"><aside class="catalog-sidebar" id="catalog-sidebar"></aside><main class="catalog-results"><div class="catalog-grid" id="catalog-grid"></div></main></div></div>';
@@ -1301,6 +1416,33 @@ function initQuickCommerce() {
     setTimeout(function () { if (!business.classList.contains("open")) business.classList.remove("active"); }, 430);
   }
 
+  /* ---------- coupons: SPEACIAL20, 20% off on orders Rs 849+ (BigBasket-style) ---------- */
+  var COUPON_CODE = "SPEACIAL20";
+  var COUPON_LEGACY = "SPECIAL20"; /* old spelling still honoured for saved carts */
+  var COUPON_PCT = 20;
+  var COUPON_MIN = 849;
+  function wwRound2(n) { return Math.round(n * 100) / 100; }
+  function storedCoupon() {
+    try { return window.localStorage.getItem("ww_coupon") || ""; } catch (e) { return ""; }
+  }
+  function couponMatches(v) {
+    v = String(v || "").trim().toUpperCase();
+    return v === COUPON_CODE || v === COUPON_LEGACY;
+  }
+  function setStoredCoupon(code) {
+    try {
+      if (code) window.localStorage.setItem("ww_coupon", code);
+      else window.localStorage.removeItem("ww_coupon");
+    } catch (e) {}
+  }
+  function couponDiscount(total) {
+    if (!couponVisible()) return 0; /* admin hid the offer */
+    if (couponMatches(storedCoupon()) && total >= COUPON_MIN) {
+      return Math.min(wwRound2(total * COUPON_PCT / 100), total);
+    }
+    return 0;
+  }
+
   function renderSheet() {
     var items = cartItems(), total = cartTotal();
     var root = qs("#cart-sheet-body", sheet);
@@ -1311,23 +1453,79 @@ function initQuickCommerce() {
     var orderLines = items.map(function (it, i) {
       return (i + 1) + ". " + it.product.name + ", Qty: " + it.qty;
     }).join("\n");
-    var orderMessage = "Namaste Palak! I want to place this order:\n\n" + orderLines +
-      "\n\nEstimated total: " + formatMoney(total) +
-      "\n\nPlease confirm availability, delivery and payment details. Dhanyavaad!";
+    var discount = couponDiscount(total);
+    var payable = wwRound2(total - discount);
+    var couponStored = couponMatches(storedCoupon());
+    var orderMessage = "Namaste Palak! I want to place this order:\n\n" + orderLines;
+    if (discount > 0) {
+      orderMessage += "\n\nCart total: " + formatMoney(total) +
+        "\nCoupon " + COUPON_CODE + " applied (20% OFF): -" + formatMoney(discount) +
+        "\nTotal payable: " + formatMoney(payable);
+    } else {
+      orderMessage += "\n\nEstimated total: " + formatMoney(total);
+    }
+    orderMessage += "\n\nPlease confirm availability, delivery and payment details. Dhanyavaad!";
     root.innerHTML =
       '<div class="cart-savings">Your health is on the way <span aria-hidden="true">🌿</span></div>' +
       '<div class="cart-delivery-row"><span class="delivery-clock" aria-hidden="true">' + icon('M12 7v5l3 2M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z') + '</span><div><strong>Delivery timing</strong><p>Confirmed based on your delivery address</p></div></div>' +
       '<div class="cart-delivery-row"><span class="delivery-clock" aria-hidden="true">' + icon('M5 12l4 4L19 6') + '</span><div><strong>Delivery updates</strong><p>Shared directly with you on WhatsApp</p></div></div>' +
       '<div class="sheet-items">' + items.map(function (it) { return '<div class="sheet-item"><img src="' + it.product.image + '" alt="' + it.product.name + '"><div><h3>' + it.product.name + '</h3><p>1 pack</p><strong>' + formatMoney(it.product.price * it.qty) + '</strong></div><div class="qty-stepper"><button data-cart-dec="' + it.product.slug + '" aria-label="Decrease ' + it.product.name + '">−</button><span>' + it.qty + '</span><button data-cart-inc="' + it.product.slug + '" aria-label="Increase ' + it.product.name + '">+</button></div></div>'; }).join("") + '</div>' +
       '<button class="sheet-add-more" type="button">Forgot something? <strong>Add More Items</strong></button>' +
-      '<div class="sheet-summary"><div><span>Item total</span><strong>' + formatMoney(total) + '</strong></div><a class="sheet-checkout" target="_blank" rel="noopener" href="' + waLink(orderMessage) + '"><span>Proceed with WhatsApp</span><strong>' + formatMoney(total) + ' →</strong></a></div>';
+      buildCouponHtml(total, discount, couponStored) +
+      '<div class="sheet-summary"><div class="sheet-totals">' +
+        '<div class="sheet-total-row"><span>Item total</span><strong>' + formatMoney(total) + '</strong></div>' +
+        (discount > 0 ? '<div class="sheet-total-row coupon-row"><span>Coupon discount (' + COUPON_CODE + ')</span><strong>\u2212 ' + formatMoney(discount) + '</strong></div>' : '') +
+        (discount > 0 ? '<div class="sheet-total-row payable"><span>To Pay</span><strong>' + formatMoney(payable) + '</strong></div>' : '') +
+      '</div><button type="button" class="sheet-checkout" id="sheet-checkout-choice"><span>Choose checkout option</span><strong>' + formatMoney(payable) + ' →</strong></button></div>';
+  function buildCouponHtml(total, discount, couponStored) {
+    if (!couponVisible()) return ""; /* admin hid the offer */
+    if (discount > 0) {
+      return '<div class="sheet-coupon applied">' +
+        '<div class="coupon-applied-row"><span class="coupon-tick">\u2713</span><div><strong>' + COUPON_CODE + '</strong>' +
+        '<p>20% OFF applied \u2014 you save ' + formatMoney(discount) + '</p></div>' +
+        '<button type="button" class="coupon-remove" id="coupon-remove">Remove</button></div>' +
+      '</div>';
+    }
+    var needMore = COUPON_MIN - total;
+    var hint = (couponStored && needMore > 0)
+      ? '<p class="coupon-hint show">Add items worth ' + formatMoney(needMore) + ' more to unlock ' + COUPON_CODE + '</p>'
+      : '<p class="coupon-hint" id="coupon-hint"></p>';
+    return '<div class="sheet-coupon">' +
+      '<button type="button" class="coupon-toggle" id="coupon-toggle"><span>🏷️ Apply Coupon</span><span class="coupon-chev">\u25BE</span></button>' +
+      '<div class="coupon-list" id="coupon-list" hidden>' +
+        '<div class="coupon-card"><span class="coupon-code">' + COUPON_CODE + '</span>' +
+        '<p>Get 20% OFF on orders \u20B9849 &amp; above</p>' +
+        '<button type="button" class="coupon-apply" id="coupon-apply">APPLY</button></div>' +
+      '</div>' + hint +
+    '</div>';
+  }
+
     var addMore = qs(".sheet-add-more", root);
     if (addMore) addMore.addEventListener("click", function () { openCatalog("all"); });
-    var checkout = qs(".sheet-checkout", root);
-    if (checkout) checkout.addEventListener("click", function (event) {
-      event.preventDefault();
-      playCheckoutGratitude(checkout.href);
+    var checkoutChoiceBtn = qs("#sheet-checkout-choice", root);
+    if (checkoutChoiceBtn) checkoutChoiceBtn.addEventListener("click", function () {
+      openCheckoutChoice({ orderMessage: orderMessage, coupon: (couponVisible() && couponStored) ? COUPON_CODE : "" });
     });
+    var couponToggle = qs("#coupon-toggle", root);
+    if (couponToggle) couponToggle.addEventListener("click", function () {
+      var list = qs("#coupon-list", root);
+      var opening = list.hasAttribute("hidden");
+      if (opening) { list.removeAttribute("hidden"); couponToggle.classList.add("open"); }
+      else { list.setAttribute("hidden", ""); couponToggle.classList.remove("open"); }
+    });
+    var couponApply = qs("#coupon-apply", root);
+    if (couponApply) couponApply.addEventListener("click", function () {
+      if (cartTotal() >= COUPON_MIN) { setStoredCoupon(COUPON_CODE); renderSheet(); }
+      else {
+        var h = qs("#coupon-hint", root);
+        if (h) {
+          h.textContent = "Add items worth " + formatMoney(COUPON_MIN - cartTotal()) + " more to unlock " + COUPON_CODE;
+          h.classList.add("show");
+        }
+      }
+    });
+    var couponRemove = qs("#coupon-remove", root);
+    if (couponRemove) couponRemove.addEventListener("click", function () { setStoredCoupon(""); renderSheet(); });
   }
   function openSheet(fromHistory) {
     if (!fromHistory) {
