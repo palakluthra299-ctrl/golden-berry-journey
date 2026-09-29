@@ -9,6 +9,8 @@
   <link rel="stylesheet" href="assets/css/styles.css">
   <style>
     h1, h2, h3 { font-style: normal; }
+    /* Confirmation header: no logo/wordmark — search only, single column */
+    .co-topbar { grid-template-columns: 1fr; }
     .oc-wrap { max-width: 640px; margin: 0 auto; }
     .oc-card { background: var(--card); border: 1px solid var(--card-border); border-radius: var(--radius);
       padding: 26px 22px; margin: 18px 0; text-align: center;
@@ -37,11 +39,7 @@
 
 <header class="storefront-header">
   <div class="container storefront-header-inner">
-    <div class="storefront-topbar">
-      <a class="brand" href="index.html" aria-label="WellWith home">
-        <span class="brand-name">wellwith</span>
-        <span class="brand-tag">Sea Buckthorn</span>
-      </a>
+    <div class="storefront-topbar co-topbar">
       <form class="quick-search storefront-search" id="quick-search" role="search">
         <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-4-4"></path></svg>
         <input id="quick-search-input" type="search" placeholder="Search WellWith" aria-label="Search WellWith products">
