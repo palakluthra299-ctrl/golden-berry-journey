@@ -9,6 +9,7 @@ var entries = [
   "product.html",
   "cart.html",
   "checkout.html",
+  "checkout-review.html",
   "order-confirmation.html",
   "expert.html",
   "solution-finder.html",
