@@ -181,7 +181,7 @@ function cartItems() {
   if (typeof PRODUCTS === "undefined") return [];
   var cart = getCart(), out = [];
   PRODUCTS.forEach(function (p) {
-    if (cart[p.slug]) out.push({ product: p, qty: cart[p.slug] });
+    if (cart[p.slug] && p.active !== false) out.push({ product: p, qty: cart[p.slug] });
   });
   return out;
 }
@@ -189,6 +189,10 @@ function addToCart(slug, qty) {
   if (typeof PRODUCTS === "undefined") return;
   var p = PRODUCTS.find(function (x) { return x.slug === slug; });
   if (!p) return;
+  if (p.active === false) {
+    if (typeof showToast === "function") showToast(p.name + " is currently unavailable");
+    return;
+  }
   var cart = getCart();
   cart[slug] = (cart[slug] || 0) + (qty || 1);
   saveCart(cart);
@@ -750,7 +754,7 @@ function initProductGrids() {
       '<img src="' + p.image + '" alt="' + p.name + '" loading="lazy" decoding="async"></div>' +
       '<div class="body">' +
         '<h3>' + p.name + '</h3>' +
-        '<div class="product-price">' + formatMoney(p.price) + '</div>' +
+        '<div class="product-price">' + window.productPriceHTML(p) + '</div>' +
         '<p class="tagline">' + p.tagline + '</p>' +
         '<p class="desc">' + p.description + '</p>' +
         '<div class="row">' +
@@ -762,11 +766,12 @@ function initProductGrids() {
         '</div>' +
       '</div></article>';
   }
+  function visible(list) { return list.filter(function (p) { return p.active !== false; }); }
   var all = qs("#grid-products");
   var conc = qs("#grid-concentrates"), add = qs("#grid-addons");
-  if (all) all.innerHTML = PRODUCTS.map(card).join("");
-  if (conc) conc.innerHTML = PRODUCTS.filter(function (p) { return p.category === "concentrate"; }).map(card).join("");
-  if (add) add.innerHTML = PRODUCTS.filter(function (p) { return p.category === "addon"; }).map(card).join("");
+  if (all) all.innerHTML = visible(PRODUCTS).map(card).join("");
+  if (conc) conc.innerHTML = visible(PRODUCTS).filter(function (p) { return p.category === "concentrate"; }).map(card).join("");
+  if (add) add.innerHTML = visible(PRODUCTS).filter(function (p) { return p.category === "addon"; }).map(card).join("");
 }
 
 /* ---------- Full-screen customer review player ---------- */
@@ -1332,21 +1337,24 @@ function initQuickCommerce() {
         '<span class="quick-img-swap"><img src="' + p.image + '" alt="' + p.name + '" loading="lazy"></span>' +
       '</a>' +
       '<div class="quick-card-body"><button class="quick-name" type="button" data-open-list="' + p.category + '">' + p.name + '</button>' +
-      '<p>1 pack</p><div class="quick-price-row"><strong>' + formatMoney(p.price) + '</strong><span data-cart-control="' + p.slug + '">' + cartControlHTML(p.slug, "quick-stepper") + '</span></div>' +
+      '<p>1 pack</p><div class="quick-price-row">' + window.productPriceHTML(p) + '<span data-cart-control="' + p.slug + '">' + cartControlHTML(p.slug, "quick-stepper") + '</span></div>' +
       '<a class="quick-details-link" href="product.html?slug=' + p.slug + '">View Details ›</a></div></article>';
   }
 
   function renderRails() {
     var root = qs("#rail-products");
-    if (root) root.innerHTML = PRODUCTS.map(quickCard).join("");
+    if (root) root.innerHTML = PRODUCTS.filter(function (p) { return p.active !== false; }).map(quickCard).join("");
   }
 
   var activeFilter = "all";
   function listingCard(p) {
     var off = Math.max(0, (p.mrp || p.price) - p.price);
+    var priceHtml = p.onDrop
+      ? '<strong class="ww-price-drop">' + formatMoney(p.price) + '</strong><del>' + formatMoney(p.mrp || p.price) + '</del> <span class="ww-drop-badge">PRICE DROP</span>'
+      : '<strong>' + formatMoney(p.price) + '</strong><del>' + formatMoney(p.mrp || p.price) + '</del>';
     return '<article class="listing-card">' +
       '<div class="listing-image"><button class="wish-btn" type="button" aria-label="Add ' + p.name + ' to wishlist">♡</button><a href="product.html?slug=' + p.slug + '" aria-label="View ' + p.name + ' details"><span class="quick-img-swap"><img src="' + p.image + '" alt="' + p.name + '"></span></a><span class="listing-add" data-cart-control="' + p.slug + '">' + cartControlHTML(p.slug, "listing-stepper") + '</span></div>' +
-      '<div class="listing-price"><strong>' + formatMoney(p.price) + '</strong><del>' + formatMoney(p.mrp || p.price) + '</del></div>' +
+      '<div class="listing-price">' + priceHtml + '</div>' +
       '<div class="listing-off">' + (off ? formatMoney(off) + ' OFF' : 'MRP pricing') + '</div>' +
       '<h3>' + p.name + '</h3><p>1 pack</p><button class="variant-link" type="button">1 variant ›</button>' +
     '</article>';
@@ -1360,7 +1368,7 @@ function initQuickCommerce() {
     closeBusiness(true);
     closeSheet(true);
     var items = PRODUCTS.filter(function (p) {
-      return productMatches(p, activeFilter) && (!query || (p.name + " " + p.description).toLowerCase().indexOf(query.toLowerCase()) !== -1);
+      return p.active !== false && productMatches(p, activeFilter) && (!query || (p.name + " " + p.description).toLowerCase().indexOf(query.toLowerCase()) !== -1);
     });
     qs("#catalog-title", catalog).textContent = query ? 'Search: “' + query + '”' : (catalogGroups.find(function (g) { return g[0] === activeFilter; }) || [0, "Products"])[1];
     qs("#catalog-grid", catalog).innerHTML = items.length ? items.map(listingCard).join("") : '<div class="catalog-empty"><h3>No products found</h3><p>Try a different search.</p></div>';
@@ -1703,7 +1711,7 @@ function initQuickCommerce() {
     activeSuggestion = -1;
     if (!query) { closeSearchSuggestions(); return; }
 
-    var products = PRODUCTS.map(function (product) {
+    var products = PRODUCTS.filter(function (p) { return p.active !== false; }).map(function (product) {
       var searchable = [product.name, product.tagline, product.description, product.ingredients].join(" ");
       return { type: "product", label: product.name, product: product, score: suggestionScore(product.name, searchable, query) };
     }).filter(function (item) { return item.score < 99; });
@@ -1849,7 +1857,11 @@ function initQuickCommerce() {
 }
 
 /* ---------- Boot ---------- */
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", async function () {
+  /* Admin product overrides (price / price drop / active / new products) are
+     merged into PRODUCTS before anything renders — no flash of base prices.
+     site-overrides.js guarantees this resolves (2.5s timeout fallback). */
+  try { await window.__overridesReady; } catch (e) {}
   WellWithHistory.init();
   /* If a popup is open and user taps an internal link (e.g. View Details),
      close the popup's history entry first so Back lands on a clean page. */

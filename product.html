@@ -6,7 +6,7 @@
   <title>Product | WellWith Sea Buckthorn</title>
   <meta name="description" content="WellWith Sea Buckthorn products – pure Himalayan wellness from Ladakh.">
   <link rel="icon" href="assets/favicon.png" type="image/png">
-  <link rel="stylesheet" href="assets/css/styles.css?v=20260929-4">
+  <link rel="stylesheet" href="assets/css/styles.css?v=20260929-6">
   <style>
     /* Single-screen product page: no page scroll, tabbed info */
     html, body { height: 100dvh; overflow: hidden; }
@@ -70,9 +70,12 @@
 <div class="container product-screen" id="product-root"></div>
 
 <script src="assets/js/data.js?v=20260929-1"></script>
-<script src="assets/js/app.js?v=20260929-4"></script>
+<script src="assets/js/site-overrides.js?v=20260929-6"></script>
+<script src="assets/js/app.js?v=20260929-6"></script>
 <script>
 (function () {
+  /* Wait for admin product overrides (price drop / active flags) before render. */
+  function render() {
   var slug = new URLSearchParams(window.location.search).get("slug");
   var p = (typeof PRODUCTS !== "undefined") ? PRODUCTS.find(function (x) { return x.slug === slug; }) : null;
   var root = document.getElementById("product-root");
@@ -87,7 +90,14 @@
 
   document.title = p.name + " | WellWith Sea Buckthorn";
   var cat = p.category === "concentrate" ? "Liquid Concentrate" : "Specialized Add-on";
-  var price = (typeof formatPrice === "function") ? formatPrice(p.price) : ("₹" + p.price);
+  var price = (typeof window.productPriceHTML === "function") ? window.productPriceHTML(p)
+    : ((typeof formatPrice === "function") ? formatPrice(p.price) : ("₹" + p.price));
+  var available = p.active !== false;
+  var cartBtn = available
+    ? '<button class="btn btn-green btn-add" data-add-cart="' + p.slug + '">Add to Cart</button>'
+    : '<button class="btn btn-add" type="button" disabled style="opacity:.5;cursor:not-allowed">Unavailable</button>';
+  var availNote = available ? ""
+    : '<p class="tagline" style="color:#b3261e">Currently unavailable — check back soon.</p>';
 
   root.innerHTML =
     '<div class="product-compact-hero">' +
@@ -95,8 +105,9 @@
       '<div class="p-info">' +
         '<span class="cat">' + cat + '</span>' +
         '<div class="name-row"><h1>' + p.name + '</h1>' +
-        '<button class="btn btn-green btn-add" data-add-cart="' + p.slug + '">Add to Cart</button></div>' +
+        cartBtn + '</div>' +
         '<p class="tagline">' + p.tagline + '</p>' +
+        availNote +
         '<div class="p-price-row"><span class="p-price">' + price + '</span></div>' +
       '</div>' +
     '</div>' +
@@ -146,6 +157,12 @@
       if (panel) panel.classList.add("active");
     });
   });
+  }
+  if (window.__overridesReady && typeof window.__overridesReady.then === "function") {
+    window.__overridesReady.then(render).catch(render);
+  } else {
+    render();
+  }
 })();
 </script>
 </body>

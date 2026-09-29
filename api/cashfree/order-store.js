@@ -114,6 +114,9 @@ module.exports = {
   logLead: logLead,
   listLeads: listLeads,
   leadThrottled: leadThrottled,
+  getProductOverrides: getProductOverrides,
+  setProductOverrides: setProductOverrides,
+  effectivePrice: effectivePrice,
   DEFAULT_CONFIG: DEFAULT_CONFIG
 };
 
@@ -351,4 +354,117 @@ async function listLeads(limit) {
     if (lead) out.push(lead);
   }
   return out;
+}
+
+/* ---------- product overrides (admin product manager) ----------
+ * Stored as one JSON doc in Redis key "ww:product_overrides":
+ *   { "<slug>": { name, sku, price, price_drop, active, image, category, tagline, description } }
+ * Only admin-set fields are stored; the storefront merges them over the
+ * baked-in catalog (assets/js/data.js) and the server merges them over
+ * api/cashfree/prices.json. Effective price = price_drop (when set and lower)
+ * else price override else base price. */
+
+var PRODUCTS_KEY = "ww:product_overrides";
+var PRODUCT_CATEGORIES = ["concentrate", "addon"];
+
+function cleanSlug(s) {
+  s = String(s == null ? "" : s).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+  if (s.length > 60) s = s.slice(0, 60);
+  return s;
+}
+function cleanText(s, max) {
+  s = String(s == null ? "" : s).replace(/[\u0000-\u001F\u007F]/g, "").trim();
+  if (s.length > max) s = s.slice(0, max);
+  return s;
+}
+function cleanPrice(n) {
+  n = Number(n);
+  if (!isFinite(n) || n <= 0 || n > 1000000) return null;
+  return Math.round(n);
+}
+function cleanImageUrl(s) {
+  s = cleanText(s, 500);
+  if (!s) return "";
+  if (/^(https?:\/\/|assets\/|\/)/i.test(s)) return s;
+  return "";
+}
+/* Sanitize one product override. Returns the cleaned object, or null when
+ * it carries nothing usable. `isNew` marks admin-added products (name+price required). */
+function cleanProductOverride(slug, input, isNew) {
+  if (!slug || !input || typeof input !== "object") return null;
+  var out = {};
+  var name = cleanText(input.name, 80);
+  if (name) out.name = name;
+  var sku = cleanText(input.sku, 40);
+  if (sku) out.sku = sku;
+  var price = cleanPrice(input.price);
+  if (price) out.price = price;
+  var drop = cleanPrice(input.price_drop);
+  if (drop) out.price_drop = drop;
+  if (typeof input.active === "boolean") out.active = input.active;
+  var img = cleanImageUrl(input.image);
+  if (img) out.image = img;
+  var cat = cleanText(input.category, 20).toLowerCase();
+  if (PRODUCT_CATEGORIES.indexOf(cat) !== -1) out.category = cat;
+  var tagline = cleanText(input.tagline, 120);
+  if (tagline) out.tagline = tagline;
+  var desc = cleanText(input.description, 2000);
+  if (desc) out.description = desc;
+  if (isNew && (!out.name || !out.price)) return null;
+  if (!Object.keys(out).length) return null;
+  return out;
+}
+/* Effective selling price for a slug: price_drop (when lower) > price override > base. */
+function effectivePrice(slug, basePrice, overrides) {
+  var o = (overrides && overrides[slug]) || {};
+  var price = (typeof o.price === "number" && o.price > 0) ? o.price
+    : (typeof basePrice === "number" ? basePrice : 0);
+  if (typeof o.price_drop === "number" && o.price_drop > 0 && o.price_drop < price) return o.price_drop;
+  return price;
+}
+async function getProductOverrides() {
+  var r = client();
+  if (!r) return {};
+  try {
+    var o = parse(await r.get(PRODUCTS_KEY));
+    return (o && typeof o === "object" && !Array.isArray(o)) ? o : {};
+  } catch (e) {
+    return {};
+  }
+}
+async function setProductOverrides(patch) {
+  var r = client();
+  if (!r) {
+    var err = new Error("Order storage is not configured.");
+    err.code = "STORE_NOT_CONFIGURED";
+    throw err;
+  }
+  patch = (patch && typeof patch === "object") ? patch : {};
+  var current = await getProductOverrides();
+  var slugs = Object.keys(patch);
+  if (!slugs.length) {
+    var e = new Error("Nothing to update.");
+    e.code = "BAD_PATCH";
+    throw e;
+  }
+  if (slugs.length > 200) {
+    var e2 = new Error("Too many products in one save (max 200).");
+    e2.code = "BAD_PATCH";
+    throw e2;
+  }
+  for (var i = 0; i < slugs.length; i++) {
+    var slug = cleanSlug(slugs[i]);
+    if (!slug) continue;
+    var val = patch[slugs[i]];
+    if (val === null) { delete current[slug]; continue; } // null = remove override
+    var isNew = !current[slug] || !!current[slug]._new;
+    var c = cleanProductOverride(slug, val, isNew && val._new === true);
+    if (c) {
+      if (val._new === true) c._new = true;
+      else if (current[slug] && current[slug]._new) c._new = true;
+      current[slug] = c;
+    }
+  }
+  await r.set(PRODUCTS_KEY, JSON.stringify(current));
+  return current;
 }

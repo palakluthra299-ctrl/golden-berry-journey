@@ -4288,3 +4288,27 @@ body.cc-open { overflow: hidden; }
   .review-video-preview .review-play-badge
 }
 
+
+/* ---------- Admin price-drop display (animated + glowing) ---------- */
+.ww-price { display: inline-flex; align-items: center; flex-wrap: wrap; }
+.ww-price-strike { opacity: .5; margin-right: 8px; font-weight: 600; }
+.ww-price-drop {
+  font-weight: 800;
+  color: #c25e00;
+  display: inline-block;
+  animation: wwDropGlow 1.6s ease-in-out infinite;
+}
+@keyframes wwDropGlow {
+  0%, 100% { text-shadow: 0 0 4px rgba(255,150,0,.35); transform: scale(1); }
+  50% { text-shadow: 0 0 14px rgba(255,130,0,.85), 0 0 32px rgba(255,150,0,.5); transform: scale(1.06); }
+}
+.ww-drop-badge {
+  display: inline-block; margin-left: 8px; padding: 3px 10px; border-radius: 999px;
+  font-size: 10px; font-weight: 800; letter-spacing: .1em; color: #fff; white-space: nowrap;
+  background: linear-gradient(90deg, #ff8a00, #e63e00, #ff8a00);
+  background-size: 200% 100%;
+  animation: wwBadgeShine 2.2s linear infinite;
+  box-shadow: 0 0 12px rgba(255,110,0,.65);
+  vertical-align: middle;
+}
+@keyframes wwBadgeShine { to { background-position: 200% 0; } }
