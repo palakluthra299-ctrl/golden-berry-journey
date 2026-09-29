@@ -26,8 +26,13 @@ function send(res, code, obj) {
   res.end(JSON.stringify(obj));
 }
 
-function siteBase() {
+function siteBase(req) {
   if (process.env.SITE_URL) return String(process.env.SITE_URL).replace(/\/+$/, "");
+  /* Prefer the host the shopper actually used (e.g. www.wellwith.shop).
+   * VERCEL_URL is the deployment URL, which has Deployment Protection on —
+   * using it for return_url sends paying customers to a Vercel login wall. */
+  var host = req && req.headers && (req.headers["x-forwarded-host"] || req.headers.host);
+  if (host) return "https://" + String(host).split(",")[0].trim().replace(/\/+$/, "");
   if (process.env.VERCEL_URL) return "https://" + process.env.VERCEL_URL;
   return "";
 }
@@ -187,7 +192,7 @@ module.exports = async function (req, res) {
     String(d.getDate()).padStart(2, "0");
   var orderId = "WW-" + ymd + "-" + Math.random().toString(36).slice(2, 8).toUpperCase();
 
-  var base = siteBase();
+  var base = siteBase(req);
   var cfOrder = {
     order_id: orderId,
     order_amount: payNow,
