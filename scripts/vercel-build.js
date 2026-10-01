@@ -21,6 +21,7 @@ var entries = [
   "404.html",
   "robots.txt",
   "sitemap.xml",
+  "googledf8929efe11b81eb.html",
   "css",
   "js",
   "assets"
