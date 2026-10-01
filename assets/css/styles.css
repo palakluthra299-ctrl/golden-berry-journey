@@ -4410,7 +4410,6 @@ body.cc-open { overflow: hidden; }
 .video-train-viewport { overflow: hidden; position: relative; border-radius: 18px; }
 .video-train-track { display: flex; width: max-content; animation: video-train-scroll 55s linear infinite; padding: 4px 0 10px; }
 .video-train-set { display: flex; gap: 14px; padding-right: 14px; }
-.video-train-viewport:hover .video-train-track, .video-train-viewport:focus-within .video-train-track { animation-play-state: paused; }
 @keyframes video-train-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 .video-train-card { flex: 0 0 220px; background: #fff; border-radius: 16px; overflow: hidden; box-shadow: 0 6px 20px rgba(60,40,10,.10); border: 1px solid rgba(120,80,20,.10); }
 .video-train-thumb { position: relative; aspect-ratio: 3/4; background: #1a1208; cursor: pointer; }
