@@ -87,6 +87,7 @@
 <script src="assets/js/data.js?v=20260929-1"></script>
 <script src="assets/js/site-overrides.js?v=20260929-6"></script>
 <script src="assets/js/app.js?v=20260929-6"></script>
+<script src="assets/js/ga-ecommerce.js?v=20261001-1"></script>
 <script>
 (function () {
   /* Wait for admin product overrides (price drop / active flags) before render. */
@@ -104,6 +105,7 @@
   }
 
   document.title = p.name + " | WellWith Sea Buckthorn";
+  if (window.wwGa) window.wwGa.viewItem(p);
   var cat = p.category === "concentrate" ? "Liquid Concentrate" : "Specialized Add-on";
   var price = (typeof window.productPriceHTML === "function") ? window.productPriceHTML(p)
     : ((typeof formatPrice === "function") ? formatPrice(p.price) : ("₹" + p.price));
