@@ -932,10 +932,19 @@ function initVideoTrain() {
     if (thumb) { e.preventDefault(); openTrainModal(Number(thumb.getAttribute("data-train-open")), items); }
   });
 }
-function openTrainModal(index, items) {
-  var item = items[index];
+var trainModalItems = [];
+var trainModalOverlay = null;
+function trainModalOnKey(e) { if (e.key === "Escape") closeTrainModalOverlay(false); }
+function openTrainModal(index, items, fromHistory) {
+  if (items && items.length) trainModalItems = items;
+  if (!fromHistory) {
+    WellWithHistory.open("train-video", { index: index });
+    return;
+  }
+  var item = trainModalItems[index];
   if (!item) return;
   var p = item.product;
+  closeTrainModalOverlay(true);
   var overlay = document.createElement("div");
   overlay.className = "train-modal-backdrop";
   overlay.setAttribute("role", "dialog");
@@ -957,24 +966,34 @@ function openTrainModal(index, items) {
       '</div>' +
     '</div>';
   document.body.appendChild(overlay);
+  trainModalOverlay = overlay;
   document.body.style.overflow = "hidden";
-  function close() {
-    var video = overlay.querySelector("video");
-    if (video) { try { video.pause(); } catch (e) {} }
-    overlay.remove();
-    document.body.style.overflow = "";
-    document.removeEventListener("keydown", onKey);
-  }
-  function onKey(e) { if (e.key === "Escape") close(); }
-  overlay.querySelector(".train-modal-close").addEventListener("click", close);
-  overlay.addEventListener("click", function (e) { if (e.target === overlay) close(); });
-  document.addEventListener("keydown", onKey);
+  overlay.querySelector(".train-modal-close").addEventListener("click", function () { closeTrainModalOverlay(false); });
+  overlay.addEventListener("click", function (e) { if (e.target === overlay) closeTrainModalOverlay(false); });
+  document.addEventListener("keydown", trainModalOnKey);
   var mv = overlay.querySelector("video");
   if (mv) {
     mv.addEventListener("contextmenu", function (e) { e.preventDefault(); });
     mv.play().catch(function () {});
   }
 }
+function closeTrainModalOverlay(fromHistory) {
+  if (!fromHistory) {
+    WellWithHistory.close("train-video");
+    return;
+  }
+  if (trainModalOverlay) {
+    var video = trainModalOverlay.querySelector("video");
+    if (video) { try { video.pause(); } catch (e) {} }
+    trainModalOverlay.remove();
+    trainModalOverlay = null;
+  }
+  document.body.style.overflow = "";
+  document.removeEventListener("keydown", trainModalOnKey);
+}
+WellWithHistory.register("train-video", function (data) {
+  openTrainModal(data.index || 0, null, true);
+}, closeTrainModalOverlay);
 
 /* ---------- Health coach profile ---------- */
 function initCoachExperience() {
