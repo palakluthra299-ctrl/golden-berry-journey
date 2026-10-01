@@ -1173,9 +1173,9 @@ function initQuickCommerce() {
   gratitude.innerHTML =
     '<div class="gratitude-shade" aria-hidden="true"></div>' +
     '<div class="gratitude-scene" aria-hidden="true">' +
-      '<div class="gratitude-character-stage"><video class="gratitude-video" muted playsinline preload="auto" aria-hidden="true" src="' + gratitudeAssetPrefix + 'videos/thankyou-farmer-1.webm"></video><span class="gratitude-ground-shadow"></span></div>' +
+      '<div class="gratitude-character-stage"><video class="gratitude-video" muted playsinline preload="none" aria-hidden="true"></video><span class="gratitude-ground-shadow"></span></div>' +
       '<div class="gratitude-copy"><p class="gratitude-thanks">Thank You!</p></div>' +
-      '<audio id="gratitude-audio" preload="auto" src="' + gratitudeAssetPrefix + 'audio/thankyou-voice.mp3"></audio>' +
+      '<audio id="gratitude-audio" preload="none"></audio>' +
     '</div>';
   document.body.appendChild(gratitude);
 
