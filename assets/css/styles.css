@@ -3780,6 +3780,39 @@ body.cc-open { overflow: hidden; }
   line-height: 1.25;
 }
 .promo-whatsapp .wellwith-promo-lead { color: #227a55; }
+/* Franchise banner — Deal Zone slide 5 */
+.promo-franchise { background: #221a10; }
+.promo-franchise::after { background: linear-gradient(90deg, transparent 30%, rgba(34,26,16,.55) 50%, #221a10 62%); }
+.promo-franchise .wellwith-promo-art { animation: franchise-kenburns 16s ease-in-out infinite alternate; }
+@keyframes franchise-kenburns { from { transform: scale(1); } to { transform: scale(1.1); } }
+.promo-franchise .wellwith-promo-kicker { color: #eec25e; }
+.promo-franchise .wellwith-promo-copy h3 { color: #fff8ea; }
+.promo-franchise .franchise-shimmer {
+  background: linear-gradient(100deg, #eec25e 25%, #fffbe9 45%, #eec25e 65%);
+  background-size: 220% auto;
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent; color: transparent;
+  animation: franchise-shimmer 3.2s linear infinite;
+}
+@keyframes franchise-shimmer { to { background-position: 220% center; } }
+.promo-franchise .wellwith-promo-lead { color: #f0dfba; }
+.promo-franchise .wellwith-promo-support { color: rgba(240,223,186,.78); }
+.promo-franchise .wellwith-promo-support span { color: #eec25e; }
+.promo-cta {
+  display: inline-flex; align-items: center; gap: 10px;
+  margin-top: 18px; padding: 0 26px; min-height: 50px;
+  border: 0; border-radius: 999px;
+  background: linear-gradient(135deg, #f2c14e, #d9941f);
+  color: #2a1e08; font-weight: 900; font-size: 16px; letter-spacing: .02em;
+  text-decoration: none;
+  animation: promo-cta-pulse 2.2s ease-in-out infinite;
+}
+@keyframes promo-cta-pulse {
+  0%, 100% { box-shadow: 0 10px 26px -10px rgba(242,193,78,.8), 0 0 0 0 rgba(242,193,78,.55); transform: scale(1); }
+  50% { box-shadow: 0 10px 26px -10px rgba(242,193,78,.8), 0 0 0 14px rgba(242,193,78,0); transform: scale(1.04); }
+}
+.promo-cta:hover { transform: translateY(-2px) scale(1.03); }
+.promo-cta:focus-visible { outline: 3px solid #ffe9b0; outline-offset: 3px; }
 .wellwith-promo-support {
   max-width: 520px;
   margin-top: 12px;
@@ -3861,6 +3894,8 @@ body.cc-open { overflow: hidden; }
   .wellwith-promo-art { width: 54%; object-position: 48% center; }
   .wellwith-promo-banner::after { background: linear-gradient(90deg, transparent 15%, rgba(245,240,228,.82) 37%, #f5f0e4 52%); }
   .promo-whatsapp::after { background: linear-gradient(90deg, transparent 14%, rgba(248,233,203,.82) 37%, #f8e9cb 53%); }
+  .promo-franchise::after { background: linear-gradient(90deg, transparent 12%, rgba(34,26,16,.82) 37%, #221a10 53%); }
+  .promo-cta { margin-top: 12px; min-height: 42px; padding: 0 20px; font-size: 13px; }
   .wellwith-promo-copy { width: 64%; padding: 18px 12px 42px 8px; }
   .wellwith-promo-kicker { font-size: 8px !important; }
   .wellwith-promo-copy h3 { margin-top: 5px; font-size: clamp(20px, 5.8vw, 27px); line-height: .98; }
