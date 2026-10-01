@@ -16,7 +16,7 @@
   <meta property="og:title" content="WellWith Sea Buckthorn">
   <meta property="og:description" content="Premium WellWith Sea Buckthorn wellness products, including cold-pressed juices, capsules and tisanes.">
   <meta property="og:type" content="website">
-  <link rel="stylesheet" href="assets/css/styles.css?v=20260929-7">
+  <link rel="stylesheet" href="assets/css/styles.css?v=20261001-1">
 </head>
 <body>
 
@@ -49,7 +49,8 @@
       { scene: "stop", words: ["stop", "scrolling"] },
       { scene: "sale", words: ["MEGA", "SALE", "UP TO", "20% OFF"] },
       { scene: "hurry", words: ["HURRY", "HURRY", "LIMITED TIME", "HURRY", "HURRY"] },
-      { scene: "cta", words: ["SHOP NOW"] }
+      { scene: "cta", words: ["SHOP NOW"] },
+      { scene: "partner", words: ["BECOME", "BUSINESS PARTNER"] }
     ];
     /* ======================= END OFFER TEXT CONFIG ======================= */
     /* Admin override: /api/config/get se banner scenes aate hain (admin page >
@@ -58,7 +59,7 @@
     (function () {
       function applyBannerConfig(cfg) {
         if (!cfg || !cfg.banner || typeof cfg.banner !== "object") return;
-        var order = ["hey", "stop", "sale", "hurry", "cta"];
+        var order = ["hey", "stop", "sale", "hurry", "cta", "partner"];
         for (var i = 0; i < OFFER_KINETIC_CONFIG.length; i++) {
           var scene = OFFER_KINETIC_CONFIG[i];
           var words = cfg.banner[scene.scene];
@@ -98,6 +99,12 @@
             root.innerHTML = '<div class="offer-sale">' + words.map(function (word, i) { return '<strong style="--i:' + i + '">' + word + '</strong>'; }).join("") + '</div>';
           } else if (config.scene === "hurry") {
             root.innerHTML = '<div class="offer-hurry">' + words.map(function (word, i) { return '<strong class="' + (i === 2 ? 'limited' : '') + '" style="--i:' + i + '">' + word + '</strong>'; }).join("") + '</div>';
+          } else if (config.scene === "partner") {
+            root.innerHTML = '<button class="offer-partner" type="button" aria-label="Become a business partner">' + words.map(function (word) { return '<strong>' + word + '</strong>'; }).join("") + '<span aria-hidden="true">\u2192</span></button>';
+            qs(".offer-partner", root).addEventListener("click", function () {
+              var opener = document.querySelector("[data-open-business-listen]");
+              if (opener) opener.click();
+            });
           } else {
             root.innerHTML = '<button class="offer-shop" type="button" data-scroll-to="products">' + words[0] + '<span aria-hidden="true">→</span></button>';
             qs(".offer-shop", root).addEventListener("click", function () {
