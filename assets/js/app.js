@@ -887,6 +887,110 @@ function openReviewPlayer(startIndex, entries, fromHistory) {
   render();
 }
 
+/* ---------- Product Video Train ---------- */
+var VIDEO_TRAIN = [
+  { slug: "sea-buckthorn-pulp", file: "pulp.mp4" },
+  { slug: "turmeric-blend", file: "turmeric.mp4" },
+  { slug: "femwell", file: "femwell.mp4" },
+  { slug: "power-x", file: "powerx.mp4" },
+  { slug: "fitwell", file: "fitwell.mp4" },
+  { slug: "diawell", file: "diawell.mp4" },
+  { slug: "gummies-30", file: "gummies.mp4" },
+  { slug: "omega-7-capsules", file: "capsules.mp4" },
+  { slug: "nourishing-face-oil", file: "faceoil.mp4" }
+];
+function initVideoTrain() {
+  var track = document.getElementById("video-train-track");
+  if (!track || typeof PRODUCTS === "undefined") return;
+  var base = (typeof PAGE_IN_ASSETS !== "undefined" && PAGE_IN_ASSETS) ? "videos/product-train/" : "assets/videos/product-train/";
+  var items = VIDEO_TRAIN.map(function (v) {
+    var p = PRODUCTS.find(function (x) { return x.slug === v.slug; });
+    return p ? { product: p, src: base + v.file } : null;
+  }).filter(Boolean);
+  if (!items.length) return;
+  function cardHTML(item, i) {
+    return '<article class="video-train-card">' +
+      '<div class="video-train-thumb" data-train-open="' + i + '" role="button" tabindex="0" aria-label="Watch ' + item.product.name + ' video">' +
+        '<video muted loop playsinline preload="none" data-train-src="' + item.src + '"></video>' +
+      '</div>' +
+      '<div class="video-train-body"><h3>' + item.product.name + '</h3>' +
+      '<div class="video-train-actions">' +
+        '<button class="btn btn-green" data-add-cart="' + item.product.slug + '">Add to Cart</button>' +
+        '<a class="btn btn-gold" target="_blank" rel="noopener" href="' + productWaLink(item.product.name) + '">Buy Now</a>' +
+      '</div></div></article>';
+  }
+  var setHTML = '<div class="video-train-set">' + items.map(cardHTML).join("") + '</div>';
+  track.innerHTML = setHTML + setHTML;
+  /* Lazy-load train videos as they scroll into view */
+  var observer = new IntersectionObserver(function (entries) {
+    entries.forEach(function (en) {
+      if (!en.isIntersecting) return;
+      var v = en.target;
+      observer.unobserve(v);
+      var src = v.getAttribute("data-train-src");
+      if (src && !v.getAttribute("src")) {
+        v.setAttribute("src", src);
+        v.play().catch(function () {});
+      }
+    });
+  }, { root: document.getElementById("video-train-viewport"), rootMargin: "300px" });
+  qsa("video[data-train-src]", track).forEach(function (v) { observer.observe(v); });
+  /* Open single-product popup */
+  track.addEventListener("click", function (e) {
+    var thumb = e.target.closest ? e.target.closest("[data-train-open]") : null;
+    if (thumb) openTrainModal(Number(thumb.getAttribute("data-train-open")), items);
+  });
+  track.addEventListener("keydown", function (e) {
+    if (e.key !== "Enter" && e.key !== " ") return;
+    var thumb = e.target.closest ? e.target.closest("[data-train-open]") : null;
+    if (thumb) { e.preventDefault(); openTrainModal(Number(thumb.getAttribute("data-train-open")), items); }
+  });
+}
+function openTrainModal(index, items) {
+  var item = items[index];
+  if (!item) return;
+  var p = item.product;
+  /* Pause the scrolling train videos while the popup plays */
+  qsa("#video-train-track video").forEach(function (v) { try { v.pause(); } catch (e) {} });
+  var overlay = document.createElement("div");
+  overlay.className = "train-modal-backdrop";
+  overlay.setAttribute("role", "dialog");
+  overlay.setAttribute("aria-modal", "true");
+  overlay.setAttribute("aria-label", p.name + " video");
+  overlay.innerHTML =
+    '<div class="train-modal-panel">' +
+      '<div class="train-modal-stage">' +
+        '<video controls autoplay playsinline preload="metadata" src="' + item.src + '"></video>' +
+        '<button class="train-modal-close" type="button" aria-label="Close video">✕</button>' +
+      '</div>' +
+      '<div class="train-modal-body">' +
+        '<h3>' + p.name + '</h3>' +
+        '<p class="train-modal-price">' + window.productPriceHTML(p) + '</p>' +
+        '<div class="train-modal-actions">' +
+          '<button class="btn btn-green" data-add-cart="' + p.slug + '">Add to Cart</button>' +
+          '<a class="btn btn-gold" target="_blank" rel="noopener" href="' + productWaLink(p.name) + '">Buy Now</a>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+  document.body.appendChild(overlay);
+  document.body.style.overflow = "hidden";
+  function close() {
+    var video = overlay.querySelector("video");
+    if (video) { try { video.pause(); } catch (e) {} }
+    overlay.remove();
+    document.body.style.overflow = "";
+    document.removeEventListener("keydown", onKey);
+    /* Resume the train */
+    qsa("#video-train-track video").forEach(function (v) { if (v.getAttribute("src")) v.play().catch(function () {}); });
+  }
+  function onKey(e) { if (e.key === "Escape") close(); }
+  overlay.querySelector(".train-modal-close").addEventListener("click", close);
+  overlay.addEventListener("click", function (e) { if (e.target === overlay) close(); });
+  document.addEventListener("keydown", onKey);
+  var mv = overlay.querySelector("video");
+  if (mv) mv.play().catch(function () {});
+}
+
 /* ---------- Health coach profile ---------- */
 function initCoachExperience() {
   qsa("[data-open-coach]").forEach(function (opener) {
@@ -1884,6 +1988,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   initPartner();
   initProductGrids();
   initReviewVideos();
+  initVideoTrain();
   initCoachExperience();
   initQuickCommerce();
   initVisualPolish();
