@@ -905,13 +905,13 @@ function initVideoTrain() {
   var base = (typeof PAGE_IN_ASSETS !== "undefined" && PAGE_IN_ASSETS) ? "videos/product-train/" : "assets/videos/product-train/";
   var items = VIDEO_TRAIN.map(function (v) {
     var p = PRODUCTS.find(function (x) { return x.slug === v.slug; });
-    return p ? { product: p, src: base + v.file } : null;
+    return p ? { product: p, src: base + v.file, poster: base + "posters/" + v.file.replace(".mp4", ".jpg") } : null;
   }).filter(Boolean);
   if (!items.length) return;
   function cardHTML(item, i) {
     return '<article class="video-train-card">' +
       '<div class="video-train-thumb" data-train-open="' + i + '" role="button" tabindex="0" aria-label="Watch ' + item.product.name + ' video">' +
-        '<video muted loop playsinline preload="none" data-train-src="' + item.src + '"></video>' +
+        '<img loading="lazy" decoding="async" src="' + item.poster + '" alt="' + item.product.name + '">' +
       '</div>' +
       '<div class="video-train-body"><h3>' + item.product.name + '</h3>' +
       '<div class="video-train-actions">' +
@@ -921,20 +921,6 @@ function initVideoTrain() {
   }
   var setHTML = '<div class="video-train-set">' + items.map(cardHTML).join("") + '</div>';
   track.innerHTML = setHTML + setHTML;
-  /* Lazy-load train videos as they scroll into view */
-  var observer = new IntersectionObserver(function (entries) {
-    entries.forEach(function (en) {
-      if (!en.isIntersecting) return;
-      var v = en.target;
-      observer.unobserve(v);
-      var src = v.getAttribute("data-train-src");
-      if (src && !v.getAttribute("src")) {
-        v.setAttribute("src", src);
-        v.play().catch(function () {});
-      }
-    });
-  }, { root: document.getElementById("video-train-viewport"), rootMargin: "300px" });
-  qsa("video[data-train-src]", track).forEach(function (v) { observer.observe(v); });
   /* Open single-product popup */
   track.addEventListener("click", function (e) {
     var thumb = e.target.closest ? e.target.closest("[data-train-open]") : null;
@@ -950,8 +936,6 @@ function openTrainModal(index, items) {
   var item = items[index];
   if (!item) return;
   var p = item.product;
-  /* Pause the scrolling train videos while the popup plays */
-  qsa("#video-train-track video").forEach(function (v) { try { v.pause(); } catch (e) {} });
   var overlay = document.createElement("div");
   overlay.className = "train-modal-backdrop";
   overlay.setAttribute("role", "dialog");
@@ -980,8 +964,6 @@ function openTrainModal(index, items) {
     overlay.remove();
     document.body.style.overflow = "";
     document.removeEventListener("keydown", onKey);
-    /* Resume the train */
-    qsa("#video-train-track video").forEach(function (v) { if (v.getAttribute("src")) v.play().catch(function () {}); });
   }
   function onKey(e) { if (e.key === "Escape") close(); }
   overlay.querySelector(".train-modal-close").addEventListener("click", close);
