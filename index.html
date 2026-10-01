@@ -48,9 +48,9 @@
       { scene: "hey", words: ["HEY!", "HEY!", "HEY!"] },
       { scene: "stop", words: ["stop", "scrolling"] },
       { scene: "sale", words: ["MEGA", "SALE", "UP TO", "20% OFF"] },
+      { scene: "partner", words: ["BECOME", "BUSINESS PARTNER"] },
       { scene: "hurry", words: ["HURRY", "HURRY", "LIMITED TIME", "HURRY", "HURRY"] },
-      { scene: "cta", words: ["SHOP NOW"] },
-      { scene: "partner", words: ["BECOME", "BUSINESS PARTNER"] }
+      { scene: "cta", words: ["SHOP NOW"] }
     ];
     /* ======================= END OFFER TEXT CONFIG ======================= */
     /* Admin override: /api/config/get se banner scenes aate hain (admin page >
@@ -100,8 +100,8 @@
           } else if (config.scene === "hurry") {
             root.innerHTML = '<div class="offer-hurry">' + words.map(function (word, i) { return '<strong class="' + (i === 2 ? 'limited' : '') + '" style="--i:' + i + '">' + word + '</strong>'; }).join("") + '</div>';
           } else if (config.scene === "partner") {
-            root.innerHTML = '<button class="offer-partner" type="button" aria-label="Become a business partner">' + words.map(function (word) { return '<strong>' + word + '</strong>'; }).join("") + '<span aria-hidden="true">\u2192</span></button>';
-            qs(".offer-partner", root).addEventListener("click", function () {
+            root.innerHTML = '<div class="offer-sale offer-partner-text" role="button" tabindex="0" aria-label="Become a business partner">' + words.map(function (word, i) { return '<strong style="--i:' + i + '">' + word + '</strong>'; }).join("") + '</div>';
+            qs(".offer-partner-text", root).addEventListener("click", function () {
               var opener = document.querySelector("[data-open-business-listen]");
               if (opener) opener.click();
             });
