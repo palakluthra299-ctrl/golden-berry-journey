@@ -944,7 +944,7 @@ function openTrainModal(index, items) {
   overlay.innerHTML =
     '<div class="train-modal-panel">' +
       '<div class="train-modal-stage">' +
-        '<video controls autoplay playsinline preload="metadata" src="' + item.src + '"></video>' +
+        '<video controls controlsList="nodownload" disablepictureinpicture autoplay playsinline preload="metadata" src="' + item.src + '"></video>' +
         '<button class="train-modal-close" type="button" aria-label="Close video">✕</button>' +
       '</div>' +
       '<div class="train-modal-body">' +
@@ -970,7 +970,10 @@ function openTrainModal(index, items) {
   overlay.addEventListener("click", function (e) { if (e.target === overlay) close(); });
   document.addEventListener("keydown", onKey);
   var mv = overlay.querySelector("video");
-  if (mv) mv.play().catch(function () {});
+  if (mv) {
+    mv.addEventListener("contextmenu", function (e) { e.preventDefault(); });
+    mv.play().catch(function () {});
+  }
 }
 
 /* ---------- Health coach profile ---------- */
