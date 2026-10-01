@@ -19,6 +19,8 @@ var entries = [
   "terms.html",
   "refunds.html",
   "404.html",
+  "robots.txt",
+  "sitemap.xml",
   "css",
   "js",
   "assets"
