@@ -47,6 +47,7 @@
   }
   </script>
   <link rel="stylesheet" href="assets/css/styles.css?v=20261001-6">
+  <link rel="stylesheet" href="assets/css/navratri-banner.css?v=20261011-1">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-M35JWF75RT"></script>
 <script>
@@ -71,6 +72,48 @@
         <button type="submit">Search</button>
       </form>
     </div>
+    <!-- ============ NAVRATRI MATA BANNER (2D animated, auto-rotates 9 days) ============ -->
+    <section class="navratri-banner" id="navratri-banner" aria-label="Happy Navratri" hidden>
+      <div class="navratri-inner">
+        <div class="navratri-text">
+          <span class="navratri-happy">HAPPY</span>
+          <h2 class="navratri-title">Navaratri</h2>
+          <p class="navratri-devi" id="navratri-devi-name">MAA SHAILAPUTRI</p>
+          <p class="navratri-symbol" id="navratri-devi-symbol">Symbol of strength</p>
+        </div>
+        <div class="navratri-art">
+          <span class="navratri-halo" aria-hidden="true"></span>
+          <img class="navratri-devi-img" id="navratri-devi-img" src="assets/navratri/devi-1-shailaputri.png?v=20261011-1" alt="Maa Shailaputri — Symbol of strength" loading="eager" decoding="async">
+        </div>
+        <svg class="navratri-lotus navratri-lotus-left" viewBox="0 0 74 74" aria-hidden="true">
+          <g fill="#F2668B">
+            <ellipse cx="37" cy="26" rx="9" ry="16"/>
+            <ellipse cx="24" cy="32" rx="8" ry="14" transform="rotate(-28 24 32)"/>
+            <ellipse cx="50" cy="32" rx="8" ry="14" transform="rotate(28 50 32)"/>
+            <ellipse cx="15" cy="42" rx="7" ry="12" transform="rotate(-52 15 42)"/>
+            <ellipse cx="59" cy="42" rx="7" ry="12" transform="rotate(52 59 42)"/>
+          </g>
+          <circle cx="37" cy="44" r="7" fill="#FFD93B"/>
+          <path d="M8 62 Q37 50 66 62" stroke="#3E8E4D" stroke-width="5" fill="none" stroke-linecap="round"/>
+          <ellipse cx="20" cy="58" rx="10" ry="5" fill="#3E8E4D" transform="rotate(-18 20 58)"/>
+          <ellipse cx="54" cy="58" rx="10" ry="5" fill="#3E8E4D" transform="rotate(18 54 58)"/>
+        </svg>
+        <svg class="navratri-lotus navratri-lotus-right" viewBox="0 0 74 74" aria-hidden="true">
+          <g fill="#F2668B">
+            <ellipse cx="37" cy="26" rx="9" ry="16"/>
+            <ellipse cx="24" cy="32" rx="8" ry="14" transform="rotate(-28 24 32)"/>
+            <ellipse cx="50" cy="32" rx="8" ry="14" transform="rotate(28 50 32)"/>
+            <ellipse cx="15" cy="42" rx="7" ry="12" transform="rotate(-52 15 42)"/>
+            <ellipse cx="59" cy="42" rx="7" ry="12" transform="rotate(52 59 42)"/>
+          </g>
+          <circle cx="37" cy="44" r="7" fill="#FFD93B"/>
+          <path d="M8 62 Q37 50 66 62" stroke="#3E8E4D" stroke-width="5" fill="none" stroke-linecap="round"/>
+          <ellipse cx="20" cy="58" rx="10" ry="5" fill="#3E8E4D" transform="rotate(-18 20 58)"/>
+          <ellipse cx="54" cy="58" rx="10" ry="5" fill="#3E8E4D" transform="rotate(18 54 58)"/>
+        </svg>
+      </div>
+      <div class="navratri-petals" aria-hidden="true"></div>
+    </section>
     <!-- ============ OFFERS BANNER (red glowing kinetic typography, no video) ============ -->
     <section class="kinetic-offer" id="kinetic-offer" aria-label="Limited-time offer animation">
       <div class="kinetic-offer-stage" id="kinetic-offer-stage" aria-live="off"></div>
@@ -482,5 +525,6 @@
 <script src="assets/js/site-overrides.js?v=20260929-6"></script>
 <script src="assets/js/app.js?v=20261001-5"></script>
 <script src="assets/js/ga-ecommerce.js?v=20261001-1"></script>
+<script src="assets/js/navratri-banner.js?v=20261011-1"></script>
 </body>
 </html>

@@ -1,0 +1,187 @@
+/* ==========================================================================
+   NAVRATRI MATA BANNER — 2D animated, auto-rotates across 9 days
+   Style: Blinkit-style festive banner (cream bg, orange typography, 2D devi)
+   Dates: 2026-10-11 (Shailaputri) → 2026-10-19 (Siddhidatri). Hidden otherwise.
+   ========================================================================== */
+
+.navratri-banner {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(180deg, #FFFBF2 0%, #FFF6E6 60%, #FFF1DC 100%);
+  border-bottom: 1px solid #F5E6C8;
+}
+
+.navratri-inner {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 18px 28px 14px;
+  min-height: 190px;
+}
+
+/* ---- Text block ---- */
+.navratri-text { position: relative; z-index: 3; flex: 1 1 auto; }
+
+.navratri-happy {
+  display: block;
+  font-family: "Anton", "Arial Black", sans-serif;
+  font-size: 13px;
+  letter-spacing: 8px;
+  color: #E8912D;
+  margin-bottom: 2px;
+}
+
+.navratri-title {
+  margin: 0;
+  font-family: "Anton", "Arial Black", sans-serif;
+  font-size: clamp(38px, 6vw, 64px);
+  line-height: 1;
+  background: linear-gradient(100deg, #F5A623 10%, #EE7B1E 40%, #F5A623 60%, #E25822 90%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  animation: navratri-shimmer 5s linear infinite;
+  filter: drop-shadow(0 2px 0 rgba(255,255,255,.7));
+}
+
+@keyframes navratri-shimmer {
+  to { background-position: 200% center; }
+}
+
+.navratri-devi {
+  margin: 6px 0 0;
+  font-family: "Anton", "Arial Black", sans-serif;
+  font-size: clamp(16px, 2.6vw, 26px);
+  letter-spacing: 2px;
+  color: #D97A1F;
+}
+
+.navratri-symbol {
+  margin: 2px 0 0;
+  font-size: 13px;
+  font-style: italic;
+  color: #9a8a70;
+}
+
+/* ---- Devi art ---- */
+.navratri-art {
+  position: relative;
+  z-index: 2;
+  flex: 0 0 auto;
+  width: clamp(150px, 26vw, 260px);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.navratri-halo {
+  position: absolute;
+  bottom: 6%;
+  left: 50%;
+  width: 115%;
+  aspect-ratio: 1;
+  transform: translateX(-50%);
+  background: radial-gradient(circle, rgba(245,166,35,.45) 0%, rgba(245,166,35,.12) 55%, transparent 70%);
+  border-radius: 50%;
+  animation: navratri-halo 4s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes navratri-halo {
+  0%, 100% { transform: translateX(-50%) scale(1); opacity: .85; }
+  50% { transform: translateX(-50%) scale(1.08); opacity: 1; }
+}
+
+.navratri-devi-img {
+  position: relative;
+  width: 100%;
+  height: auto;
+  max-height: 230px;
+  object-fit: contain;
+  animation: navratri-sway 6s ease-in-out infinite;
+  filter: drop-shadow(0 10px 14px rgba(180, 100, 20, .25));
+}
+
+@keyframes navratri-sway {
+  0%, 100% { transform: translateY(0) rotate(-.6deg); }
+  50% { transform: translateY(-7px) rotate(.6deg); }
+}
+
+/* ---- Corner lotus decorations (inline SVG sized via CSS) ---- */
+.navratri-lotus {
+  position: absolute;
+  z-index: 1;
+  width: 74px;
+  height: 74px;
+  opacity: .9;
+  animation: navratri-lotus-sway 7s ease-in-out infinite;
+  pointer-events: none;
+}
+.navratri-lotus-left { left: 6px; bottom: 2px; }
+.navratri-lotus-right { right: 6px; top: 4px; transform: scaleX(-1); animation-delay: -3.5s; }
+
+@keyframes navratri-lotus-sway {
+  0%, 100% { transform: rotate(-4deg); }
+  50% { transform: rotate(4deg); }
+}
+.navratri-lotus-right { animation-name: navratri-lotus-sway-r; }
+@keyframes navratri-lotus-sway-r {
+  0%, 100% { transform: scaleX(-1) rotate(-4deg); }
+  50% { transform: scaleX(-1) rotate(4deg); }
+}
+
+/* ---- Falling petals (JS-generated spans) ---- */
+.navratri-petals { position: absolute; inset: 0; z-index: 4; pointer-events: none; overflow: hidden; }
+.navratri-petals i {
+  position: absolute;
+  top: -18px;
+  width: 10px;
+  height: 13px;
+  background: radial-gradient(ellipse at 30% 30%, #FFB3C7, #F2668B);
+  border-radius: 60% 40% 60% 40%;
+  opacity: 0;
+  animation: navratri-petal-fall linear infinite;
+}
+@keyframes navratri-petal-fall {
+  0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+  8% { opacity: .9; }
+  90% { opacity: .7; }
+  100% { transform: translateY(240px) rotate(340deg); opacity: 0; }
+}
+
+/* ---- Diya glow dots ---- */
+.navratri-diya {
+  position: absolute;
+  z-index: 1;
+  width: 8px; height: 12px;
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  background: radial-gradient(circle at 50% 70%, #FFE9A3 0%, #FFB52E 55%, #F07B0A 100%);
+  filter: blur(.4px);
+  animation: navratri-flicker 1.6s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes navratri-flicker {
+  0%, 100% { transform: scale(1); opacity: .9; }
+  30% { transform: scale(1.12, .94); opacity: 1; }
+  60% { transform: scale(.94, 1.08); opacity: .82; }
+}
+
+/* ---- Mobile ---- */
+@media (max-width: 640px) {
+  .navratri-inner { padding: 14px 16px 10px; min-height: 150px; }
+  .navratri-happy { font-size: 10px; letter-spacing: 5px; }
+  .navratri-art { width: 128px; }
+  .navratri-devi-img { max-height: 150px; }
+  .navratri-lotus { width: 48px; height: 48px; }
+  .navratri-symbol { font-size: 11px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .navratri-banner * { animation: none !important; }
+}
