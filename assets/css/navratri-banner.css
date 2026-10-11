@@ -7,8 +7,8 @@
 .navratri-banner {
   position: relative;
   overflow: hidden;
-  background: linear-gradient(180deg, #FFFBF2 0%, #FFF6E6 60%, #FFF1DC 100%);
-  border-bottom: 1px solid #F5E6C8;
+  background: linear-gradient(180deg, #FDF6E7 0%, #FAEED5 55%, #F8E7C6 100%);
+  border-bottom: 1px solid #F0DDAE;
 }
 
 .navratri-inner {
@@ -16,11 +16,11 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: 8px;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 18px 28px 14px;
-  min-height: 190px;
+  padding: 10px 20px 6px;
+  min-height: 210px;
 }
 
 /* ---- Text block ---- */
@@ -74,10 +74,11 @@
   position: relative;
   z-index: 2;
   flex: 0 0 auto;
-  width: clamp(150px, 26vw, 260px);
+  width: clamp(190px, 30vw, 300px);
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: center;
+  margin-right: -6px;
 }
 
 .navratri-halo {
@@ -102,8 +103,11 @@
   position: relative;
   width: 100%;
   height: auto;
-  max-height: 230px;
-  object-fit: contain;
+  aspect-ratio: 1;
+  object-fit: cover;
+  transform-origin: center;
+  -webkit-mask-image: radial-gradient(circle at 50% 50%, black 68%, transparent 99%);
+  mask-image: radial-gradient(circle at 50% 50%, black 68%, transparent 99%);
   animation: navratri-sway 6s ease-in-out infinite;
   filter: drop-shadow(0 10px 14px rgba(180, 100, 20, .25));
 }
@@ -174,10 +178,9 @@
 
 /* ---- Mobile ---- */
 @media (max-width: 640px) {
-  .navratri-inner { padding: 14px 16px 10px; min-height: 150px; }
+  .navratri-inner { padding: 10px 12px 6px; min-height: 170px; }
   .navratri-happy { font-size: 10px; letter-spacing: 5px; }
-  .navratri-art { width: 128px; }
-  .navratri-devi-img { max-height: 150px; }
+  .navratri-art { width: 150px; margin-right: -4px; }
   .navratri-lotus { width: 48px; height: 48px; }
   .navratri-symbol { font-size: 11px; }
 }
