@@ -114,11 +114,81 @@
       </div>
       <div class="navratri-petals" aria-hidden="true"></div>
     </section>
-    <!-- ============ GIFT KINETIC BANNER (HURRY-style motion, cycles gift messages — separate block after Mata poster) ============ -->
+    <!-- ============ GIFT KINETIC BANNER (HURRY-style + Diwali 2D elements: ladi, anar, crackers, kids, gifts) ============ -->
     <section class="kinetic-offer" id="gift-kinetic" aria-label="WellWith gift hampers">
+      <svg class="gift-ladi" viewBox="0 0 1200 60" preserveAspectRatio="none" aria-hidden="true">
+        <path id="gift-ladi-wire" d="M0,6 Q300,46 600,16 T1200,6" fill="none" stroke="#5a2c00" stroke-width="2"/>
+        <g id="gift-ladi-bulbs"></g>
+      </svg>
+      <canvas class="gift-fx" id="gift-fx" aria-hidden="true"></canvas>
+      <svg class="gift-kid gift-kid-left" viewBox="0 0 100 140" aria-hidden="true">
+        <path d="M35,55 Q50,45 65,55 L72,118 Q50,128 28,118 Z" fill="#e31032"/>
+        <circle cx="50" cy="34" r="17" fill="#f2c09a"/>
+        <path d="M33,30 Q50,10 67,30 Q60,21 50,23 Q40,21 33,30" fill="#3a2415"/>
+        <path d="M38,60 L24,32" stroke="#f2c09a" stroke-width="8" stroke-linecap="round"/>
+        <path d="M62,60 L76,32" stroke="#f2c09a" stroke-width="8" stroke-linecap="round"/>
+        <line x1="76" y1="32" x2="84" y2="16" stroke="#cfd6dd" stroke-width="3"/>
+        <circle cx="84" cy="14" r="6" fill="#fff3c4"/>
+        <circle cx="84" cy="14" r="10" fill="#ffd76a" opacity="0.35"/>
+        <rect x="38" y="116" width="10" height="20" rx="3" fill="#7a4a21"/>
+        <rect x="52" y="116" width="10" height="20" rx="3" fill="#7a4a21"/>
+      </svg>
+      <svg class="gift-kid gift-kid-right" viewBox="0 0 100 140" aria-hidden="true">
+        <path d="M35,55 Q50,45 65,55 L72,118 Q50,128 28,118 Z" fill="#1d7a3a"/>
+        <circle cx="50" cy="34" r="17" fill="#e8a878"/>
+        <path d="M33,30 Q50,10 67,30 Q60,21 50,23 Q40,21 33,30" fill="#141414"/>
+        <path d="M38,60 L24,32" stroke="#e8a878" stroke-width="8" stroke-linecap="round"/>
+        <path d="M62,60 L76,32" stroke="#e8a878" stroke-width="8" stroke-linecap="round"/>
+        <line x1="24" y1="32" x2="16" y2="16" stroke="#cfd6dd" stroke-width="3"/>
+        <circle cx="16" cy="14" r="6" fill="#fff3c4"/>
+        <circle cx="16" cy="14" r="10" fill="#ffd76a" opacity="0.35"/>
+        <rect x="38" y="116" width="10" height="20" rx="3" fill="#5a3418"/>
+        <rect x="52" y="116" width="10" height="20" rx="3" fill="#5a3418"/>
+      </svg>
+      <svg class="gift-box-svg gift-box-1" viewBox="0 0 80 80" aria-hidden="true">
+        <rect x="10" y="32" width="60" height="40" rx="4" fill="#e31032"/>
+        <rect x="34" y="32" width="12" height="40" fill="#ffd76a"/>
+        <rect x="10" y="24" width="60" height="12" rx="3" fill="#b30d28"/>
+        <rect x="34" y="24" width="12" height="12" fill="#ffd76a"/>
+        <ellipse cx="31" cy="17" rx="10" ry="7" fill="#ffd76a" transform="rotate(-20 31 17)"/>
+        <ellipse cx="49" cy="17" rx="10" ry="7" fill="#ffd76a" transform="rotate(20 49 17)"/>
+        <circle cx="40" cy="19" r="5" fill="#ffedb0"/>
+      </svg>
+      <svg class="gift-box-svg gift-box-2" viewBox="0 0 80 80" aria-hidden="true">
+        <rect x="14" y="36" width="52" height="34" rx="4" fill="#1d7a3a"/>
+        <rect x="36" y="36" width="10" height="34" fill="#fff3c4"/>
+        <rect x="14" y="29" width="52" height="10" rx="3" fill="#145c2b"/>
+        <rect x="36" y="29" width="10" height="10" fill="#fff3c4"/>
+        <ellipse cx="33" cy="22" rx="9" ry="6" fill="#fff3c4" transform="rotate(-20 33 22)"/>
+        <ellipse cx="47" cy="22" rx="9" ry="6" fill="#fff3c4" transform="rotate(20 47 22)"/>
+        <circle cx="40" cy="24" r="4" fill="#ffffff"/>
+      </svg>
       <div class="kinetic-offer-stage" id="gift-kinetic-stage" aria-live="off"></div>
       <span class="kinetic-glow" aria-hidden="true"></span>
     </section>
+    <style>
+      #gift-kinetic .gift-ladi { position: absolute; top: 0; left: 0; width: 100%; height: 40px; z-index: 3; pointer-events: none; }
+      #gift-kinetic .gift-ladi-bulb { animation: ladiTwinkle 1.1s ease-in-out infinite alternate; }
+      @keyframes ladiTwinkle { from { opacity: .45; } to { opacity: 1; } }
+      #gift-kinetic .gift-fx { position: absolute; inset: 0; z-index: 3; pointer-events: none; }
+      #gift-kinetic .gift-kid { position: absolute; bottom: 4px; width: 46px; z-index: 3; pointer-events: none; animation: kidBounce 1.6s ease-in-out infinite; }
+      #gift-kinetic .gift-kid-left { left: 8px; }
+      #gift-kinetic .gift-kid-right { right: 8px; animation-delay: -.8s; }
+      @keyframes kidBounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+      #gift-kinetic .gift-box-svg { position: absolute; bottom: 6px; width: 38px; z-index: 3; pointer-events: none; animation: giftBob 2.6s ease-in-out infinite; }
+      #gift-kinetic .gift-box-1 { left: 62px; }
+      #gift-kinetic .gift-box-2 { right: 62px; animation-delay: -1.3s; }
+      @keyframes giftBob { 0%,100% { transform: translateY(0) rotate(-2deg); } 50% { transform: translateY(-5px) rotate(2deg); } }
+      @media (max-width: 640px) {
+        #gift-kinetic .gift-kid { width: 34px; }
+        #gift-kinetic .gift-box-svg { width: 28px; }
+        #gift-kinetic .gift-box-1 { left: 46px; }
+        #gift-kinetic .gift-box-2 { right: 46px; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        #gift-kinetic .gift-ladi-bulb, #gift-kinetic .gift-kid, #gift-kinetic .gift-box-svg { animation: none !important; }
+      }
+    </style>
     <script>
     /* GIFT KINETIC — HURRY-style red-glow motion, cycles gift messages (2026-10-12). Messages yahin badlo! */
     var GIFT_KINETIC_CONFIG = [
@@ -158,6 +228,66 @@
       } else {
         initGiftKinetic();
       }
+    })();
+    /* Diwali ladi bulbs along the wire */
+    (function () {
+      var g = document.getElementById("gift-ladi-bulbs");
+      var path = document.getElementById("gift-ladi-wire");
+      if (!g || !path || !path.getTotalLength) return;
+      var N = 26, len = path.getTotalLength();
+      var colors = ["#ffd76a", "#ffb52e", "#fff3c4", "#ff9d2e"];
+      for (var i = 0; i < N; i++) {
+        var pt = path.getPointAtLength(len * i / (N - 1));
+        var halo = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        halo.setAttribute("cx", pt.x); halo.setAttribute("cy", pt.y + 7);
+        halo.setAttribute("r", 9); halo.setAttribute("fill", colors[i % 4]);
+        halo.setAttribute("opacity", "0.25"); halo.setAttribute("class", "gift-ladi-bulb");
+        halo.style.animationDelay = (Math.random() * 1.1) + "s";
+        var bulb = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        bulb.setAttribute("cx", pt.x); bulb.setAttribute("cy", pt.y + 7);
+        bulb.setAttribute("r", 4.5); bulb.setAttribute("fill", colors[i % 4]);
+        bulb.setAttribute("class", "gift-ladi-bulb");
+        bulb.style.animationDelay = halo.style.animationDelay;
+        g.appendChild(halo); g.appendChild(bulb);
+      }
+    })();
+    /* Anar fountains + cracker bursts on canvas */
+    (function () {
+      var cv = document.getElementById("gift-fx");
+      if (!cv || !cv.getContext) return;
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      var ctx = cv.getContext("2d"), parts = [], t = 0;
+      function resize() { cv.width = cv.offsetWidth || 300; cv.height = cv.offsetHeight || 180; }
+      resize(); window.addEventListener("resize", resize);
+      function anar(x, y) {
+        for (var i = 0; i < 3; i++) {
+          parts.push({ x: x + (Math.random() - .5) * 10, y: y, vx: (Math.random() - .5) * 1.7, vy: -2 - Math.random() * 2.6, life: 1, decay: .012 + Math.random() * .012, c: Math.random() < .5 ? "#ffd76a" : "#ff9d2e", r: 1.4 + Math.random() * 1.6 });
+        }
+      }
+      function burst(x, y) {
+        var cols = ["#ffd76a", "#ff9d2e", "#fff3c4", "#ff5a2e"];
+        for (var i = 0; i < 30; i++) {
+          var a = (Math.PI * 2 * i / 30) + Math.random() * .3, sp = 1.6 + Math.random() * 3.2;
+          parts.push({ x: x, y: y, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp, life: 1, decay: .02 + Math.random() * .016, c: cols[i % 4], r: 1.5 + Math.random() * 2 });
+        }
+      }
+      (function loop() {
+        t++;
+        ctx.clearRect(0, 0, cv.width, cv.height);
+        var W = cv.width, H = cv.height;
+        if (t % 2 === 0) { anar(W * .13, H - 6); anar(W * .87, H - 6); }
+        if (t % 160 === 0) { burst(W * (.25 + Math.random() * .5), H * (.3 + Math.random() * .25)); }
+        for (var i = parts.length - 1; i >= 0; i--) {
+          var p = parts[i];
+          p.x += p.vx; p.y += p.vy; p.vy += .05; p.life -= p.decay;
+          if (p.life <= 0) { parts.splice(i, 1); continue; }
+          ctx.globalAlpha = Math.max(p.life, 0);
+          ctx.fillStyle = p.c;
+          ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, 7); ctx.fill();
+        }
+        ctx.globalAlpha = 1;
+        requestAnimationFrame(loop);
+      })();
     })();
     </script>
     <!-- ============ OFFERS BANNER (red glowing kinetic typography, no video) ============ -->
