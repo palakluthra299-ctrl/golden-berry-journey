@@ -4477,3 +4477,15 @@ body.cc-open { overflow: hidden; }
   .category-tile strong { font-size: 15px; }
   .category-tile img { padding: 14px; }
 }
+
+/* ============ HEALTH COACH BANNER (single, 2026-10-12 — reviews card removed per Palak) ============ */
+.coach-banner { display: flex; align-items: center; justify-content: space-between; gap: 14px; border-radius: 20px; padding: 18px 20px; text-decoration: none; color: var(--text); background: linear-gradient(150deg, #edf7f2, #d9eee4); border: 1px solid var(--card-border); }
+.coach-banner-text h3 { margin: 0 0 6px; font-size: 21px; line-height: 1.15; }
+.coach-banner-text p { margin: 0; font-size: 14px; opacity: .7; }
+.coach-banner .coach-cta { flex-shrink: 0; background: #157a3a; color: #fff; border-radius: 999px; padding: 10px 18px; font-weight: 800; font-size: 14px; }
+@media (max-width: 760px) {
+  .coach-banner { padding: 15px 16px; border-radius: 16px; }
+  .coach-banner-text h3 { font-size: 17px; }
+  .coach-banner-text p { font-size: 12px; }
+  .coach-banner .coach-cta { padding: 9px 15px; font-size: 13px; }
+}
