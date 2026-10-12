@@ -80,7 +80,6 @@
           <h2 class="navratri-title">Navaratri</h2>
           <p class="navratri-devi" id="navratri-devi-name">MAA SHAILAPUTRI</p>
           <p class="navratri-symbol" id="navratri-devi-symbol">Symbol of strength</p>
-          <p class="navratri-gift" id="navratri-gift" aria-live="polite"><span id="navratri-gift-text">🎁 Gift your loved ones — WellWith gift hampers!</span></p>
         </div>
         <div class="navratri-art">
           <span class="navratri-halo" aria-hidden="true"></span>
@@ -115,6 +114,55 @@
       </div>
       <div class="navratri-petals" aria-hidden="true"></div>
     </section>
+    <!-- ============ GIFT HAMPERS KINETIC BANNER (red glowing, cycles gift messages) ============ -->
+    <section class="kinetic-offer" id="gift-kinetic" aria-label="WellWith gift hampers">
+      <div class="kinetic-offer-stage" id="gift-kinetic-stage" aria-live="off"></div>
+      <span class="kinetic-glow" aria-hidden="true"></span>
+    </section>
+    <script>
+    /* ==========================================================================
+       GIFT KINETIC — Diwali gift-hamper messages, same red-glow motion as the
+       offers banner below (added 2026-10-12). Messages yahin badlo!
+       ========================================================================== */
+    var GIFT_KINETIC_CONFIG = [
+      { scene: "sale",  words: ["GIFT", "YOUR LOVED", "ONES!"] },
+      { scene: "hurry", words: ["DIWALI", "GIFTING", "HEALTHY TWIST"] },
+      { scene: "sale",  words: ["FESTIVE", "HAMPERS", "FOR ALL!"] }
+    ];
+    (function () {
+      function qs(sel, root) { return (root || document).querySelector(sel); }
+      function initGiftKinetic() {
+        var root = qs("#gift-kinetic-stage");
+        if (!root || !GIFT_KINETIC_CONFIG.length) return;
+        var index = 0;
+        var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        function esc(value) {
+          var span = document.createElement("span");
+          span.textContent = value;
+          return span.innerHTML;
+        }
+        function renderScene(config) {
+          var words = config.words.map(esc);
+          root.className = "kinetic-offer-stage scene-" + config.scene;
+          if (config.scene === "sale") {
+            root.innerHTML = '<div class="offer-sale">' + words.map(function (word, i) { return '<strong style="--i:' + i + '">' + word + '</strong>'; }).join("") + '</div>';
+          } else if (config.scene === "hurry") {
+            root.innerHTML = '<div class="offer-hurry">' + words.map(function (word, i) { return '<strong class="' + (i === 2 ? 'limited' : '') + '" style="--i:' + i + '">' + word + '</strong>'; }).join("") + '</div>';
+          }
+        }
+        renderScene(GIFT_KINETIC_CONFIG[0]);
+        if (!reduceMotion) window.setInterval(function () {
+          index = (index + 1) % GIFT_KINETIC_CONFIG.length;
+          renderScene(GIFT_KINETIC_CONFIG[index]);
+        }, 2200);
+      }
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", initGiftKinetic);
+      } else {
+        initGiftKinetic();
+      }
+    })();
+    </script>
     <!-- ============ OFFERS BANNER (red glowing kinetic typography, no video) ============ -->
     <section class="kinetic-offer" id="kinetic-offer" aria-label="Limited-time offer animation">
       <div class="kinetic-offer-stage" id="kinetic-offer-stage" aria-live="off"></div>
