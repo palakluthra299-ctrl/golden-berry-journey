@@ -85,27 +85,6 @@
     banner.hidden = false;
     spawnPetals(banner);
     spawnDiyas(banner);
-    startGiftRotator();
-  }
-
-  /* ---- Diwali gift message rotator: swaps text every 4.5s ---- */
-  var GIFT_MSGS = [
-    "🎁 Gift your loved ones — WellWith gift hampers!",
-    "🪔 Diwali gifting with a healthy twist!",
-    "✨ Festive hampers for every budget!"
-  ];
-  function startGiftRotator() {
-    var giftEl = document.getElementById("navratri-gift-text");
-    if (!giftEl) return;
-    var gi = 0;
-    setInterval(function () {
-      giftEl.classList.add("gift-fade");
-      setTimeout(function () {
-        gi = (gi + 1) % GIFT_MSGS.length;
-        giftEl.textContent = GIFT_MSGS[gi];
-        giftEl.classList.remove("gift-fade");
-      }, 450);
-    }, 4500);
   }
 
   if (document.readyState === "loading") {
