@@ -4435,3 +4435,45 @@ body.cc-open { overflow: hidden; }
   .video-train-card { flex-basis: 168px; }
   .video-train-actions .btn { font-size: 12px; padding: 7px 10px; }
 }
+
+/* ============ SHARK TANK STRIP + TRUST CARDS + BIGGER TILES (2026-10-12, Palak) ============ */
+.shark-strip { display: flex; align-items: center; gap: 12px; margin: 16px 0 6px; padding: 13px 16px; background: linear-gradient(135deg, #0e1a2e, #1e3252); border: 1px solid #2e4d7a; border-radius: 16px; color: #fff; }
+.shark-strip .shark-emoji { font-size: 32px; line-height: 1; }
+.shark-strip p { margin: 0; display: flex; flex-direction: column; gap: 2px; }
+.shark-strip strong { font-size: 15px; letter-spacing: .2px; }
+.shark-strip span { font-size: 12px; opacity: .72; }
+.trust-cards-row { display: grid; grid-template-columns: 1.25fr 1fr; gap: 14px; }
+.trust-card { border-radius: 20px; padding: 18px 16px; text-decoration: none; color: var(--text); position: relative; overflow: hidden; border: 1px solid var(--card-border); display: block; }
+.reviews-card { background: linear-gradient(150deg, #fff9ea, #ffedc2); }
+.coach-card { background: linear-gradient(150deg, #edf7f2, #d9eee4); display: flex; flex-direction: column; }
+.trust-kicker { font-size: 11px; letter-spacing: 1.5px; font-weight: 800; color: #b3541e; display: flex; align-items: center; gap: 7px; margin: 0 0 6px; }
+.trust-kicker i { width: 8px; height: 8px; border-radius: 50%; background: #e3102e; display: inline-block; }
+.trust-card h3 { margin: 0 0 8px; font-size: 21px; line-height: 1.15; }
+.trust-stars { color: #f0a020; font-size: 22px; letter-spacing: 3px; text-shadow: 0 1px 0 rgba(0,0,0,.15); }
+.trust-title { font-weight: 700; font-size: 14px; margin: 8px 0 3px; line-height: 1.35; }
+.trust-dim { font-size: 12px; opacity: .62; margin: 0 0 12px; }
+.trust-play { display: inline-flex; align-items: center; gap: 9px; background: #191919; color: #fff; border-radius: 999px; padding: 7px 15px 7px 7px; font-size: 13px; font-weight: 700; }
+.trust-play b { background: #f0a020; border-radius: 50%; width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center; font-size: 11px; color: #191919; font-style: normal; }
+.coach-leaf { font-size: 46px; margin-top: auto; padding-top: 14px; }
+.coach-cta { margin-top: 10px; font-weight: 800; color: #157a3a; font-size: 14px; }
+/* Bigger category tiles — Palak: "products bade bade ho" */
+.category-grid { gap: 20px; }
+.category-tile span { aspect-ratio: 1; }
+.category-tile img { padding: 14px; }
+.category-tile strong { font-size: 17px; }
+@media (max-width: 760px) {
+  .shark-strip { margin: 12px 0 4px; padding: 11px 13px; }
+  .shark-strip .shark-emoji { font-size: 26px; }
+  .shark-strip strong { font-size: 13px; }
+  .shark-strip span { font-size: 11px; }
+  .trust-cards-row { gap: 10px; }
+  .trust-card { padding: 14px 12px; border-radius: 16px; }
+  .trust-card h3 { font-size: 16px; }
+  .trust-stars { font-size: 17px; }
+  .trust-title { font-size: 12px; }
+  .trust-dim { font-size: 10px; }
+  .coach-leaf { font-size: 36px; }
+  .category-grid { grid-template-columns: repeat(2, minmax(0,1fr)); gap: 18px; }
+  .category-tile strong { font-size: 15px; }
+  .category-tile img { padding: 14px; }
+}
