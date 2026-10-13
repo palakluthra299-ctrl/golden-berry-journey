@@ -405,7 +405,7 @@ footer a:hover { color: var(--gold-dark); }
 
 /* ---------- Wave hero slider (Shark Tank + Omega + Mata slides) ---------- */
 .wave-hero { position: relative; overflow: hidden; line-height: 0; }
-.wave-slides { position: relative; display: grid; }
+.wave-slides { position: relative; display: grid; touch-action: pan-y; }
 .wave-slide {
   grid-area: 1/1; display: flex;
   min-height: clamp(230px, 36vw, 430px);
@@ -445,6 +445,7 @@ footer a:hover { color: var(--gold-dark); }
   .wave-slide-img img.wave-hero-img { height: auto; aspect-ratio: 2880/1300; object-fit: contain; }
   .wave-slide-mata .navratri-art { width: 140px; }
   .wave-dots { bottom: 44px; }
+  .wave-dots button { width: 11px; height: 11px; }
   .wave-bottom { height: 34px; }
 }
 

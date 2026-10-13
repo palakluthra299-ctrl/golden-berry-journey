@@ -46,7 +46,7 @@
     "url": "https://www.wellwith.shop/"
   }
   </script>
-  <link rel="stylesheet" href="assets/css/styles.css?v=20261013-8">
+  <link rel="stylesheet" href="assets/css/styles.css?v=20261013-9">
   <link rel="stylesheet" href="assets/css/navratri-banner.css?v=20261012-4">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-M35JWF75RT"></script>
@@ -184,6 +184,17 @@
       }
       paint(); restart();
       setTimeout(paint, 2000); /* pick up Mata slide if navratri-banner.js unhides it on DOMContentLoaded */
+      /* touch swipe: mobile par ungli se slide badlo */
+      var tx = null;
+      wrap.addEventListener('touchstart', function(e){ tx = e.touches[0].clientX; }, {passive: true});
+      wrap.addEventListener('touchend', function(e){
+        if (tx === null) return;
+        var dx = e.changedTouches[0].clientX - tx; tx = null;
+        var n = visible().length;
+        if (n < 2) return;
+        if (dx <= -40) { idx = (idx + 1) % n; paint(); restart(); }
+        else if (dx >= 40) { idx = (idx - 1 + n) % n; paint(); restart(); }
+      }, {passive: true});
     })();
     </script>
     
