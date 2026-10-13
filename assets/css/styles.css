@@ -426,6 +426,14 @@ footer a:hover { color: var(--gold-dark); }
   line-height: 1.4;
 }
 .wave-slide-mata .navratri-banner { width: 100%; border-bottom: none; }
+.wave-slide-gift {
+  align-items: center; justify-content: center;
+  background: #1a0003; line-height: 1.4;
+}
+.wave-slide-gift .kinetic-offer {
+  width: 100%; margin: auto 0;
+  border-radius: 0; border-left: none; border-right: none;
+}
 .wave-dots {
   position: absolute; z-index: 3; bottom: 70px; left: 0; right: 0;
   display: flex; gap: 8px; justify-content: center; line-height: 1;
