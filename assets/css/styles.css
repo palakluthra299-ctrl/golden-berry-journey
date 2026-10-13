@@ -4474,7 +4474,7 @@ body.cc-open { overflow: hidden; }
 
 /* ============ SHARK TANK STRIP + TRUST CARDS + BIGGER TILES (2026-10-12, Palak) ============ */
 .shark-strip { display: flex; align-items: center; gap: 12px; margin: 16px 0 6px; padding: 13px 16px; background: linear-gradient(135deg, #0e1a2e, #1e3252); border: 1px solid #2e4d7a; border-radius: 16px; color: #fff; }
-.shark-strip .shark-emoji { font-size: 32px; line-height: 1; }
+.shark-strip .shark-badge { width: 46px; height: auto; border-radius: 8px; flex: none; }
 .shark-strip p { margin: 0; display: flex; flex-direction: column; gap: 2px; }
 .shark-strip strong { font-size: 15px; letter-spacing: .2px; }
 .shark-strip span { font-size: 12px; opacity: .72; }
@@ -4499,7 +4499,7 @@ body.cc-open { overflow: hidden; }
 .category-tile strong { font-size: 17px; }
 @media (max-width: 760px) {
   .shark-strip { margin: 12px 0 4px; padding: 11px 13px; }
-  .shark-strip .shark-emoji { font-size: 26px; }
+  .shark-strip .shark-badge { width: 38px; }
   .shark-strip strong { font-size: 13px; }
   .shark-strip span { font-size: 11px; }
   .trust-cards-row { gap: 10px; }
