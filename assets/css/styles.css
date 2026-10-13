@@ -417,7 +417,8 @@ footer a:hover { color: var(--gold-dark); }
   width: 100%; height: 60px; display: block;
 }
 @media (max-width: 760px) {
-  .wave-hero-img { height: 250px; object-position: 32% center; }
+  .wave-hero-img { height: auto; aspect-ratio: 2880 / 1300; object-fit: contain; }
+  .wave-bottom { height: 34px; }
 }
 
 /* ---------- Scrolling announcement marquee ---------- */
