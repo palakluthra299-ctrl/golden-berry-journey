@@ -2265,11 +2265,8 @@ body.cc-open { overflow: hidden; }
 }
 
 
-/* Keep the mobile WhatsApp shortcut clear of the brand and header controls. */
+/* Mobile WhatsApp float: visible above the tab bar, clear of header controls. */
 @media (max-width: 760px) {
-  .wa-float {
-    display: none;
-  }
   .wa-mark { transform: scale(.82); }
 }
 
