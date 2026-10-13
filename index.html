@@ -46,7 +46,7 @@
     "url": "https://www.wellwith.shop/"
   }
   </script>
-  <link rel="stylesheet" href="assets/css/styles.css?v=20261013-3">
+  <link rel="stylesheet" href="assets/css/styles.css?v=20261013-4">
   <link rel="stylesheet" href="assets/css/navratri-banner.css?v=20261012-4">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-M35JWF75RT"></script>
@@ -176,7 +176,7 @@
     })();
     </script>
     <!-- ============ GIFT KINETIC BANNER (HURRY-style + Diwali 2D elements: ladi, anar, crackers, kids, gifts) ============ -->
-    <section class="kinetic-offer" id="gift-kinetic" aria-label="WellWith gift hampers">
+    <section class="kinetic-offer" id="gift-kinetic" aria-label="WellWith gift hampers" hidden>
       <svg class="gift-ladi" viewBox="0 0 1200 60" preserveAspectRatio="none" aria-hidden="true">
         <path id="gift-ladi-wire" d="M0,6 Q300,46 600,16 T1200,6" fill="none" stroke="#5a2c00" stroke-width="2"/>
         <g id="gift-ladi-bulbs"></g>
@@ -227,6 +227,23 @@
       <div class="kinetic-offer-stage" id="gift-kinetic-stage" aria-live="off"></div>
       <span class="kinetic-glow" aria-hidden="true"></span>
     </section>
+    <script>
+    /* Diwali gift banner: hidden during Navratri (Oct 11-19, 2026).
+       Once the Mata banner is gone, show the gift banner in Mata's place. */
+    (function(){
+      var start = new Date(2026, 9, 11), end = new Date(2026, 9, 19);
+      var now = new Date(); now.setHours(0, 0, 0, 0);
+      if (now >= start && now <= end) return; // Navratri on — keep gift hidden
+      var gift = document.getElementById('gift-kinetic');
+      var mata = document.getElementById('navratri-banner');
+      var wave = document.querySelector('.wave-slider');
+      if (!gift) return;
+      gift.hidden = false;
+      if (mata && mata.parentNode && wave) {
+        mata.parentNode.insertBefore(gift, wave); // Mata's old spot, above wave slider
+      }
+    })();
+    </script>
     <style>
       #gift-kinetic .gift-ladi { position: absolute; top: 0; left: 0; width: 100%; height: 40px; z-index: 3; pointer-events: none; }
       #gift-kinetic .gift-ladi-bulb { animation: ladiTwinkle 1.1s ease-in-out infinite alternate; }
