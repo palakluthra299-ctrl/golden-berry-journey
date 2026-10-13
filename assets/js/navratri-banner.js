@@ -83,6 +83,8 @@
     if (symEl) symEl.textContent = devi.symbol;
 
     banner.hidden = false;
+    var slide = document.getElementById("wave-slide-mata");
+    if (slide) slide.hidden = false; // Mata now lives inside the wave hero slider
     spawnPetals(banner);
     spawnDiyas(banner);
   }
