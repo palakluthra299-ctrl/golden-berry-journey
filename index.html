@@ -46,7 +46,7 @@
     "url": "https://www.wellwith.shop/"
   }
   </script>
-  <link rel="stylesheet" href="assets/css/styles.css?v=20261013-5">
+  <link rel="stylesheet" href="assets/css/styles.css?v=20261013-6">
   <link rel="stylesheet" href="assets/css/navratri-banner.css?v=20261012-4">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-M35JWF75RT"></script>
@@ -86,53 +86,13 @@
         <button type="submit">Search</button>
       </form>
     </div>
-<!-- ============ WAVE BRAND SLIDER (above Mata banner, brand slides only — no offers) ============ -->
-    <section class="wave-slider" aria-label="WellWith brand highlights">
-      <div class="wave-slides" id="wave-slides">
-        <div class="wave-slide is-active">
-          <p class="wave-eyebrow">From Ladakh's Resilient Lands</p>
-          <h2 class="wave-title">Pure Himalayan<br>Sea Buckthorn</h2>
-          <p class="wave-sub">Handpicked at 11,500 ft for everyday wellness</p>
-        </div>
-        <div class="wave-slide">
-          <p class="wave-eyebrow">As Seen On</p>
-          <h2 class="wave-title">Shark Tank India</h2>
-          <p class="wave-sub">India's original sea buckthorn wellness brand</p>
-        </div>
-        <div class="wave-slide">
-          <p class="wave-eyebrow">190+ Bioactive Nutrients</p>
-          <h2 class="wave-title">Omega 3 · 6 · 7 · 9</h2>
-          <p class="wave-sub">Rare Omega-7 + Vitamin C for skin, immunity &amp; gut</p>
-        </div>
-      </div>
-      <div class="wave-dots" id="wave-dots" role="tablist" aria-label="Slides"></div>
+<!-- ============ WAVE HERO BANNER (above Mata banner — brand banner, no offers) ============ -->
+    <section class="wave-slider wave-hero" aria-label="WellWith — As seen on Shark Tank India">
+      <img class="wave-hero-img" src="assets/img/hero-shark-tank.webp?v=20261013-1" alt="WellWith sea buckthorn juice range — As seen on Shark Tank India Season 5" loading="eager" decoding="async">
       <svg class="wave-bottom" viewBox="0 0 1440 70" preserveAspectRatio="none" aria-hidden="true">
         <path d="M0,40 C240,80 480,0 720,30 C960,60 1200,10 1440,40 L1440,70 L0,70 Z" fill="#ffffff"/>
       </svg>
     </section>
-    <script>
-    (function(){
-      var slides = document.querySelectorAll('#wave-slides .wave-slide');
-      var dotsWrap = document.getElementById('wave-dots');
-      if (!slides.length || !dotsWrap) return;
-      var idx = 0, timer;
-      slides.forEach(function(_, i){
-        var b = document.createElement('button');
-        b.setAttribute('role','tab');
-        b.setAttribute('aria-label','Slide ' + (i+1));
-        b.addEventListener('click', function(){ go(i); restart(); });
-        dotsWrap.appendChild(b);
-      });
-      var dots = dotsWrap.querySelectorAll('button');
-      function go(i){
-        idx = (i + slides.length) % slides.length;
-        slides.forEach(function(s, k){ s.classList.toggle('is-active', k === idx); });
-        dots.forEach(function(d, k){ d.classList.toggle('is-active', k === idx); });
-      }
-      function restart(){ clearInterval(timer); timer = setInterval(function(){ go(idx+1); }, 5000); }
-      go(0); restart();
-    })();
-    </script>
     <!-- ============ NAVRATRI MATA BANNER (2D animated, auto-rotates 9 days) ============ -->
     <section class="navratri-banner" id="navratri-banner" aria-label="Happy Navratri" hidden>
       <div class="navratri-inner">
