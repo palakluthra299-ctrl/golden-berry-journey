@@ -1255,7 +1255,12 @@ body { padding-bottom: 0; }
 .cart-sheet > header p { color: var(--muted); font-size: 11px; }
 .cart-sheet > header h2 { font: 800 26px/1 var(--display); }
 .sheet-close { width: 42px; height: 42px; border: 0; border-radius: 50%; background: var(--surface-soft); color: var(--text); font-size: 26px; }
-#cart-sheet-body { min-height: 0; flex: 1; display: flex; flex-direction: column; overflow-y: auto; overscroll-behavior: contain; }
+#cart-sheet-body { min-height: 0; flex: 1; display: flex; flex-direction: column; overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; touch-action: pan-y; }
+/* Cart sheet scroll fix (2026-10-19, Palak: coupon dhak jata tha, scroll nahi hota tha):
+   flex-column scroller ke children default flex-shrink:1 se dab jate the bajaye overflow ke,
+   isliye scroll kaam nahi karta tha. flex-shrink:0 se overflow hoga aur scroll chalega. */
+#cart-sheet-body > * { flex-shrink: 0; }
+.cart-sheet > header { flex-shrink: 0; }
 .cart-savings { margin: 14px 14px 8px; padding: 13px 16px; border-radius: 12px; background: #e2f6e8; color: #17623f; font-size: 14px; }
 .cart-delivery-row { display: flex; align-items: center; gap: 12px; margin: 4px 14px 8px; padding: 14px; border: 1px solid var(--quick-line); border-radius: 13px; background: #fff; }
 .delivery-clock { width: 42px; height: 42px; display: grid; place-items: center; flex: 0 0 auto; border-radius: 50%; background: #edf8f1; color: var(--green); }
@@ -1765,10 +1770,24 @@ body.cc-open { overflow: hidden; }
 .storefront-header-inner { padding-top: 10px; padding-bottom: 12px; }
 .storefront-topbar {
   display: grid;
-  grid-template-columns: auto minmax(300px, 1fr);
+  grid-template-columns: auto minmax(300px, 1fr) auto;
   align-items: center;
   gap: 22px;
 }
+.topbar-cart {
+  width: 46px;
+  height: 46px;
+  min-width: 46px;
+  padding: 0;
+  border-radius: 50%;
+  border: 1px solid rgba(29,40,34,.14);
+  background: var(--surface-soft);
+  font-size: 21px;
+  cursor: pointer;
+  color: var(--green);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.8), 0 8px 22px -20px rgba(22,35,27,.52);
+}
+.topbar-cart:active { transform: scale(.94); }
 .storefront-header .brand {
   min-height: 44px;
   align-items: center;
@@ -1984,10 +2003,12 @@ body.cc-open { overflow: hidden; }
     padding: 8px 0 10px;
   }
   .storefront-topbar {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr auto;
     gap: 8px;
     padding: 0 12px;
   }
+  .topbar-cart { order: 2; justify-self: end; align-self: center; width: 44px; height: 44px; min-width: 44px; }
+  .storefront-search { grid-column: 1 / -1; order: 3; }
   .storefront-header .brand {
     min-height: 32px;
     justify-self: start;

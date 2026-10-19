@@ -120,11 +120,13 @@ var WellWithHistory = (function () {
 /* ---------- Cart ---------- */
 /* The cart travels in the page URL so it works across this static site without browser storage. */
 var CART_PARAM = "cart";
+var CART_STORE = "ww_cart"; /* durable cart backup — survives refresh until user removes items (2026-10-19, Palak) */
 
 function getCart() {
   var cart = {};
   try {
     var raw = new URLSearchParams(window.location.search).get(CART_PARAM) || "";
+    if (!raw) { try { raw = window.localStorage.getItem(CART_STORE) || ""; } catch (e2) {} }
     raw.split(",").forEach(function (entry) {
       var parts = entry.split("~"), slug = parts[0], qty = parseInt(parts[1], 10);
       if (slug && qty > 0) cart[slug] = qty;
@@ -161,6 +163,11 @@ function saveCart(cart) {
     if (value) url.searchParams.set(CART_PARAM, value); else url.searchParams.delete(CART_PARAM);
     WellWithHistory.preserveStateReplace(url.pathname + url.search + url.hash);
   } catch (e) {}
+  try {
+    var v = cartValue(cart);
+    if (v) window.localStorage.setItem(CART_STORE, v);
+    else window.localStorage.removeItem(CART_STORE);
+  } catch (e2) {}
   updateCartBadge();
   updateInternalCartLinks();
 }
