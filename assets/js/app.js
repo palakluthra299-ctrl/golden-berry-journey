@@ -1724,11 +1724,11 @@ function initQuickCommerce() {
     if (moreTab) moreTab.addEventListener("click", function () { setActiveTab("menu"); openSiteMenu(); });
   }
 
-  pill.addEventListener("click", openSheet);
+  pill.addEventListener("click", function () { openSheet(); }); /* event ko fromHistory mat banne do — warna history entry push nahi hoti aur back site se bahar le jata hai (fix 2026-10-19) */
   qsa(".cart-link").forEach(function (link) {
     link.addEventListener("click", function (e) { e.preventDefault(); openSheet(); });
   });
-  qs(".sheet-close", sheet).addEventListener("click", closeSheet);
+  qs(".sheet-close", sheet).addEventListener("click", function () { closeSheet(); }); /* event ko fromHistory mat banne do — warna history.back() skip ho jata aur stale entry reh jati (fix 2026-10-19) */
   sheet.addEventListener("click", function (e) { if (e.target === sheet) closeSheet(); });
   qs(".catalog-back", catalog).addEventListener("click", closeCatalog);
   qsa("[data-catalog-filter]", catalog).forEach(function (btn) { btn.addEventListener("click", function () { openCatalog(btn.getAttribute("data-catalog-filter")); }); });
