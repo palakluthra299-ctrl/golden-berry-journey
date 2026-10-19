@@ -4515,7 +4515,7 @@ body.cc-open { overflow: hidden; }
 .shark-strip strong { font-size: 15px; letter-spacing: .2px; }
 .shark-strip span { font-size: 12px; opacity: .72; }
 
-/* ============ PARTNER WAVE (Retailer / Wholesaler — Palak 2026-10-19) ============ */
+/* ============ PARTNER WAVE SLIDER (Retailer / Wholesaler — Palak 2026-10-19) ============ */
 .partner-wave { position: relative; margin: 14px 0 6px; border-radius: 22px; overflow: hidden;
   background: linear-gradient(165deg, #0e3a28 0%, #1b6a46 55%, #239057 100%);
   box-shadow: 0 20px 44px -22px rgba(14, 58, 40, .55); }
@@ -4524,14 +4524,18 @@ body.cc-open { overflow: hidden; }
 .partner-kicker { margin: 0 0 6px; font-size: 11px; font-weight: 800; letter-spacing: .16em;
   text-transform: uppercase; color: #f3b13d; }
 .partner-wave-inner h2 { margin: 0 0 18px; font-size: 25px; line-height: 1.2; color: #fff; }
-.partner-flow { display: flex; align-items: stretch; justify-content: center; }
-.partner-card { flex: 1 1 0; max-width: 330px; display: flex; flex-direction: column; align-items: center;
-  gap: 5px; background: #ffffff; color: var(--text); border-radius: 20px; padding: 20px 14px 18px;
+.partner-slides { position: relative; display: grid; touch-action: pan-y; }
+.partner-slide { grid-area: 1/1; display: flex; justify-content: center;
+  opacity: 0; pointer-events: none; transition: opacity .45s ease; }
+.partner-slide.is-active { opacity: 1; pointer-events: auto; }
+.partner-slide .partner-card { width: 100%; max-width: 340px; }
+.partner-card { display: flex; flex-direction: column; align-items: center;
+  gap: 5px; background: #ffffff; color: var(--text); border-radius: 20px; padding: 22px 16px 20px;
   text-decoration: none; box-shadow: 0 16px 36px -16px rgba(0, 0, 0, .5); }
 .partner-tier { font-size: 10px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase;
   color: #1b6a46; background: #e2f2e9; padding: 4px 12px; border-radius: 999px; }
 .partner-card.gold .partner-tier { color: #9e410a; background: #fdeeda; }
-.partner-card strong { font-size: 19px; line-height: 1.25; }
+.partner-card strong { font-size: 20px; line-height: 1.25; }
 .partner-card small { font-size: 13px; color: var(--muted); }
 .partner-btn { margin-top: 9px; display: inline-flex; align-items: center; gap: 8px;
   background: linear-gradient(135deg, #f3b13d 0%, #e87817 100%); color: #fff;
@@ -4544,57 +4548,14 @@ body.cc-open { overflow: hidden; }
   transform: skewX(-20deg); animation: partner-shine 3s ease-in-out infinite; }
 @keyframes partner-shine { 0% { left: -70%; } 55%, 100% { left: 140%; } }
 .partner-card:active .partner-btn { transform: scale(.96); }
-.partner-dots { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 0 14px; flex: none; }
-.partner-dots i { width: 8px; height: 8px; border-radius: 50%; background: rgba(255, 255, 255, .9);
-  box-shadow: 0 0 0 3px rgba(255, 255, 255, .18); }
-.partner-swipe-hint { display: none; }
+.partner-dots { display: flex; gap: 8px; justify-content: center; margin-top: 16px; }
+.partner-dots button { width: 9px; height: 9px; padding: 0; border: none; border-radius: 50%;
+  background: rgba(255,255,255,.5); cursor: pointer; }
+.partner-dots button.is-active { background: #f3b13d; transform: scale(1.25); }
 @media (max-width: 560px) {
-  .partner-flow { display: flex; flex-direction: row; align-items: stretch; overflow-x: auto;
-    scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none;
-    margin: 0 -16px; padding: 4px 16px 10px; gap: 12px; }
-  .partner-flow::-webkit-scrollbar { display: none; }
-  .partner-card { flex: 0 0 84%; max-width: 84%; scroll-snap-align: center; }
-  .partner-dots { display: none; }
   .partner-wave-inner h2 { font-size: 22px; }
-  .partner-swipe-hint { display: block; margin-top: 12px; font-size: 12px; color: rgba(255,255,255,.75); }
+  .partner-slide .partner-card { max-width: 320px; }
 }
-
-.trust-cards-row { display: grid; grid-template-columns: 1.25fr 1fr; gap: 14px; }
-.trust-card { border-radius: 20px; padding: 18px 16px; text-decoration: none; color: var(--text); position: relative; overflow: hidden; border: 1px solid var(--card-border); display: block; }
-.reviews-card { background: linear-gradient(150deg, #fff9ea, #ffedc2); }
-.coach-card { background: linear-gradient(150deg, #edf7f2, #d9eee4); display: flex; flex-direction: column; }
-.trust-kicker { font-size: 11px; letter-spacing: 1.5px; font-weight: 800; color: #b3541e; display: flex; align-items: center; gap: 7px; margin: 0 0 6px; }
-.trust-kicker i { width: 8px; height: 8px; border-radius: 50%; background: #e3102e; display: inline-block; }
-.trust-card h3 { margin: 0 0 8px; font-size: 21px; line-height: 1.15; }
-.trust-stars { color: #f0a020; font-size: 22px; letter-spacing: 3px; text-shadow: 0 1px 0 rgba(0,0,0,.15); }
-.trust-title { font-weight: 700; font-size: 14px; margin: 8px 0 3px; line-height: 1.35; }
-.trust-dim { font-size: 12px; opacity: .62; margin: 0 0 12px; }
-.trust-play { display: inline-flex; align-items: center; gap: 9px; background: #191919; color: #fff; border-radius: 999px; padding: 7px 15px 7px 7px; font-size: 13px; font-weight: 700; }
-.trust-play b { background: #f0a020; border-radius: 50%; width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center; font-size: 11px; color: #191919; font-style: normal; }
-.coach-leaf { font-size: 46px; margin-top: auto; padding-top: 14px; }
-.coach-cta { margin-top: 10px; font-weight: 800; color: #157a3a; font-size: 14px; }
-/* Bigger category tiles — Palak: "products bade bade ho" */
-.category-grid { gap: 20px; }
-.category-tile span { aspect-ratio: 1; }
-.category-tile img { padding: 14px; }
-.category-tile strong { font-size: 17px; }
-@media (max-width: 760px) {
-  .shark-strip { margin: 12px 0 4px; padding: 11px 13px; }
-  .shark-strip .shark-badge { width: 38px; }
-  .shark-strip strong { font-size: 13px; }
-  .shark-strip span { font-size: 11px; }
-  .trust-cards-row { gap: 10px; }
-  .trust-card { padding: 14px 12px; border-radius: 16px; }
-  .trust-card h3 { font-size: 16px; }
-  .trust-stars { font-size: 17px; }
-  .trust-title { font-size: 12px; }
-  .trust-dim { font-size: 10px; }
-  .coach-leaf { font-size: 36px; }
-  .category-grid { grid-template-columns: repeat(2, minmax(0,1fr)); gap: 18px; }
-  .category-tile strong { font-size: 15px; }
-  .category-tile img { padding: 14px; }
-}
-
 /* ============ HEALTH COACH BANNER (single, 2026-10-12 — reviews card removed per Palak) ============ */
 .coach-banner { display: flex; align-items: center; justify-content: space-between; gap: 14px; border-radius: 20px; padding: 18px 20px; text-decoration: none; color: var(--text); background: linear-gradient(150deg, #edf7f2, #d9eee4); border: 1px solid var(--card-border); }
 .coach-banner-text h3 { margin: 0 0 6px; font-size: 21px; line-height: 1.15; }
