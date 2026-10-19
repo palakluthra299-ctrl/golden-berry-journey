@@ -46,7 +46,7 @@
     "url": "https://www.wellwith.shop/"
   }
   </script>
-  <link rel="stylesheet" href="assets/css/styles.css?v=20261019-4">
+  <link rel="stylesheet" href="assets/css/styles.css?v=20261019-5">
   <link rel="stylesheet" href="assets/css/navratri-banner.css?v=20261012-4">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-M35JWF75RT"></script>
@@ -395,6 +395,78 @@
     </div>
 
 
+    <!-- ============ PARTNER WAVE SLIDER (Retailer / Wholesaler — Palak 2026-10-19) ============ -->
+    <section class="partner-wave" aria-label="Partner with WellWith">
+      <svg class="partner-wave-edge" viewBox="0 0 1440 70" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M0,40 C240,80 480,0 720,30 C960,60 1200,10 1440,40 L1440,0 L0,0 Z" fill="#ffffff"/>
+      </svg>
+      <div class="partner-wave-inner">
+        <p class="partner-kicker">Grow with WellWith</p>
+        <h2>Partner with us</h2>
+        <div class="partner-slides" id="partner-slides">
+          <div class="partner-slide is-active">
+            <a class="partner-card" href="https://wa.me/919266086554?text=Hi!%20I%20want%20to%20become%20a%20WellWith%20Retailer%20(starting%20%E2%82%B920k%20only)" target="_blank" rel="noopener" aria-label="Become a WellWith Retailer, starting with 20k only">
+              <span class="partner-tier">Retailer</span>
+              <strong>Become a Retailer</strong>
+              <small>starting with 20k only</small>
+              <span class="partner-btn">Chat on WhatsApp <i>&#8594;</i></span>
+            </a>
+          </div>
+          <div class="partner-slide">
+            <a class="partner-card gold" href="https://wa.me/919266086554?text=Hi!%20I%20want%20to%20become%20a%20WellWith%20Wholesaler%20(starting%20%E2%82%B950k%20only)" target="_blank" rel="noopener" aria-label="Become a WellWith Wholesaler, starting with 50k only">
+              <span class="partner-tier">Wholesaler</span>
+              <strong>Become a Wholesaler</strong>
+              <small>starting with 50k only</small>
+              <span class="partner-btn">Chat on WhatsApp <i>&#8594;</i></span>
+            </a>
+          </div>
+        </div>
+        <div class="partner-dots" id="partner-dots" role="tablist" aria-label="Partner options"></div>
+      </div>
+      <svg class="partner-wave-edge" viewBox="0 0 1440 70" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M0,40 C240,80 480,0 720,30 C960,60 1200,10 1440,40 L1440,70 L0,70 Z" fill="#ffffff"/>
+      </svg>
+    </section>
+    <script>
+    /* Partner wave slider: ek baar me ek card — dots + touch swipe + auto-rotate (hero pattern) */
+    (function(){
+      var wrap = document.getElementById('partner-slides');
+      var dotsWrap = document.getElementById('partner-dots');
+      if (!wrap) return;
+      var slides = wrap.querySelectorAll('.partner-slide');
+      var idx = 0, timer = null;
+      function paint(){
+        idx = idx % slides.length;
+        Array.prototype.forEach.call(slides, function(s){ s.classList.remove('is-active'); });
+        slides[idx].classList.add('is-active');
+        if (dotsWrap) {
+          if (!dotsWrap.children.length) {
+            Array.prototype.forEach.call(slides, function(_, i){
+              var b = document.createElement('button');
+              b.type = 'button';
+              b.setAttribute('aria-label', 'Option ' + (i + 1));
+              b.addEventListener('click', function(){ idx = i; paint(); restart(); });
+              dotsWrap.appendChild(b);
+            });
+          }
+          Array.prototype.forEach.call(dotsWrap.children, function(d, k){ d.classList.toggle('is-active', k === idx); });
+        }
+      }
+      function restart(){
+        if (timer) clearInterval(timer);
+        timer = setInterval(function(){ idx = (idx + 1) % slides.length; paint(); }, 6000);
+      }
+      paint(); restart();
+      var tx = null;
+      wrap.addEventListener('touchstart', function(e){ tx = e.touches[0].clientX; }, {passive: true});
+      wrap.addEventListener('touchend', function(e){
+        if (tx === null) return;
+        var dx = e.changedTouches[0].clientX - tx; tx = null;
+        if (dx <= -40) { idx = (idx + 1) % slides.length; paint(); restart(); }
+        else if (dx >= 40) { idx = (idx - 1 + slides.length) % slides.length; paint(); restart(); }
+      }, {passive: true});
+    })();
+    </script>
     <!-- ============ HEALTH COACH BANNER (Palak 2026-10-12: reviews card removed) ============ -->
     <section class="quick-section" id="trust-cards" aria-label="Health coach">
       <a class="coach-banner" href="https://wa.me/919266086554?text=Hi!%20Mujhe%20WellWith%20products%20par%20health%20coach%20se%20consult%20karna%20hai" target="_blank" rel="noopener">
@@ -650,79 +722,6 @@
       <div class="quick-heading"><div><p>Complete collection</p><h2 id="products-zone-title">Products Zone</h2></div><button type="button" data-open-list="all">View list</button></div>
       <div class="product-rail" id="rail-products"></div>
     </section>
-
-    <!-- ============ PARTNER WAVE SLIDER (Retailer / Wholesaler — Palak 2026-10-19) ============ -->
-    <section class="partner-wave" aria-label="Partner with WellWith">
-      <svg class="partner-wave-edge" viewBox="0 0 1440 70" preserveAspectRatio="none" aria-hidden="true">
-        <path d="M0,40 C240,80 480,0 720,30 C960,60 1200,10 1440,40 L1440,0 L0,0 Z" fill="#ffffff"/>
-      </svg>
-      <div class="partner-wave-inner">
-        <p class="partner-kicker">Grow with WellWith</p>
-        <h2>Partner with us</h2>
-        <div class="partner-slides" id="partner-slides">
-          <div class="partner-slide is-active">
-            <a class="partner-card" href="https://wa.me/919266086554?text=Hi!%20I%20want%20to%20become%20a%20WellWith%20Retailer%20(starting%20%E2%82%B920k%20only)" target="_blank" rel="noopener" aria-label="Become a WellWith Retailer, starting with 20k only">
-              <span class="partner-tier">Retailer</span>
-              <strong>Become a Retailer</strong>
-              <small>starting with 20k only</small>
-              <span class="partner-btn">Chat on WhatsApp <i>&#8594;</i></span>
-            </a>
-          </div>
-          <div class="partner-slide">
-            <a class="partner-card gold" href="https://wa.me/919266086554?text=Hi!%20I%20want%20to%20become%20a%20WellWith%20Wholesaler%20(starting%20%E2%82%B950k%20only)" target="_blank" rel="noopener" aria-label="Become a WellWith Wholesaler, starting with 50k only">
-              <span class="partner-tier">Wholesaler</span>
-              <strong>Become a Wholesaler</strong>
-              <small>starting with 50k only</small>
-              <span class="partner-btn">Chat on WhatsApp <i>&#8594;</i></span>
-            </a>
-          </div>
-        </div>
-        <div class="partner-dots" id="partner-dots" role="tablist" aria-label="Partner options"></div>
-      </div>
-      <svg class="partner-wave-edge" viewBox="0 0 1440 70" preserveAspectRatio="none" aria-hidden="true">
-        <path d="M0,40 C240,80 480,0 720,30 C960,60 1200,10 1440,40 L1440,70 L0,70 Z" fill="#ffffff"/>
-      </svg>
-    </section>
-    <script>
-    /* Partner wave slider: ek baar me ek card — dots + touch swipe + auto-rotate (hero pattern) */
-    (function(){
-      var wrap = document.getElementById('partner-slides');
-      var dotsWrap = document.getElementById('partner-dots');
-      if (!wrap) return;
-      var slides = wrap.querySelectorAll('.partner-slide');
-      var idx = 0, timer = null;
-      function paint(){
-        idx = idx % slides.length;
-        Array.prototype.forEach.call(slides, function(s){ s.classList.remove('is-active'); });
-        slides[idx].classList.add('is-active');
-        if (dotsWrap) {
-          if (!dotsWrap.children.length) {
-            Array.prototype.forEach.call(slides, function(_, i){
-              var b = document.createElement('button');
-              b.type = 'button';
-              b.setAttribute('aria-label', 'Option ' + (i + 1));
-              b.addEventListener('click', function(){ idx = i; paint(); restart(); });
-              dotsWrap.appendChild(b);
-            });
-          }
-          Array.prototype.forEach.call(dotsWrap.children, function(d, k){ d.classList.toggle('is-active', k === idx); });
-        }
-      }
-      function restart(){
-        if (timer) clearInterval(timer);
-        timer = setInterval(function(){ idx = (idx + 1) % slides.length; paint(); }, 6000);
-      }
-      paint(); restart();
-      var tx = null;
-      wrap.addEventListener('touchstart', function(e){ tx = e.touches[0].clientX; }, {passive: true});
-      wrap.addEventListener('touchend', function(e){
-        if (tx === null) return;
-        var dx = e.changedTouches[0].clientX - tx; tx = null;
-        if (dx <= -40) { idx = (idx + 1) % slides.length; paint(); restart(); }
-        else if (dx >= 40) { idx = (idx - 1 + slides.length) % slides.length; paint(); restart(); }
-      }, {passive: true});
-    })();
-    </script>
   </div>
 </main>
 
