@@ -13,6 +13,18 @@
       "has": [{ "type": "host", "value": "www.wellwith.shop" }],
       "destination": "https://wellwithshop.vercel.app/:path*",
       "permanent": true
+    },
+    {
+      "source": "/",
+      "has": [{ "type": "host", "value": "wellwith.shop" }],
+      "destination": "https://wellwithshop.vercel.app/",
+      "permanent": true
+    },
+    {
+      "source": "/",
+      "has": [{ "type": "host", "value": "www.wellwith.shop" }],
+      "destination": "https://wellwithshop.vercel.app/",
+      "permanent": true
     }
   ],
   "headers": [
